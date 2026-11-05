@@ -49,7 +49,10 @@ claude mcp list 2>/dev/null | grep -i qmd
 ```
 
 Inside T3 Code = tools named `mcp__t3-code__…` exist (check your tool list or ToolSearch `t3-code`).
-In a terminal they don't. If `install-progress.md` exists, this is a continued install: skip the
+In a terminal or the Claude desktop app they don't. The desktop app's Code tab runs Claude Code
+and reads the same `~/.claude` (skills, hooks, `CLAUDE.md`, memory search), so install there
+exactly as in a terminal; it doesn't read their shell profile, so tools installed now show up
+there only after the app is quit and reopened. If `install-progress.md` exists, this is a continued install: skip the
 stages it lists as done.
 
 Get the repo (or update it):
@@ -65,7 +68,7 @@ Linux — see Stage 1's package line. Then retry.
 **The answers.** They look like this:
 
 ```
-Where I talk to Claude: T3 Code            (T3 Code · Terminal · Both)
+Where I talk to Claude: T3 Code            (one or more of: T3 Code · Claude desktop app · Terminal)
 Computers:
 - studio · Mac · main                       (nickname · Mac/Linux/Windows · main/other)
 - laptop · Linux · other
@@ -83,7 +86,9 @@ Image service: OpenAI                       (OpenAI · Gemini · Both)
   the page: ask them in chat at Stage 2 and Stage 5.
 - **Which computer is this?** The answers' `main` one, unless the message says "this is <nickname>"
   — then this is that other computer: install the same pieces, and skip "Your other computers".
-- `dev-bible` is always installed. `chat-voice` and `pass-handoff` only when they use T3 Code. A
+- `dev-bible` is always installed. `chat-voice` and `pass-handoff` only when T3 Code is one of
+  the places they talk to Claude; terminal and desktop-app users get `reply-format` (markdown
+  replies) and nothing T3-only. A
   piece's `needs` (in `pieces.json`) come along even if not ticked; say so in one line.
 - They want to open things on their phone; assume it. The files server and Tailscale make it work.
 
@@ -107,7 +112,7 @@ No questions yet.</k-status>
 </k-reply>
 ```
 
-In a terminal, say the same in five short lines: what you'll do, the pieces, that you'll ask
+Outside T3 Code (terminal or desktop app), say the same in five short lines: what you'll do, the pieces, that you'll ask
 before replacing anything of theirs, that you'll say when you need them, and that it ends with a
 checkup.
 
@@ -199,6 +204,10 @@ TS=$(command -v tailscale || echo /Applications/Tailscale.app/Contents/MacOS/Tai
 
 Lists this computer (and the phone), and prints a name like `studio.tail1234.ts.net`. Tell them:
 the first word is this computer's name in every link.
+
+Then one click so it never drops off: Tailscale signs each computer out after 180 days. Ask them
+to open **login.tailscale.com/admin/machines**, click **⋯** beside this computer → **Disable key
+expiry**. Same for each computer they add (phones can stay as they are).
 
 ## Stage 4 — Links that open anywhere (files-server)
 
@@ -304,7 +313,7 @@ The hooks start working after the restart (Stage 11) once Stage 10 registers the
 ## Stage 8 — Skills and rules
 
 One `$AIT install <id>` per chosen piece, in this order, each with its keep/take/skip answer from
-the plan: `dev-bible`, `chat-voice`, `html`, `plain-voice`, `pass-handoff`, `doctor`,
+the plan: `dev-bible`, `reply-format`, `chat-voice`, `html`, `pass-handoff`, `doctor`,
 `spec-logic-design`, `prototype`.
 
 **Verify:** `ls ~/.claude/skills/*/SKILL.md` lists every skill picked (except kept or skipped
@@ -394,7 +403,8 @@ command -v qmd >/dev/null && ~/.claude/bin/qmd-upkeep index
 Tell them: **quit T3 Code completely** (Mac: Cmd-Q; Linux: close the window and quit it from the
 tray if it stays) **and open it again**, come back to this thread and type **continue**. If the
 thread has forgotten: *"Continue my ai-tools install from ~/.claude/ai-tools/install-progress.md"*.
-In a terminal: quit `claude` and start it again, then the same sentence.
+Desktop app: quit it completely (Mac: Cmd-Q) and reopen it, then the same sentence in a new Code
+session. In a terminal: quit `claude` and start it again, then the same sentence.
 
 ## Stage 12 — Checkup, first note, done
 
@@ -408,7 +418,7 @@ In a terminal: quit `claude` and start it again, then the same sentence.
 
 **Done page.** In T3 Code, a chat-kit Done page (`<k-reply s="ok" note="<the note's link>">`): a
 `k-head` title "ai-tools · installed on <nickname>", then the same grouped `k-head` lists as the welcome,
-each line `ok <name> ~ <try line from pieces.json>`, then the note in `k-links`. In a terminal: a short list,
+each line `ok <name> ~ <try line from pieces.json>`, then the note in `k-links`. Outside T3 Code: a short markdown list,
 one line per piece: its name and its "try this".
 
 Then, if the answers list other computers, go on to "Your other computers".
@@ -421,13 +431,18 @@ For each computer in the answers that isn't this one, give them these steps, one
 time, and wait while they do it. Name the computer by its nickname every time.
 
 1. **Tailscale** on it, signed in to the **same account** (Stage 3's table).
-2. **Claude Code** and **T3 Code** on it, both signed in.
-3. Open a new T3 Code thread there, paste the **same answers**, and add one line:
+2. **Claude Code** on it, signed in (plus T3 Code or the Claude desktop app, if that's where they
+   talk to Claude).
+3. Open a new chat with Claude there (T3 Code thread, desktop app Code tab, or terminal), paste
+   the **same answers**, and add one line:
    **"this is <nickname>"**. Claude there installs the same pieces.
 4. **Syncthing pairing** (if they share the memory folder with it): on this computer, Syncthing →
    **Add Remote Device** → paste the other computer's device ID (Actions → Show ID on that one) →
    **Sharing** tab → tick `memory` → **Save**. On the other one, accept the folder and point it at
    its memory folder.
+
+Steps 5 to 7 only when they use T3 Code.
+
 5. **Add it to T3 Code here**, so one window runs Claude on any computer. On the **other** computer:
    T3 Code → **Settings** → **Connections** → switch on **Tailscale HTTPS** (click **Enable**; it
    restarts). Then **Authorized clients** → **Create link** → keep **Standard** → **Create link** →
@@ -455,7 +470,9 @@ phone needs Tailscale on.
 
 ## Updates
 
-When they say "check ai-tools for updates":
+Nothing updates the pieces by itself. Once a week a small start-of-session check (installed with
+the Development Bible) looks for a newer release and, when there is one, asks Claude to mention it
+once. When they say "check ai-tools for updates":
 
 ```bash
 git -C ~/.claude/ai-tools/src fetch --depth 1 --tags -q
@@ -502,7 +519,7 @@ shortcut, `rm ~/memory` removes only the shortcut.
 Less tested; say so. Claude Code on Windows runs its commands in **Git Bash**, so the Linux-style
 commands mostly work there.
 
-- Pieces that are plain files work as they are: dev-bible, chat-voice, html, plain-voice, memory,
+- Pieces that are plain files work as they are: dev-bible, reply-format, chat-voice, html, memory,
   pass-handoff, doctor, spec-logic-design, prototype, image, review-multi. `$AIT` runs with
   `python` from Git Bash.
 - **Tailscale** and **Syncthing** have Windows installers (tailscale.com/download,

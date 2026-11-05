@@ -201,7 +201,7 @@ one-off. If a block looks wrong, fix it in the sheet so every future page improv
 - **A sequence carries no numerals.** Numerals only where something must be cited by number — proof
   claims and asks. Off section headings.
 - **Status is dots on pages, glyphs in chat.** On a page: the mark AND the word, filled = firm
-  state, hollow = fading or pending. In chat: the status glyphs in `~/.claude/ai-tools/rules/chat-voice.md`.
+  state, hollow = fading or pending. In chat: the status glyphs in `~/.claude/ai-tools/rules/reply-format.md`.
 - **Containment is a rule.** Every grid uses `minmax(0,1fr)`; wide tables scroll inside `.r-tablebox`,
   never the page; on a phone a comparison table becomes one card per row wearing its column names.
   **Never `overflow-x:hidden` on `html` or `body`** — it breaks scrolling in Chrome.

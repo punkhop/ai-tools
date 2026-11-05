@@ -72,6 +72,8 @@ for piece_id, piece in sorted(pieces.items()):
 PY
 python3 -c "import json,sys; json.load(open(sys.argv[1]))" "$S" 2>/dev/null \
   && echo "OK settings.json is valid JSON" || echo "FAIL ~/.claude/settings.json missing or broken JSON — Claude ignores all of it; rerun the installer"
+git --version >/dev/null 2>&1 && python3 -c 1 2>/dev/null && echo "OK git and python3 run (the hooks and scripts need them)" \
+  || echo "FAIL git or python3 won't run — after a macOS update this is normal: run xcode-select --install in Terminal and click Install · Linux: install git and python3"
 ```
 
 ## memory
@@ -127,14 +129,20 @@ B=~/.claude/ai-tools/bibles/01-DEVELOPMENT-BIBLE.md
 grep -qE '^@.*ai-tools/bibles/01-DEVELOPMENT-BIBLE\.md' ~/.claude/CLAUDE.md 2>/dev/null \
   && echo "OK the bible loads in every session (imported in ~/.claude/CLAUDE.md)" \
   || echo "FAIL the bible isn't imported — add this line to ~/.claude/CLAUDE.md: @~/.claude/ai-tools/bibles/01-DEVELOPMENT-BIBLE.md"
+registered ai-tools-check.sh; runnable ai-tools-check.sh
+HAVE=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1])).get("version",""))' "$M" 2>/dev/null)
+NEW=$(git -C ~/.claude/ai-tools/src ls-remote --tags --refs --sort=-v:refname origin 'v*' 2>/dev/null | head -1 | sed 's#.*refs/tags/v##')
+if [ -z "$NEW" ]; then echo "WARN couldn't reach GitHub to look for a newer ai-tools — fine offline"
+elif [ "$NEW" = "$HAVE" ]; then echo "OK ai-tools $HAVE is the newest"
+else echo "WARN ai-tools $NEW is out (this computer has $HAVE) — say: check ai-tools for updates"; fi
 ```
 
-## chat-voice, plain-voice
+## reply-format, chat-voice
 
-Run once per voice piece that is listed (replace `chat-voice` with the piece id):
+Run once per voice piece that is listed (replace `reply-format` with the piece id):
 
 ```bash
-P=chat-voice
+P=reply-format
 python3 - "$M" "$P" <<'PY'
 import json, os, re, sys
 pieces = json.load(open(sys.argv[1])).get("pieces") or {}
@@ -184,6 +192,9 @@ if command -v qmd >/dev/null; then echo "OK $(qmd --version)"
   esac
   qmd collection list 2>/dev/null | grep -q '^memory ' && echo "OK collection 'memory'" \
     || echo "FAIL no 'memory' collection — qmd collection add \"\$(cd ~/memory && pwd -P)\" --name memory"
+  CP=$(qmd collection show memory 2>/dev/null | sed -n 's/^ *Path: *//p'); MP=$(cd ~/memory 2>/dev/null && pwd -P)
+  [ -z "$CP" ] || [ "$CP" = "$MP" ] && echo "OK search reads the memory folder" \
+    || echo "FAIL search still reads $CP but memory is now $MP (the folder moved) — qmd collection remove memory && qmd collection add \"$MP\" --name memory && qmd update && qmd embed"
 else echo "FAIL qmd not installed — npm install -g @tobilu/qmd"; fi
 OUT=$(claude mcp list 2>&1 | grep -i '^qmd')
 case "$OUT" in
@@ -217,6 +228,15 @@ esac
 TS=$(command -v tailscale || echo /Applications/Tailscale.app/Contents/MacOS/Tailscale)
 "$TS" status >/dev/null 2>&1 && echo "OK Tailscale up" \
   || echo "FAIL Tailscale down — links won't open on other devices (Mac: open the Tailscale app and connect · Linux: sudo tailscale up)"
+"$TS" status --json 2>/dev/null | python3 -c '
+import sys, json, datetime as d
+s = json.load(sys.stdin).get("Self") or {}
+e = s.get("KeyExpiry")
+if not e:
+    print("OK Tailscale key never expires"); sys.exit()
+days = (d.datetime.fromisoformat(e.replace("Z", "+00:00")) - d.datetime.now(d.timezone.utc)).days
+print(("WARN" if days > 14 else "FAIL") + f" this computer drops off Tailscale in {days} days (its sign-in expires) — "
+      "login.tailscale.com/admin/machines → this computer → ⋯ → Disable key expiry")' 2>/dev/null
 ```
 
 ## files-server
@@ -269,6 +289,9 @@ done
 ```bash
 if command -v codex >/dev/null; then echo "OK $(codex --version 2>/dev/null | head -1)"
   codex login status >/dev/null 2>&1 && echo "OK codex signed in" || echo "FAIL codex not signed in — run: codex login"
+  CV=$(codex --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1); NV=$(npm view @openai/codex version 2>/dev/null)
+  [ -z "$NV" ] || [ "$CV" = "$NV" ] && echo "OK codex is current" \
+    || echo "WARN codex $CV is behind $NV — old versions stop working when OpenAI retires a model: npm install -g @openai/codex@latest (or brew upgrade codex)"
 else echo "FAIL codex CLI missing — /review and /multi need it (Mac: brew install codex · Mac or Linux: npm install -g @openai/codex), then codex login"; fi
 command -v gemini >/dev/null && echo "OK gemini CLI (optional third voice for /multi)" || echo "WARN gemini CLI not installed — optional; /multi works with Claude + codex"
 ```
@@ -279,7 +302,11 @@ command -v gemini >/dev/null && echo "OK gemini CLI (optional third voice for /m
 [ -f ~/.claude/skills/image/SKILL.md ] && echo "OK /image" || echo "FAIL /image missing — rerun the installer and pick image"
 if [ -n "${GEMINI_API_KEY:-}" ] || [ -n "${OPENAI_API_KEY:-}" ] || grep -qE '^(export )?(GEMINI|OPENAI)_API_KEY=.' ~/.claude/ai-tools/keys.env 2>/dev/null; then echo "OK an image API key is saved"
 else echo "FAIL no OpenAI or Gemini key saved — save one with: python3 ~/.claude/skills/image/scripts/save_key.py OPENAI_API_KEY (run it in your own terminal; the paste stays hidden)"; fi
-PY_=~/.claude/ai-tools/venv/bin/python; [ -x "$PY_" ] || PY_=python3
+PY_=~/.claude/ai-tools/venv/bin/python
+if [ -e ~/.claude/ai-tools/venv ] && ! "$PY_" -c 1 2>/dev/null; then
+  echo "FAIL the image packages' private Python stopped running (a Python upgrade removed the one it was built from) — python3 -m venv --clear ~/.claude/ai-tools/venv && ~/.claude/ai-tools/venv/bin/python -m pip install pillow openai google-genai"
+fi
+[ -x "$PY_" ] || PY_=python3
 "$PY_" ~/.claude/skills/image/scripts/generate-template.py --check 2>/dev/null | grep -q '^pillow: installed' \
   && echo "OK image packages (pillow)" || echo "FAIL pillow missing — python3 -m venv ~/.claude/ai-tools/venv && ~/.claude/ai-tools/venv/bin/python -m pip install pillow openai google-genai"
 command -v python3 >/dev/null && echo "OK python3" || echo "FAIL python3 missing — the image scripts need it (Mac: brew install python · Linux: install python3)"

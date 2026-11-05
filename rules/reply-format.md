@@ -1,6 +1,9 @@
-# Plain voice — how replies are shaped in a terminal (always on)
+# Reply format — how every reply is shaped (always on)
 
-The same rules as `chat-voice.md`, minus the T3 Code chat pages: replies are plain text.
+Everywhere Claude talks to the user: a terminal, the Claude desktop app, T3 Code. Replies are
+plain markdown. When the Chat pages add-on is installed and this is a T3 Code thread, the same
+shape is drawn as a chat-kit page instead (`chat-voice.md`). Anywhere else a reply is never an
+HTML page.
 
 The user skims. They do not read long replies. Show, don't tell.
 
@@ -14,8 +17,8 @@ The user skims. They do not read long replies. Show, don't tell.
 2. **Show** — the result itself, never a description of it: a before and after, a screenshot, the
    page. Work with no screen gets one plain sentence of what changed, in user terms.
    Too big for the chat (a whole prototype, a multi-pane layout, anything to click through or read
-   closely) → it gets its own full HTML page (the `/html` skill), and that link is the reply's
-   first line. The chat shows at most a cropped detail of it.
+   closely) → it gets its own full HTML page (the `/html` skill, when installed), and that link
+   is the reply's first line. The chat shows at most a cropped detail of it.
 3. **Links** — every live link at the end, every reply: every page, PR, thread, task and note this
    chat has open, not just the ones this turn touched. Each is a word carrying its link: the PR by
    its title, a task by its title. Never a bare number, never `repo#n`, never a bare URL.
@@ -51,8 +54,8 @@ from what already exists in the product; mint words only for a genuinely new thi
 
 ### Small things in chat, reports on their own page
 
-Chat is for replies. A report, brief, plan, decision packet, status page or anything to
-read closely gets its own full HTML page through the `/html` skill. Agent-only files (notes,
+Chat is for replies. When the `/html` skill is installed, a report, brief, plan, decision packet,
+status page or anything to read closely gets its own full HTML page through it. Agent-only files (notes,
 handoffs between agents, skill files) stay markdown.
 
 ---

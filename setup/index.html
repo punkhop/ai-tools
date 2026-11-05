@@ -171,10 +171,11 @@ pre.out{white-space:pre-wrap;font:13px/1.5 ui-monospace,Menlo,monospace;backgrou
 </div><div>
 <h2>Where you talk to Claude</h2>
 <div class="radios" id="where">
-  <label class="radio"><input type="radio" name="where" value="T3 Code" checked> T3 Code</label>
-  <label class="radio"><input type="radio" name="where" value="Terminal"> Claude Code in a terminal</label>
-  <label class="radio"><input type="radio" name="where" value="Both"> Both</label>
+  <label class="radio"><input type="checkbox" name="where" value="T3 Code"> T3 Code</label>
+  <label class="radio"><input type="checkbox" name="where" value="Claude desktop app"> Claude desktop app, Code tab</label>
+  <label class="radio"><input type="checkbox" name="where" value="Terminal"> Claude Code in a terminal</label>
 </div>
+<p class="sub">The desktop app's chat tab can't install any of this; use its Code tab.</p>
 </div></div>
 
 <h2>Pick your pieces</h2>
@@ -184,7 +185,7 @@ pre.out{white-space:pre-wrap;font:13px/1.5 ui-monospace,Menlo,monospace;backgrou
 <h2>Then</h2>
 <ol class="steps">
   <li><span>Click <b>Copy my answers</b> below.</span></li>
-  <li><span>On your main computer, open a new chat with Claude (a new thread in T3 Code).</span></li>
+  <li><span>On your main computer, open a new chat with Claude: a new thread in T3 Code, a new session in the desktop app's Code tab, or <b>claude</b> in a terminal.</span></li>
   <li><span>Paste and send. Claude installs each piece, tells you when it needs a click or a password, and shows you a page of what you got.</span></li>
 </ol>
 <details><summary>What gets copied</summary><pre class="out" id="out"></pre></details>
@@ -230,9 +231,9 @@ t3env:`<svg viewBox="0 0 680 330"><text class="Tb" x="14" y="24">1 · On the oth
 
 const GROUPS = [
  {name:'How Claude talks to you', pieces:[
-  {id:'chat-voice', name:'Chat pages', t3:true, art:'chat', say:['Replies come back as tidy pages in the thread: what changed, what to look at, every link at the end, questions last.']},
+  {id:'reply-format', name:'Reply format', art:'plain', say:['Every reply has the same shape: what changed, what to look at, every link at the end, questions last with Claude’s pick. Short sentences, no jargon.']},
+  {id:'chat-voice', name:'Chat pages', t3:true, art:'chat', needs:['reply-format'], say:['The same replies, drawn as tidy pages in the thread.']},
   {id:'html', name:'Report pages', cmd:'/html', art:'report', say:['A plan, a comparison or where a project stands becomes a clean web page instead of a wall of text. First, Claude asks you a few questions about how you like to read.']},
-  {id:'plain-voice', name:'Plain words', art:'plain', say:['Short sentences, no jargon, and no shouty all-caps labels on anything Claude draws for you.']},
  ]},
  {name:'Memory', pieces:[
   {id:'memory', name:'Memory folder and notes', cmd:'/note', art:'memory', say:['One folder of plain files that keeps what you decided. At the end of a chat Claude writes a dated note there; type /note to ask for one.']},
@@ -261,13 +262,15 @@ const ALL = GROUPS.flatMap(g=>g.pieces);
 const KEY = 'ai-tools-setup-v1';
 
 const defaults = () => ({
-  comps:[{nick:'',os:'Mac',role:'main'}], where:'T3 Code',
+  comps:[{nick:'',os:'Mac',role:'main'}], where:['T3 Code'],
   picks:Object.fromEntries(ALL.map(p=>[p.id,!p.off && p.id!=='syncthing'])),
   image:'OpenAI'
 });
 let S;
 try{ S = Object.assign(defaults(), JSON.parse(localStorage.getItem(KEY)||'{}')); }catch(e){ S = defaults(); }
 S.picks = Object.assign(defaults().picks, S.picks); S.picks['dev-bible']=true;
+if(!Array.isArray(S.where)) S.where = S.where==='Both' ? ['T3 Code','Terminal'] : [S.where||'T3 Code'];
+const noT3 = () => !S.where.includes('T3 Code');
 const save = () => { try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} };
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -294,16 +297,18 @@ $('#comps').addEventListener('click', e=>{
   save(); renderComps(); renderMore(); update();
 });
 $('#addComp').onclick = ()=>{ S.comps.push({nick:'',os:S.comps[0]?.os||'Mac',role:'other'}); if(S.comps.length===2 && !S.picksTouchedSync){ S.picks.syncthing=true; } save(); renderComps(); renderGroups(); update(); const ins=document.querySelectorAll('#comps input'); ins[ins.length-1].focus(); };
-document.querySelectorAll('#where input').forEach(r=>{ r.checked = r.value===S.where; r.onchange=()=>{ S.where=r.value; save(); renderGroups(); update(); }; });
+document.querySelectorAll('#where input').forEach(r=>{ r.checked = S.where.includes(r.value); r.onchange=()=>{
+  S.where = [...document.querySelectorAll('#where input:checked')].map(x=>x.value);
+  if(!S.where.length){ r.checked=true; S.where=[r.value]; }
+  save(); renderGroups(); update(); }; });
 
 function renderGroups(){
   const box = $('#groups'); box.innerHTML='';
-  const noT3 = S.where==='Terminal';
   GROUPS.forEach(g=>{
     const h = document.createElement('h3'); h.textContent=g.name; box.appendChild(h);
     const list = document.createElement('div'); list.className='pieces';
     g.pieces.forEach(p=>{
-      const unavailable = p.t3 && noT3;
+      const unavailable = p.t3 && noT3();
       const on = !unavailable && !!S.picks[p.id];
       const el = document.createElement('div'); el.className='card piece'+(on?'':' off'); el.dataset.id=p.id;
       const tags = (p.cmd?`<span class="tag">${p.cmd}</span>`:'')+(p.t3?'<span class="tag">T3 Code only</span>':'')+(p.locked?'<span class="tag on">Always on</span>':'');
@@ -338,11 +343,10 @@ function renderMore(){
 }
 
 function answers(){
-  const noT3 = S.where==='Terminal';
-  const on = ALL.filter(p=>S.picks[p.id] && !(p.t3&&noT3));
+  const on = ALL.filter(p=>S.picks[p.id] && !(p.t3&&noT3()));
   const L = [];
   L.push('Set me up from github.com/punkhop/ai-tools with these answers:','');
-  L.push('Where I talk to Claude: '+S.where);
+  L.push('Where I talk to Claude: '+S.where.join(', '));
   L.push('Computers:');
   S.comps.forEach((c,i)=>L.push(`- ${nick(c,i)} · ${c.os} · ${c.role==='main'?'main':'other'}`));
   L.push('','Pieces:');
@@ -354,12 +358,11 @@ function answers(){
   return L.join('\n');
 }
 function update(){
-  const noT3 = S.where==='Terminal';
-  const n = ALL.filter(p=>S.picks[p.id] && !(p.t3&&noT3)).length;
+  const n = ALL.filter(p=>S.picks[p.id] && !(p.t3&&noT3())).length;
   $('#count').textContent = n+' of '+ALL.length+' pieces';
   $('#out').textContent = answers();
   const multi = S.comps.length>1;
-  $('#envBox').hidden = !(multi && S.where!=='Terminal');
+  $('#envBox').hidden = !(multi && !noT3());
   const env = document.querySelector('#envBox .art'); if(env && !env.innerHTML) env.innerHTML = ART.t3env;
 }
 $('#copy').onclick = async ()=>{
