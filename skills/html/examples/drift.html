@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#15171b">
+<title>One value changed, six pages followed</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400..700;1,14..32,400..700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/report.css">
+</head>
+<body>
+<div class="r-page">
+
+<div class="r-nav">
+  <a href="system.html">The report system</a>
+  <a href="findings.html">findings</a>
+  <a href="decision.html">decision</a>
+  <a href="explainer.html">explainer</a>
+  <a href="mission.html">mission map</a>
+  <a href="proof.html">proof</a>
+  <a href="thing.html">the thing itself</a>
+  <span class="r-here">no drift</span>
+  <a href="newer.html">newer blocks</a>
+  <span class="r-spacer"></span>
+  <button id="theme" class="r-theme" title="Switch theme"></button>
+</div>
+
+<h1 class="r-title">One value changed, six pages followed</h1>
+<p class="r-dek">The claim behind the whole rebuild, tested rather than asserted.</p>
+
+<section class="r-sec" style="border-top-width:0;padding-top:0;margin-top:44px">
+  <div class="r-tally">
+    <span class="r-fig" style="font-size:26px">6 / 6</span>
+    <span class="r-small">pages followed the change</span>
+    <span class="r-status"><span class="r-mark r-m-done"></span>one line edited</span>
+    <span class="r-status"><span class="r-mark r-m-done"></span>zero pages touched</span>
+  </div>
+  <p class="r-body">I changed the corner radius in the stylesheet from 8 pixels to 20, re-rendered
+  every page without opening one of them, and photographed the same region before and after. Then I
+  put the value back. Nothing else was edited.</p>
+  <p class="r-body">This is the thing yesterday's pages could not do. Every one of them carried its
+  own styling written onto each element, so changing the middle changed nothing.</p>
+</section>
+
+<section class="r-sec">
+  <div class="r-claim r-claim-fixed">
+    <div class="r-claim-head"><span class="r-claim-n">1</span>Every plate and card on all six pages picked up the change</div>
+    <p class="r-claim-saw"><span class="r-tick">✓</span>Five pages show it in the visible region;
+    the sixth shows it lower down, where its only rounded block sits.</p>
+    <p class="r-claim-walk">One line in <strong>report.css</strong> went from 8px to 20px. No page
+    file was opened. The renders below are the same crop of the same page, twice, with only that
+    line different between them.</p>
+
+    <div class="r-shots">
+      <div>
+        <div class="r-shot"><img src="shots/drift/zoom-before-findings.png" alt="The findings verdict plate at 8px radius"></div>
+        <p class="r-scale-cap">Findings, before — the verdict plate at 8px.</p>
+      </div>
+      <div>
+        <div class="r-shot"><img src="shots/drift/zoom-after-findings.png" alt="The same plate at 20px radius"></div>
+        <p class="r-scale-cap">After — 20px. Same markup, same page file.</p>
+      </div>
+    </div>
+
+    <div class="r-shots r-stack">
+      <div>
+        <div class="r-shot"><img src="shots/drift/zoom-before-decision.png" alt="The decision miniature frame at 8px radius"></div>
+        <p class="r-scale-cap">Decision, before — the frame around the miniature at 8px.</p>
+      </div>
+      <div>
+        <div class="r-shot"><img src="shots/drift/zoom-after-decision.png" alt="The same frame at 20px"></div>
+        <p class="r-scale-cap">After.</p>
+      </div>
+    </div>
+
+    <div class="r-shots r-stack">
+      <div>
+        <div class="r-shot"><img src="shots/drift/zoom-before-explainer.png" alt="The explainer nesting doll at 8px radius"></div>
+        <p class="r-scale-cap">Explainer, before — the nesting doll shells at 8px.</p>
+      </div>
+      <div>
+        <div class="r-shot"><img src="shots/drift/zoom-after-explainer.png" alt="The same shells at 20px"></div>
+        <p class="r-scale-cap">After.</p>
+      </div>
+    </div>
+
+    <div class="r-shots r-stack">
+      <div>
+        <div class="r-shot"><img src="shots/drift/zoom-before-thing.png" alt="A drawn surface frame at 8px radius"></div>
+        <p class="r-scale-cap">The thing itself, before — the browser frame around a drawn screen at 8px.</p>
+      </div>
+      <div>
+        <div class="r-shot"><img src="shots/drift/zoom-after-thing.png" alt="The same frame at 20px"></div>
+        <p class="r-scale-cap">After.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="r-sec">
+  <div class="r-claim r-claim-fixed">
+    <div class="r-claim-head"><span class="r-claim-n">2</span>Measured, not eyeballed</div>
+    <p class="r-claim-saw"><span class="r-tick">✓</span>Every page changed, and every change is
+    confined to the corners of rounded blocks.</p>
+    <p class="r-claim-walk">Comparing the two renders pixel by pixel gives both the count of pixels
+    that moved and the box they moved inside. If the change had leaked into type or spacing, the
+    region would cover the whole page rather than a band of corners.</p>
+
+    <div class="r-tablebox r-stack">
+      <table class="r-table r-table-cards">
+        <thead>
+          <tr><th>Page</th><th class="r-num">Pixels changed</th><th>Where they changed</th></tr>
+        </thead>
+        <tbody>
+          <tr><td data-label="Page"><strong>Findings</strong></td>
+            <td data-label="Pixels changed" class="r-num" data-value="534">534</td>
+            <td data-label="Where">the verdict plate and the flaws row corners</td></tr>
+          <tr><td data-label="Page"><strong>Explainer</strong></td>
+            <td data-label="Pixels changed" class="r-num" data-value="2212">2,212</td>
+            <td data-label="Where">the callout, the nesting doll shells and the table box</td></tr>
+          <tr><td data-label="Page"><strong>Proof</strong></td>
+            <td data-label="Pixels changed" class="r-num" data-value="1192">1,192</td>
+            <td data-label="Where">the capture frames</td></tr>
+          <tr><td data-label="Page"><strong>Thing itself</strong></td>
+            <td data-label="Pixels changed" class="r-num" data-value="1722">1,722</td>
+            <td data-label="Where">the browser frames around the two drawn screens</td></tr>
+          <tr><td data-label="Page"><strong>Decision</strong></td>
+            <td data-label="Pixels changed" class="r-num" data-value="2636">2,636</td>
+            <td data-label="Where">the miniature frame and the two option cards</td></tr>
+          <tr><td data-label="Page"><strong>Mission map</strong></td>
+            <td data-label="Pixels changed" class="r-num" data-value="454">454</td>
+            <td data-label="Where">the question panel, 2,200 pixels down the page</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="r-body">The mission map is the honest one. Its visible top is a rail and a timeline,
+    neither of which is a rounded block, so the first capture showed no change at all. Its only
+    rounded thing is the question panel further down — and that panel is rounded on its right side
+    only, which is exactly the strip the comparison found.</p>
+  </div>
+
+  <div class="r-callout r-callout-green r-stack">Ruled 13 August: keep 8. The point was never the
+  number — it was that changing it is one line and every page follows.</div>
+</section>
+
+<section class="r-sec">
+  <h2 class="r-h2">The same is true of every other value in that block.</h2>
+  <p class="r-body">The corner radius is the most visible one to test. The stylesheet names
+  five values that govern how every page sits: the stage width, how wide prose runs, the two corner
+  radii, and the air between sections. Each behaves the same way — change it once, and the pages
+  follow without being opened.</p>
+
+  <div class="r-tablebox r-stack">
+    <table class="r-table r-table-cards">
+      <thead><tr><th>The value</th><th>What it governs</th><th>Now</th></tr></thead>
+      <tbody>
+        <tr><td data-label="The value"><strong>Stage width</strong></td>
+          <td data-label="Governs">how wide the page runs before it stops</td>
+          <td data-label="Now">1,680px</td></tr>
+        <tr><td data-label="The value"><strong>Prose measure</strong></td>
+          <td data-label="Governs">how wide a paragraph runs</td>
+          <td data-label="Now">uncapped</td></tr>
+        <tr><td data-label="The value"><strong>Plate radius</strong></td>
+          <td data-label="Governs">the corners on plates, cards and frames</td>
+          <td data-label="Now">8px</td></tr>
+        <tr><td data-label="The value"><strong>Chip radius</strong></td>
+          <td data-label="Governs">the corners on chips, buttons and inputs</td>
+          <td data-label="Now">4px</td></tr>
+        <tr><td data-label="The value"><strong>Section gap</strong></td>
+          <td data-label="Governs">the air between top-level sections</td>
+          <td data-label="Now">68px</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="r-sec">
+  <p class="r-recap">The stylesheet is the center, and this is what having a center buys: a value
+  changes once and every page that links it follows, without being opened. That was the whole
+  argument for two days of rebuilding, and it is now a demonstrated fact rather than a claim.</p>
+</section>
+
+<section class="r-sec">
+  <p class="r-small">Rendered 13 August 2026 in Chrome at 1120 pixels wide. One line of
+  <strong>report.css</strong> edited, six pages re-rendered untouched, the line reverted. Pixel
+  counts are a direct comparison of the two renders of each page.</p>
+</section>
+
+</div>
+<script src="../assets/report-table.js"></script>
+<script>
+const b=document.body,t=document.getElementById('theme');
+const set=m=>{b.classList.toggle('light',m==='light');t.textContent=m==='light'?'☾':'☀';
+try{localStorage.setItem('report-theme',m)}catch(e){}};
+let m='dark';try{m=localStorage.getItem('report-theme')||'dark'}catch(e){}
+set(m);t.onclick=()=>set(b.classList.contains('light')?'dark':'light');
+</script>
+</body>
+</html>

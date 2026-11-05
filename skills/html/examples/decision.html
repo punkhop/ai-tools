@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#15171b">
+<title>Whether Wheelhouse pays the instructor</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400..700;1,14..32,400..700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/report.css">
+</head>
+<body>
+<div class="r-page">
+
+<div class="r-nav">
+  <a href="system.html">The report system</a>
+  <a href="findings.html">findings</a>
+  <span class="r-here">decision</span>
+  <a href="explainer.html">explainer</a>
+  <a href="mission.html">mission map</a>
+  <a href="proof.html">proof</a>
+  <a href="thing.html">the thing itself</a>
+  <a href="drift.html">no drift</a>
+  <a href="newer.html">newer blocks</a>
+  <span class="r-spacer"></span>
+  <button id="theme" class="r-theme" title="Switch theme"></button>
+</div>
+
+<h1 class="r-title">Whether Wheelhouse pays the instructor</h1>
+<p class="r-dek">Two ways to end a settlement, and what each one puts on us.</p>
+
+<section class="r-sec" style="border-top-width:0;padding-top:0;margin-top:44px">
+  <h2 class="r-h2">The settlement statement ends with a button. What that button does is yours to pick.</h2>
+  <p class="r-body">The statement is built. It totals what an instructor earned in a week of classes
+  and ends in one action. Today that action marks the money as paid — a record that someone,
+  somewhere, sent it. The money itself never touches Wheelhouse.</p>
+  <p class="r-body">That split was decided in the align interview on 29 June: phase one ships the
+  record only, and the mockups leave a clean seam where the second version slots in.</p>
+
+  <p class="r-body">The other version sends it. Same statement, same button, same finished state —
+  but the instructor picks PayPal, Venmo, CashApp or their bank, and the money leaves through us.</p>
+
+  <div class="r-scale r-scale-still r-stack" style="--r-w:1280px;--r-tall:680px">
+    <iframe src="mocks/settlement-review.html"
+            title="Post-class settlement review" loading="lazy" scrolling="no"></iframe>
+  </div>
+  <p class="r-scale-cap">The screen the decision lands on — post-class settlement review, already
+  drawn. <a href="mocks/settlement-review.html">the whole feature</a></p>
+
+  <div class="r-callout r-callout-acc r-stack">The drawn version has already answered this. Its
+  button says <strong>Approve &amp; pay all</strong>, and the note under it reads "creates 4
+  transfers" — one rail, not four, and the money moving through us.</div>
+
+  <div class="r-cards r-stack">
+    <div class="r-card r-card-picked">
+      <span class="r-radio"></span>
+      <div class="r-label">record it</div>
+      <div class="r-card-fig">1 action</div>
+      <div class="r-card-title">Mark as paid, and nothing moves</div>
+      <div class="r-card-body">The studio pays however it already pays. Wheelhouse stores who, how
+      much, by what method, on what date. This is what phase one ships.</div>
+    </div>
+    <div class="r-card">
+      <span class="r-radio"></span>
+      <div class="r-label">send it</div>
+      <div class="r-card-fig">4 rails</div>
+      <div class="r-card-title">Pay through Wheelhouse</div>
+      <div class="r-card-body">PayPal, Venmo, CashApp or bank transfer, through a payouts provider.
+      The instructor chooses where it lands and never chases anybody.</div>
+    </div>
+  </div>
+</section>
+
+<section class="r-sec">
+  <h2 class="r-h2">The difference is not the button. It is who owns the money in between.</h2>
+  <div class="r-tablebox r-stack">
+    <table class="r-table r-table-cards">
+      <thead>
+        <tr><th>When it goes wrong</th><th>Mark as paid</th><th>Pay through Wheelhouse</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-label="When it goes wrong">A payment never arrives</td>
+          <td data-label="Mark as paid">The instructor calls the studio. We were never in it.</td>
+          <td data-label="Pay through Wheelhouse">The instructor calls us, and we are the ones who can see where it went.</td>
+        </tr>
+        <tr>
+          <td data-label="When it goes wrong">The instructor's details are wrong</td>
+          <td data-label="Mark as paid">Not our problem, and not our data.</td>
+          <td data-label="Pay through Wheelhouse">Ours to collect, verify and store — a whole onboarding flow that does not exist yet.</td>
+        </tr>
+        <tr>
+          <td data-label="When it goes wrong">Somebody earns enough to be reported</td>
+          <td data-label="Mark as paid">The studio's obligation, as it is today.</td>
+          <td data-label="Pay through Wheelhouse">Ours the moment money moves through us. Tax forms, thresholds, year-end.</td>
+        </tr>
+        <tr>
+          <td data-label="When it goes wrong">A studio disputes what was owed</td>
+          <td data-label="Mark as paid">The statement is the evidence, and that is all it needs to be.</td>
+          <td data-label="Pay through Wheelhouse">The statement is the evidence and we are holding the money while it is argued.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="r-sec">
+  <h2 class="r-h2">Sending money is not one feature. It is four.</h2>
+  <p class="r-body">The button is the smallest part. Everything under it has to exist first, and
+  none of it does.</p>
+
+  <div class="r-seq r-stack">
+    <div class="r-step">
+      <div class="r-step-title">Onboard the instructor</div>
+      <div class="r-step-body">Name, address, tax details, and one payout method they can change
+      later. Nobody has been asked for any of this yet.</div>
+    </div>
+    <span class="r-arrow"></span>
+    <div class="r-step">
+      <div class="r-step-title">Wire up a provider</div>
+      <div class="r-step-body">One integration reaching all four rails. The drawn version assumes a
+      card processor's transfer product, which reaches one — a bank account.</div>
+    </div>
+    <span class="r-arrow"></span>
+    <div class="r-step r-step-stuck">
+      <div class="r-step-title">Carry the tax obligation</div>
+      <div class="r-step-body">Once money moves through us, year-end reporting is ours. This is the
+      step that decides the answer.</div>
+    </div>
+    <span class="r-arrow"></span>
+    <div class="r-step">
+      <div class="r-step-title">Handle the failures</div>
+      <div class="r-step-body">Bounced transfers, closed accounts, someone who left the country.
+      Support that has never been staffed.</div>
+    </div>
+  </div>
+
+  <div class="r-callout r-stack">The amber step is not a build problem. It is the one that changes
+  what Wheelhouse is — a booking tool that keeps records, or a business that moves other people's
+  money.</div>
+
+  <div class="r-ask-here r-stack">
+    <div class="r-ask-q">Is the drawn version's single-rail approach the one you want?</div>
+    <div class="r-ask-why">It reaches a bank account and nothing else. PayPal, Venmo and CashApp need a second provider, and that was the point of going multi-rail.</div>
+    <div class="r-mycall-inline"> &mdash; <strong>No, price the others first</strong></div>
+  </div>
+</section>
+
+<section class="r-sec">
+  <h2 class="r-h2">Nothing is thrown away by waiting.</h2>
+  <p class="r-body">The statement mockups already leave the seam. Both versions end in the same
+  "Paid" state; only the path there differs. Shipping the record now and the rails later costs one
+  screen, not a rebuild.</p>
+  <p class="r-body">What nobody has priced yet: what a multi-rail payouts provider actually charges,
+  whether it covers all four rails, and who else does the same job. That is the next piece of work
+  either way.</p>
+
+  <p class="r-body">The reverse is not true. Ship the rails first and the tax work, the onboarding
+  and the support load all land before a single studio has told us the statement is even right.</p>
+  <div class="r-mycall r-stack"> &mdash; ship "Mark as paid" first anyway. The drawn version is one rail
+  dressed as four, and it hands us the tax obligation to get there. The seam holds either way.</div>
+
+  <div class="r-ask-here r-stack">
+    <div class="r-ask-q">Does Wheelhouse move instructors' money, or only record it?</div>
+    <div class="r-ask-why">Everything else follows from it, including year-end tax reporting. The mockup has already assumed yes — that is worth knowing before you answer.</div>
+    <div class="r-mycall-inline"> &mdash; <strong>Record it</strong></div>
+  </div>
+</section>
+
+<section class="r-sec r-sec-amber">
+  <h2 class="r-h2">Needs your attention</h2>
+  <div class="r-asks">
+    <div class="r-ask">
+      <span class="r-ask-n"></span>
+      <div class="r-ask-body">
+        <div class="r-ask-q">Is the drawn version's single-rail approach the one you want?</div>
+        <div class="r-mycall-inline"> &mdash; <strong>No, price the others first</strong></div>
+      </div>
+    </div>
+    <div class="r-ask">
+      <span class="r-ask-n"></span>
+      <div class="r-ask-body">
+        <div class="r-ask-q">Does Wheelhouse move instructors' money, or only record it?</div>
+        <div class="r-mycall-inline"> &mdash; <strong>Record it</strong></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div>
+<script src="../assets/report-table.js"></script>
+<script>
+const b=document.body,t=document.getElementById('theme');
+const set=m=>{b.classList.toggle('light',m==='light');t.textContent=m==='light'?'☾':'☀';
+try{localStorage.setItem('report-theme',m)}catch(e){}};
+let m='dark';try{m=localStorage.getItem('report-theme')||'dark'}catch(e){}
+set(m);t.onclick=()=>set(b.classList.contains('light')?'dark':'light');
+</script>
+</body>
+</html>

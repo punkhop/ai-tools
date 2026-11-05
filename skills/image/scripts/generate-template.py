@@ -380,7 +380,7 @@ def rebuild_manifest() -> None:
                 "file": png.stem,
                 "label": meta.get("label", png.stem),
                 # When a round mixes services, which engine drew it IS the variable.
-                "sub": meta.get("sub") or f"{round_dir.name} · {model}",
+                "sub": meta.get("sub") or " · ".join(x for x in (round_dir.name, model) if x),
                 "aspect": meta.get("aspect", ASPECT),
                 "model": model,
             })

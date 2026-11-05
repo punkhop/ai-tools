@@ -79,8 +79,8 @@ url_for() {
   case "$p" in
     "$mem/"*)    printf 'http://%s:%s/memory/%s\n' "$HOST" "$PORT" "${p#"$mem"/}" ;;
     "$dev/"*)    printf 'http://%s:%s/dev/%s\n'    "$HOST" "$PORT" "${p#"$dev"/}" ;;
-    /tmp/*|/private/tmp/*) printf 'http://%s:%s/tmp/%s\n' "$HOST" "$PORT" "${p#*/tmp/}" ;;
     "$assets/"*) printf 'http://%s:%s/assets/%s\n' "$HOST" "$PORT" "${p#"$assets"/}" ;;
+    /tmp/*|/private/tmp/*) printf 'http://%s:%s/tmp/%s\n' "$HOST" "$PORT" "${p#*/tmp/}" ;;
     *) echo "not under a served folder (memory, dev, /tmp): $p" >&2; return 1 ;;
   esac
 }

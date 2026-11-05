@@ -1,0 +1,1 @@
+- Every chat is copied to `~/memory/transcripts/` when it ends (the `session-save` hook does it).

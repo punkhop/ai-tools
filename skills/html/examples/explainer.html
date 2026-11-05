@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#15171b">
+<title>What a canceled class does to somebody's money</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400..700;1,14..32,400..700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/report.css">
+</head>
+<body>
+<div class="r-page">
+
+<div class="r-nav">
+  <a href="system.html">The report system</a>
+  <a href="findings.html">findings</a>
+  <a href="decision.html">decision</a>
+  <span class="r-here">explainer</span>
+  <a href="mission.html">mission map</a>
+  <a href="proof.html">proof</a>
+  <a href="thing.html">the thing itself</a>
+  <a href="drift.html">no drift</a>
+  <a href="newer.html">newer blocks</a>
+  <span class="r-spacer"></span>
+  <button id="theme" class="r-theme" title="Switch theme"></button>
+</div>
+
+<h1 class="r-title">What a canceled class does to somebody's money</h1>
+<p class="r-dek">A booking is a receipt for a promise. Breaking the promise does not tear up the receipt.</p>
+
+<section class="r-sec" style="border-top-width:0;padding-top:0;margin-top:44px">
+  <div class="r-callout r-callout-red">Cancel a class with "refund everyone" ticked and the money
+  stays where it is. The screen says it started refunding; twelve minutes later the order is still
+  paid. Reproduced on four classes across two runs.</div>
+  <p class="r-body">Everything below explains why that is possible — and why the same cancel can
+  also tell you there is nothing to refund when there is.</p>
+</section>
+
+<section class="r-sec">
+  <h2 class="r-h2">An order and a class are two different things that only look joined.</h2>
+    <p class="r-body">A class is a session on a date. An order is somebody's
+  purchase, and it holds the seats they booked. The order sits inside the class, and each
+  seat sits inside the order.</p>
+  <p class="r-body">An order can only ever be made on a class that is live — draft, started, ended, canceled and
+  postponed all refuse it, and once one order exists the class can no longer be unpublished. So every
+  case below is an order taken while the class was live that then had the class move underneath it.</p>
+
+  <p class="r-body">That nesting is why a class can move without the money moving. Canceling
+  changes the state of the outer box. Nothing about that automatically reaches the money in the
+  innermost one — something has to walk down and touch it.</p>
+
+  <div class="r-shell r-stack">
+    <div class="r-shell-name">Wheel Throwing: Beginners <span class="r-label">· the class</span></div>
+    <div class="r-shell-fact">Aug 22, 10:00 AM · canceled at 11:04 PM the night before</div>
+    <div class="r-shell">
+      <div class="r-shell-name">Order #4812 <span class="r-label">· somebody's purchase</span></div>
+      <div class="r-shell-fact">Dana Whitfield · paid $130.00 · still reads <strong>paid</strong> today</div>
+      <div class="r-shell r-shell-lit">
+        <div class="r-shell-name">2 seats <span class="r-label">· what she holds</span></div>
+        <div class="r-shell-fact">The class they admit her to no longer exists. The seats do, and
+        so does the charge on her card.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="r-sec">
+  <h2 class="r-h2">Pressing cancel starts four things. Only three of them finish.</h2>
+  <p class="r-body">The button does not refund anybody itself. It sets the class's state and hands
+  the refunding to a separate job, and that job is where the money is lost.</p>
+
+  <div class="r-seq r-stack">
+    <div class="r-step">
+      <div class="r-step-title">The class turns canceled</div>
+      <div class="r-step-body">Immediate, and it sticks. Every screen that reads the class's state
+      updates.</div>
+    </div>
+    <span class="r-arrow"></span>
+    <div class="r-step">
+      <div class="r-step-title">It counts who is owed</div>
+      <div class="r-step-body">Answers with a number — one order to process — and hands back a job
+      name to watch.</div>
+    </div>
+    <span class="r-arrow"></span>
+    <div class="r-step r-step-stuck">
+      <div class="r-step-title">The refunding job runs</div>
+      <div class="r-step-body">Reports that it started. Twelve minutes later the order is untouched
+      and still reads paid. This is the step that never lands.</div>
+    </div>
+    <span class="r-arrow"></span>
+    <div class="r-step">
+      <div class="r-step-title">The customer gets told</div>
+      <div class="r-step-body">The confirmation email still points at the class's public page — which
+      now answers "not found".</div>
+    </div>
+  </div>
+
+    <p class="r-body">Refunding the same order by hand works, including after
+  the cancel. So nothing is wrong with refunding — what is wrong is the job the cancel hands it to. All of this
+  is front-desk money: cash, comp and paid-elsewhere. The card path was deliberately not driven, so
+  real card refunds are untested in both directions.</p>
+</section>
+
+<section class="r-sec">
+  <h2 class="r-h2">The same cancel can also say there is nothing to refund.</h2>
+  <p class="r-body">Two kinds of order make it answer "no orders" — a class carrying real unrefunded
+  money reporting that it has none.</p>
+
+  <div class="r-flaws r-stack">
+    <div class="r-flaw" style="border-top-color:var(--red)">
+      <div class="r-flaw-title">An order already partly refunded</div>
+      <div class="r-flaw-body">Someone gave back one seat of four. The remaining three are still
+      paid for, and the count skips the order entirely.</div>
+    </div>
+    <div class="r-flaw" style="border-top-color:var(--red)">
+      <div class="r-flaw-title">A comp</div>
+      <div class="r-flaw-body">Nothing to give back, correctly — but it is counted the same way as
+      the case above, so you cannot tell them apart from the answer.</div>
+    </div>
+    <div class="r-flaw">
+      <div class="r-flaw-title">Two states that could not be tested at all</div>
+      <div class="r-flaw-body">Unpaid and disputed have no way in from the admin, so ten of the
+      squares are honestly marked not run rather than guessed at.</div>
+    </div>
+  </div>
+</section>
+
+<section class="r-sec">
+  <h2 class="r-h2">The revenue on the orders screen is not calculated here.</h2>
+    <p class="r-body">The admin asks the server for the totals and prints
+  what comes back, word for word. When the number is wrong, it is wrong before it arrives.</p>
+  <p class="r-body">Attendees is the exception. The server sends no total at all, so the admin adds
+  up the rows itself — which is why one of the two cases below is fixable here and the other is not.</p>
+
+  <div class="r-tablebox r-stack">
+    <table class="r-table r-table-cards">
+      <thead>
+        <tr><th>The class</th><th>What it actually kept</th><th>What the screen says</th><th>Who can fix it</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-label="The class">Refunded one seat of two</td>
+          <td data-label="Actually kept">$65.00</td>
+          <td data-label="Screen says"><span class="r-red">$0.00</span></td>
+          <td data-label="Who fixes it">The server sends it. Backend.</td>
+        </tr>
+        <tr>
+          <td data-label="The class">Canceled, everything refunded</td>
+          <td data-label="Actually kept">nothing</td>
+          <td data-label="Screen says"><span class="r-red">$130.00</span></td>
+          <td data-label="Who fixes it">The server sends it. Backend.</td>
+        </tr>
+        <tr>
+          <td data-label="The class">Fully refunded, counting heads</td>
+          <td data-label="Actually kept">no one is coming</td>
+          <td data-label="Screen says"><span class="r-green">fixed here</span></td>
+          <td data-label="Who fixes it">The admin adds the rows, so we could.</td>
+        </tr>
+        <tr>
+          <td data-label="The class">Partly refunded, counting heads</td>
+          <td data-label="Actually kept">some are coming</td>
+          <td data-label="Screen says"><span class="r-amber">cannot be fixed here</span></td>
+          <td data-label="Who fixes it">The rows never say how many were refunded.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="r-sec">
+  <h2 class="r-h2">The customer's link dies with the class.</h2>
+  <p class="r-body">A canceled class's public page answers "not found". A postponed one still loads,
+  and so does a live one. The link in the confirmation email is the one the customer clicks when
+  they want to know what happened — and it is the one that breaks.</p>
+  <div class="r-callout">Postponed behaves correctly. Canceled is the only state that takes the
+  page away, at exactly the moment somebody needs to read it.</div>
+
+  <div class="r-ask-here r-stack">
+    <div class="r-ask-q">Should a canceled class's page keep loading and say the class is off?</div>
+    <div class="r-ask-why">Right now it answers "not found", so the link in every customer's email is dead exactly when they use it. Postponed already does the right thing.</div>
+    <div class="r-mycall-inline"> — <strong>Keep it, say canceled</strong></div>
+  </div>
+</section>
+
+<section class="r-sec">
+  <h2 class="r-h2">Four of the six are the server's, and the admin was printing what it was handed.</h2>
+    <p class="r-body">The two that were ours are fixed and shipped: the
+  refunded attendee count, and the check-in button on a refunded seat. Both surfaces —
+  the order's attendee list and the class's attendees tab — run through one shared button, which
+  is why that was one change and not two copies.</p>
+  <p class="r-body">The other four are the server's: the refund job that never lands, the count
+  that says nothing is owed, the wrong revenue figure, and the dead public page.</p>
+
+  <div class="r-ask-here r-stack">
+    <div class="r-ask-q">Do we test the card path next, or leave it to the backend team?</div>
+    <div class="r-ask-why">Everything above is front-desk money. Whether real card refunds land after a cancel is untested in both directions.</div>
+    <div class="r-mycall-inline"> — <strong>Test it</strong></div>
+  </div>
+</section>
+
+<section class="r-sec r-sec-amber">
+  <h2 class="r-h2">Needs your attention</h2>
+  <div class="r-asks">
+    <div class="r-ask">
+      <span class="r-ask-n"></span>
+      <div class="r-ask-body">
+        <div class="r-ask-q">Should a canceled class's page keep loading and say the class is off?</div>
+        <div class="r-mycall-inline"> — <strong>Keep it, say canceled</strong></div>
+      </div>
+    </div>
+    <div class="r-ask">
+      <span class="r-ask-n"></span>
+      <div class="r-ask-body">
+        <div class="r-ask-q">Do we test the card path next, or leave it to the backend team?</div>
+        <div class="r-mycall-inline"> — <strong>Test it</strong></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div>
+<script src="../assets/report-table.js"></script>
+<script>
+const b=document.body,t=document.getElementById('theme');
+const set=m=>{b.classList.toggle('light',m==='light');t.textContent=m==='light'?'☾':'☀';
+try{localStorage.setItem('report-theme',m)}catch(e){}};
+let m='dark';try{m=localStorage.getItem('report-theme')||'dark'}catch(e){}
+set(m);t.onclick=()=>set(b.classList.contains('light')?'dark':'light');
+</script>
+</body>
+</html>

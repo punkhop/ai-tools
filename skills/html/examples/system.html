@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#15171b">
+<title>How a page gets made</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400..700;1,14..32,400..700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/report.css">
+</head>
+<body>
+<div class="r-page">
+
+<div class="r-nav">
+  <span class="r-here">The report system</span>
+  <a href="findings.html">findings</a>
+  <a href="decision.html">decision</a>
+  <a href="explainer.html">explainer</a>
+  <a href="mission.html">mission map</a>
+  <a href="proof.html">proof</a>
+  <a href="thing.html">the thing itself</a>
+  <a href="drift.html">no drift</a>
+  <a href="newer.html">newer blocks</a>
+  <span class="r-spacer"></span>
+  <button id="theme" class="r-theme" title="Switch theme"></button>
+</div>
+
+<h1 class="r-title">How a page gets made</h1>
+<p class="r-dek">One question, a shelf of blocks, and the rules that pick between them.</p>
+
+<section class="r-sec" style="border-top-width:0;padding-top:0;margin-top:44px">
+  <h2 class="r-h2">Say it out loud, name the job, shop the shelf, build, look at it.</h2>
+  <p class="r-body">Five steps, in order, every time you ask for a page. The whole system is the
+  middle three — the first stops essays, the last catches what only eyes catch.</p>
+
+  <div class="r-seq r-stack">
+    <div class="r-step">
+      <div class="r-step-title">Say it</div>
+      <div class="r-step-body">The whole thing in plain sentences, across a desk. A page that cannot
+      be said out loud turns into an essay.</div>
+    </div>
+    <span class="r-arrow"></span>
+    <div class="r-step">
+      <div class="r-step-title">Name the job</div>
+      <div class="r-step-body">What do you have to DO with this page? That is the job, not how much
+      of the page each part fills.</div>
+    </div>
+    <span class="r-arrow"></span>
+    <div class="r-step">
+      <div class="r-step-title">Shop the shelf</div>
+      <div class="r-step-body">Pick blocks by what the content IS. Every block says what it is for
+      and what it must never hold.</div>
+    </div>
+    <span class="r-arrow"></span>
+    <div class="r-step">
+      <div class="r-step-title">Build</div>
+      <div class="r-step-body">One stylesheet, no libraries. Every page links it, so changing the
+      center changes them all.</div>
+    </div>
+    <span class="r-arrow"></span>
+    <div class="r-step">
+      <div class="r-step-title">Look at it</div>
+      <div class="r-step-body">Screenshot the real render at desk width and phone width before you
+      ever see it.</div>
+    </div>
+  </div>
+
+  <div class="r-callout r-callout-acc r-stack">The arrows above are a claim: first this, then that.
+  That is the only reason they are there. Five things with no order would be a grid.</div>
+
+  <div class="r-callout r-callout-green r-stack">Ruled 13 August: this is how it works. Ask what I
+  am presenting, shop a tagged shelf, and let the content pick the shape.</div>
+</section>
+
+<section class="r-sec">
+  <h2 class="r-h2">Every page starts with one question: what am I presenting to you?</h2>
+  <div class="r-split r-stack">
+    <div class="r-split-main">
+      <p class="r-body" style="margin-top:0">Six answers, and the answer is whichever one names what
+      you have to do. If you have to answer something, it is a decision however long the teaching
+      runs. If you only have to understand, it is an explainer however many numbers appear.</p>
+      <p class="r-body">Most pages are two of these at once. The dominant job sets the order and the
+      opening; the second contributes blocks into it. The page answers once — never twice, never
+      switching format halfway down.</p>
+    </div>
+  </div>
+
+  <div class="r-glances r-stack" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr))">
+    <div class="r-glance">
+      <div class="r-glance-name">Decision</div>
+      <div class="r-glance-for">“Decide this with me.” Opens with the choices side by side, closes
+      with my call.</div>
+    </div>
+    <div class="r-glance">
+      <div class="r-glance-name">Mission map</div>
+      <div class="r-glance-for">“So I don't lose track.” Opens with the count, carries the rail of
+      what is done, doing and next.</div>
+    </div>
+    <div class="r-glance">
+      <div class="r-glance-name">Findings</div>
+      <div class="r-glance-for">“Go find out and tell me what to do.” Opens with the winner, then
+      what is wrong with it.</div>
+    </div>
+    <div class="r-glance">
+      <div class="r-glance-name">Proof</div>
+      <div class="r-glance-for">“Show me it works.” Opens with the tally, then a capture beside every
+      claim.</div>
+    </div>
+    <div class="r-glance">
+      <div class="r-glance-name">Explainer</div>
+      <div class="r-glance-for">“Help me understand.” Teaches top to bottom, one metaphor carried
+      through. The craft job.</div>
+    </div>
+    <div class="r-glance">
+      <div class="r-glance-name">The thing itself</div>
+      <div class="r-glance-for">The subject is a screen, so the page IS the screen. A described
+      surface is an unfinished page.</div>
+    </div>
+  </div>
+</section>
+
+<section class="r-sec">
+  <h2 class="r-h2">Blocks are tagged by where they are at home, not fenced in.</h2>
+  <div class="r-split r-stack">
+    <div class="r-split-main">
+      <p class="r-body" style="margin-top:0">Every block in the catalog carries the kinds it
+      belongs to. A decision page starts from the decision blocks — but a decision block goes on an
+      explainer the moment that explainer leaves you a choice, and a capture goes on a findings page
+      the moment a claim needs proving.</p>
+      <p class="r-body">So two decision pages are never identical. What is fixed is the skeleton and
+      the rules. What varies is which blocks the content asks for.</p>
+      <p class="r-body">One thing is never allowed: a block chosen because it exists.</p>
+    </div>
+  </div>
+</section>
+
+<section class="r-sec">
+  <h2 class="r-h2">Say the relationship aloud, and check the shape is saying it.</h2>
+  <p class="r-body">Every arrangement makes a claim about how its items relate. Arrows claim order.
+  A rail claims something happened. Nesting claims containment. Read the claim out loud, and if the
+  sentence is a lie, the shape is wrong — however good it looks.</p>
+
+  <div class="r-tablebox r-stack">
+    <table class="r-table r-table-cards">
+      <thead>
+        <tr><th>What you drew</th><th>What it claims</th><th>Read it aloud</th></tr>
+      </thead>
+      <tbody>
+        <tr><td data-label="Drew">Cards with arrows between them</td><td data-label="Claims">order</td><td data-label="Aloud">“A <strong>then</strong> B <strong>then</strong> C”</td></tr>
+        <tr><td data-label="Drew">A rail with dots down it</td><td data-label="Claims">happened, at times</td><td data-label="Aloud">“A <strong>happened</strong>, then B”</td></tr>
+        <tr><td data-label="Drew">Boxes inside boxes</td><td data-label="Claims">containment</td><td data-label="Aloud">“B is <strong>inside</strong> A”</td></tr>
+        <tr><td data-label="Drew">Three stations growing</td><td data-label="Claims">transformation</td><td data-label="Aloud">“A <strong>becomes</strong> B”</td></tr>
+        <tr><td data-label="Drew">One bar cut into slices</td><td data-label="Claims">parts of a whole</td><td data-label="Aloud">“A <strong>plus</strong> B <strong>equals</strong> the total”</td></tr>
+        <tr><td data-label="Drew">Bars on one shared scale</td><td data-label="Claims">magnitude</td><td data-label="Aloud">“A is <strong>bigger than</strong> B”</td></tr>
+        <tr><td data-label="Drew">A grid of equal cards</td><td data-label="Claims">peers, no order</td><td data-label="Aloud">“A <strong>and</strong> B”</td></tr>
+        <tr><td data-label="Drew">A table</td><td data-label="Claims">the same questions of each</td><td data-label="Aloud">“for each: price, size, verdict”</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="r-callout r-stack">This is the rule I broke on 12 August — three unrelated drawings
+  laid out as a flow. They were peers. Peers want “and”, so peers want a grid.</div>
+
+  <div class="r-flaws r-stack">
+    <div class="r-flaw" style="border-top-color:var(--acc)">
+      <div class="r-flaw-title">Size means importance</div>
+      <div class="r-flaw-body">A bigger block claims it matters more. If it does not, shrink it.</div>
+    </div>
+    <div class="r-flaw" style="border-top-color:var(--acc)">
+      <div class="r-flaw-title">Position means order</div>
+      <div class="r-flaw-body">Left to right, top to bottom, is a sequence claim. Never made idly.</div>
+    </div>
+    <div class="r-flaw" style="border-top-color:var(--acc)">
+      <div class="r-flaw-title">Nesting means containment</div>
+      <div class="r-flaw-body">A box inside a box says the inner thing belongs to the outer one.</div>
+    </div>
+    <div class="r-flaw" style="border-top-color:var(--acc)">
+      <div class="r-flaw-title">Color keeps four meanings</div>
+      <div class="r-flaw-body">Green good, amber waiting, red dead, teal informational. A color
+      without its meaning is a bug.</div>
+    </div>
+  </div>
+</section>
+
+<section class="r-sec">
+  <h2 class="r-h2">The shelf, drawn — every block, with what it may never hold.</h2>
+  <p class="r-body">Real content in every one, because a gray placeholder teaches nothing. Each has
+  its rules in the margin beside it.</p>
+</section>
+
+<!-- ============ ANSWER BLOCKS ============ -->
+<section class="r-sec">
+  <h3 class="r-h3">The verdict plate — the one conclusion, said once</h3>
+  <div class="r-split">
+    <div class="r-split-main">
+      <div class="r-verdict">
+        <div class="r-verdict-main">
+          <div class="r-ribbon">My pick</div>
+          <div class="r-verdict-name">Hand-written CSS</div>
+          <div class="r-verdict-fig"><span class="r-fig">1 file</span><span class="r-unit"> — 530 lines, every block ours</span></div>
+          <p class="r-lead">The system you accepted was drawn by hand. The libraries were scaffolding.</p>
+          <div class="r-reasons">
+            <div><span class="r-tick">✓</span><span>Nothing to remap — no library colors fighting the dark background</span></div>
+            <div><span class="r-tick">✓</span><span>One file to change instead of four to reconcile</span></div>
+            <div><span class="r-tick">✓</span><span>916KB of stored libraries stops being carried</span></div>
+          </div>
+        </div>
+        <div class="r-verdict-rail">
+          <div class="r-rail-head"><strong>Runner-up</strong> — keep the libraries underneath.</div>
+          <div>Harvest new shapes instead of drawing them. Every harvest needs its colors remapped.</div>
+          <div class="r-rail-gap"><strong>Ruled out</strong> — one page, one style block.</div>
+          <div>That is where this started: nine pages that could not drift because nothing joined them.</div>
+        </div>
+      </div>
+    </div>
+    <div class="r-split-aside">
+      <div><b>for</b>the one conclusion of a page that reached one.</div>
+      <div><b>holds</b>ribbon word · the name set large · one figure with its unit spelled out · a one-line verdict · exactly three reasons · a rail with runner-up and ruled-outs.</div>
+      <div><b>never</b>twice on one page; the figure wearing the ribbon — the ribbon labels the name; a page that ends open.</div>
+    </div>
+  </div>
+</section>
+
+<section class="r-sec">
+  <h3 class="r-h3">The admitted-flaws row — what is wrong with the thing that just won</h3>
+  <div class="r-split">
+    <div class="r-split-main">
+      <div class="r-flaws">
+        <div class="r-flaw">
+          <div class="r-flaw-title">Nothing to harvest from</div>
+          <div class="r-flaw-body">A shape no block covers has to be drawn, not copied out of a
+          library page.</div>
+        </div>
+        <div class="r-flaw">
+          <div class="r-flaw-title">Light mode doubles the checking</div>
+          <div class="r-flaw-body">Every new block gets looked at twice, in both modes, forever.</div>
+        </div>
+        <div class="r-flaw">
+          <div class="r-flaw-title">Old pages are frozen where they are</div>
+          <div class="r-flaw-body">Pages written before today keep the libraries they linked. They
+          improve no further.</div>
+        </div>
+      </div>
+    </div>
+    <div class="r-split-aside">
+      <div><b>for</b>the case against the thing that just won. This row is what makes a page read reported, not sold.</div>
+      <div><b>holds</b>exactly three columns — a colored rule, a short title, two lines each.</div>
+      <div><b>never</b>omitted when a verdict plate exists; softened into praise wearing a flaw's clothes.</div>
+    </div>
+  </div>
+</section>
+
+<section class="r-sec">
+  <h3 class="r-h3">Decision cards — a choice that is yours</h3>
+  <div class="r-split">
+    <div class="r-split-main">
+      <div class="r-cards">
+        <div class="r-card r-card-picked">
+          <span class="r-radio"></span>
+          <div class="r-label">rebuild</div>
+          <div class="r-card-fig">6 pages</div>
+          <div class="r-card-title">Convert all six onto the sheet</div>
+          <div class="r-card-body">Then one token change re-styles every one of them. Proves the
+          no-drift claim outright.</div>
+        </div>
+        <div class="r-card">
+          <span class="r-radio"></span>
+          <div class="r-label">sample</div>
+          <div class="r-card-fig">2 pages</div>
+          <div class="r-card-title">Convert findings and explainer only</div>
+          <div class="r-card-body">Faster to a verdict, but four pages stay stuck on the old
+          template.</div>
+        </div>
+      </div>
+    </div>
+    <div class="r-split-aside">
+      <div><b>for</b>a choice that is yours, answerable in one word from a phone.</div>
+      <div><b>holds</b>2–4 options at identical size — tag, figure, title, two lines, radio top-right, one pre-filled. Two is the best shape.</div>
+      <div><b>never</b>one card smaller than another — that is a thumb on the scale; more than four — that is the table's job.</div>
+    </div>
+  </div>
+</section>
+
+<section class="r-sec">
+  <h3 class="r-h3">My call — an opinion, and never a badge</h3>
+  <div class="r-split">
+    <div class="r-split-main">
+      <div class="r-mycall"> — convert all six. Two pages prove the style; six prove the
+      system.</div>
+    </div>
+    <div class="r-split-aside">
+      <div><b>for</b>the recommendation, wherever a choice of yours sits.</div>
+      <div><b>holds</b>green rules above and below, “My call” green and rolled into the sentence, set large. Identical on every page.</div>
+      <div><b>never</b>a badge or a pill — pills read as states, and a recommendation is an opinion; body-sized gray text — it has to announce itself.</div>
+    </div>
+  </div>
+</section>
+
+<section class="r-sec">
+  <h3 class="r-h3">The stat row — numbers that agree with each other</h3>
+  <div class="r-split">
+    <div class="r-split-main">
+      <div class="r-stats">
+        <div class="r-stat">
+          <div class="r-fig">1,627</div>
+          <div class="r-stat-why">styles written on elements, one at a time, in the pages as they arrived</div>
+        </div>
+        <div class="r-stat">
+          <div class="r-fig">0</div>
+          <div class="r-stat-why">of them reachable from one place — no page shared a class with any other</div>
+        </div>
+        <div class="r-stat">
+          <div class="r-fig">1</div>
+          <div class="r-stat-why">file they now come from, with the drift knobs named at the top</div>
+        </div>
+      </div>
+    </div>
+    <div class="r-split-aside">
+      <div><b>for</b>2–4 figures that share one unit, one period, one subject.</div>
+      <div><b>holds</b>a figure and the consequence line under it. Rules between, no boxes.</div>
+      <div><b>never</b>numbers that disagree in kind — $46/month beside $7,600/year beside 10× is three ideas pretending to be a set; a count with no so-what.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ARGUMENT BLOCKS ============ -->
+<section class="r-sec">
+  <h3 class="r-h3">Small multiples — “compared to what?”, answered without a sentence</h3>
+  <div class="r-split">
+    <div class="r-split-main">
+      <div class="r-multi">
+        <div class="r-multi-row"><span class="r-multi-name">Proof</span><span class="r-multi-track"><span class="r-multi-fill" style="width:100%"></span></span><span class="r-multi-val">29%</span></div>
+        <div class="r-multi-row"><span class="r-multi-name">Mockups</span><span class="r-multi-track"><span class="r-multi-fill" style="width:79%"></span></span><span class="r-multi-val">23%</span></div>
+        <div class="r-multi-row"><span class="r-multi-name">Decisions</span><span class="r-multi-track"><span class="r-multi-fill" style="width:72%"></span></span><span class="r-multi-val">21%</span></div>
+        <div class="r-multi-row"><span class="r-multi-name">Findings</span><span class="r-multi-track"><span class="r-multi-fill" style="width:45%"></span></span><span class="r-multi-val">13%</span></div>
+        <div class="r-multi-row"><span class="r-multi-name">Mission maps</span><span class="r-multi-track"><span class="r-multi-fill" style="width:28%"></span></span><span class="r-multi-val">8%</span></div>
+        <div class="r-multi-row r-multi-lit"><span class="r-multi-name">Explainers</span><span class="r-multi-track"><span class="r-multi-fill" style="width:17%"></span></span><span class="r-multi-val">5%</span></div>
+      </div>
+      <p class="r-small" style="margin-top:10px">Share of your last 330 pages. Explainers are lit
+      because they are what this row is about: the rarest job, and the one you said you want written
+      best. This page is one.</p>
+    </div>
+    <div class="r-split-aside">
+      <div><b>for</b>placing one value among its peers. The chart carries data you act on, or it comes off.</div>
+      <div><b>holds</b>4–10 horizontal rows — name, bar, value — one shared scale, one row lit. Horizontal so the labels read.</div>
+      <div><b>never</b>stacked on a phone; they shrink. Never a chart that carries data the reader does not act on.</div>
+    </div>
+  </div>
+</section>
+
+<section class="r-sec">
+  <h3 class="r-h3">The timeline — what is done, what is left, whose move it is</h3>
+  <div class="r-split">
+    <div class="r-split-main">
+      <div class="r-rail">
+        <div class="r-mile r-mile-done">
+          <div class="r-mile-n">1</div>
+          <div class="r-mile-when">Finished yesterday</div>
+          <div class="r-mile-head"><span class="r-mile-title">The design accepted</span>
+            <span class="r-status"><span class="r-mark r-m-done"></span>done</span></div>
+          <p class="r-mile-what">One paragraph, and it may bold <strong>the phrase the milestone
+          turns on</strong> — the thing you would say if somebody asked what this stage was about.</p>
+          <div class="r-items">
+            <details class="r-item" open>
+              <summary><span class="r-mark r-m-done"></span>A chapter, with its count
+                <span class="r-item-count">7 of 7</span></summary>
+              <div class="r-piece"><span class="r-mark r-m-done"></span><b>Each piece on its own line</b> — with the detail beside it</div>
+              <div class="r-piece"><span class="r-mark r-m-done"></span><b>Open by default or shut</b> — the one that matters opens</div>
+            </details>
+            <details class="r-item">
+              <summary><span class="r-mark r-m-done"></span>A chapter that stays shut
+                <span class="r-item-count">12 files</span></summary>
+              <div class="r-piece"><span class="r-mark r-m-done"></span>Counts read as progress where the thing is progress, inventory where it is not</div>
+            </details>
+          </div>
+        </div>
+        <div class="r-mile r-mile-now">
+          <div class="r-mile-n">2</div>
+          <div class="r-mile-when">Running now</div>
+          <div class="r-mile-head"><span class="r-mile-title">The one you are on</span>
+            <span class="r-status"><span class="r-mark r-m-flight"></span>in flight</span>
+            <span class="r-here-mark">← we are here</span></div>
+          <p class="r-mile-what">The current milestone carries the marker, so the rail says where the work stands without being read end to end.</p>
+        </div>
+      </div>
+    </div>
+    <div class="r-split-aside">
+      <div><b>for</b>history and missions — what happened, what is left, whose move it is.</div>
+      <div><b>holds</b>2–6 milestones on a rail, each with a numbered marker, a state line, one paragraph, and 2–6 chapters that OPEN to the individual pieces.</div>
+      <div><b>never</b>steps someone walks once — that is the sequence. Never a stack of identical bulleted lines: if every sub-item looks the same, none of them reads.</div>
+    </div>
+  </div>
+</section>
+
+<section class="r-sec">
+  <h3 class="r-h3">The comparison table — nothing dimmed, nothing struck</h3>
+  <div class="r-split">
+    <div class="r-split-main">
+      <div class="r-tablebox">
+        <table class="r-table r-table-cards">
+          <thead><tr><th>Block</th><th>Claims</th><th>At home on</th><th>Verdict</th></tr></thead>
+          <tbody>
+            <tr class="r-row-win">
+              <td data-label="Block"><strong>Comparison table</strong></td>
+              <td data-label="Claims">the same questions of each</td>
+              <td data-label="At home on">findings · decision</td>
+              <td data-label="Verdict"><span class="r-status"><span class="r-mark r-m-done"></span>the pick, past 5 candidates</span></td>
+            </tr>
+            <tr>
+              <td data-label="Block"><strong>Decision cards</strong></td>
+              <td data-label="Claims">A or B</td>
+              <td data-label="At home on">decision</td>
+              <td data-label="Verdict">better under five options</td>
+            </tr>
+            <tr>
+              <td data-label="Block"><strong>Small multiples</strong></td>
+              <td data-label="Claims">bigger than</td>
+              <td data-label="At home on">findings · mission</td>
+              <td data-label="Verdict">one attribute only</td>
+            </tr>
+            <tr>
+              <td data-label="Block"><strong>Stacked cards, one per row</strong></td>
+              <td data-label="Claims">peers</td>
+              <td data-label="At home on">—</td>
+              <td data-label="Verdict"><span class="r-chip">ruled out</span> <span class="r-small">hides the comparison the reader came for</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="r-small" style="margin-top:10px">Past eight rows it grows search, sortable headings
+      and filters — <a href="findings.html">the driveable
+      one is here</a>.</p>
+    </div>
+    <div class="r-split-aside">
+      <div><b>for</b>one decision across five or more candidates, or three or more attributes.</div>
+      <div><b>holds</b>3–12 banded rows. The winner's whole row tinted with a colored left edge. Magnitude as a bar inside its own cell. Columns lock their widths — sorting moves rows, never columns.</div>
+      <div><b>never</b>dimming or striking a row you still compare against; on a phone it stops being a table — each row becomes a card wearing its column names.</div>
+    </div>
+  </div>
+</section>
+
+<section class="r-sec">
+  <h3 class="r-h3">The state matrix — every action, in every state</h3>
+  <div class="r-split">
+    <div class="r-split-main">
+      <div class="r-tablebox">
+        <table class="r-table r-table-cards">
+          <thead><tr><th>Control</th><th>Draft</th><th>Published</th><th>Ended</th><th>Canceled</th></tr></thead>
+          <tbody>
+            <tr>
+              <td data-label="Control"><strong>Publish all</strong></td>
+              <td data-label="Draft" class="r-cell"><span class="r-mark r-m-done"></span><span class="r-cell-what">Draft → <strong>Published</strong></span><span class="r-cell-said">named as changed</span></td>
+              <td data-label="Published" class="r-cell"><span class="r-mark r-m-notstarted"></span><span class="r-cell-what">nothing to do</span></td>
+              <td data-label="Ended" class="r-cell"><span class="r-mark r-m-done"></span><span class="r-cell-what">unchanged</span><span class="r-cell-said">not mentioned</span></td>
+              <td data-label="Canceled" class="r-cell"><span class="r-mark r-m-done"></span><span class="r-cell-what">unchanged</span><span class="r-cell-said">named as refused</span></td>
+            </tr>
+            <tr>
+              <td data-label="Control"><strong>Cancel</strong></td>
+              <td data-label="Draft" class="r-cell"><span class="r-mark r-m-done"></span><span class="r-cell-what">Draft → <strong>Canceled</strong></span></td>
+              <td data-label="Published" class="r-cell"><span class="r-mark r-m-broken"></span><span class="r-cell-what">Canceled, money kept</span><span class="r-cell-said">reported as refunded</span></td>
+              <td data-label="Ended" class="r-cell"><span class="r-mark r-m-notstarted"></span><span class="r-cell-what">not run</span></td>
+              <td data-label="Canceled" class="r-cell"><span class="r-mark r-m-call"></span><span class="r-cell-what">unchanged</span><span class="r-cell-said">nobody has ruled</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="r-scale-cap">One red square in a field of green is the whole finding.</p>
+    </div>
+    <div class="r-split-aside">
+      <div><b>for</b>every action crossed with every state a thing can be in. The shape of the answer IS the finding.</div>
+      <div><b>holds</b>a mark, what happened in one phrase, and optionally what the system claimed happened. Past about five columns it scrolls rather than crushing.</div>
+      <div><b>never</b>a blank square — untested and unchanged are different answers. Never a cell holding a sentence; that belongs under the grid.</div>
+    </div>
+  </div>
+</section>
+
+<section class="r-sec">
+  <h3 class="r-h3">The evidence pair — the capture beside the claim it proves</h3>
+  <div class="r-split">
+    <div class="r-split-main">
+      <div class="r-tally">
+        <span class="r-fig" style="font-size:22px">2 / 2</span>
+        <span class="r-small">proven</span>
+        <span class="r-status"><span class="r-mark r-m-done"></span>columns never move</span>
+        <span class="r-status"><span class="r-mark r-m-done"></span>the pick survives sorting</span>
+      </div>
+      <div class="r-claim r-claim-fixed" style="margin-top:32px">
+        <div class="r-claim-head"><span class="r-claim-n">1</span>
+          <span class="r-strong"><span class="r-tick">✓</span> Fixed — sorting moves rows, never columns</span></div>
+        <p class="r-small" style="margin-top:6px">Measured every column width across all six sorts,
+        a filter and a search. Identical to the hundredth of a pixel, every time.</p>
+        <div class="r-shot-notes">
+          <div><span class="r-shot-n">1</span><span>Before: automatic layout re-measured the columns each time rows moved, so the table jumped sideways.</span></div>
+          <div><span class="r-shot-n">2</span><span>After: the widths the browser worked out for the full table are locked in on load.</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="r-split-aside">
+      <div><b>for</b>proof pages. The verdict lives in the headline — the mark, the word, then the claim.</div>
+      <div><b>holds</b>one numbered claim on a colored left rule, its capture or a before/after pair at full width, then numbered notes saying what to look for.</div>
+      <div><b>never</b>an evidence pile at the end; a claim with no capture; code as evidence — behavior is the evidence.</div>
+    </div>
+  </div>
+</section>
+
+<section class="r-sec">
+  <h3 class="r-h3">The callout — the one thing not to skim past</h3>
+  <div class="r-split">
+    <div class="r-split-main">
+      <div class="r-callout">A page carries at most two callouts. An alert under every block alerts
+      nobody.</div>
+      <div class="r-callout r-callout-red r-stack">Red is broken, dead, or ruled out. It never means
+      “important”.</div>
+    </div>
+    <div class="r-split-aside">
+      <div><b>for</b>the single fact that changes how the rest reads. Colored by meaning — amber caution, red broken, green resolved, teal informational.</div>
+      <div><b>holds</b>one or two lines.</div>
+      <div><b>never</b>more than two per page.</div>
+    </div>
+  </div>
+</section>
+
+<section class="r-sec">
+  <h3 class="r-h3">The question — numbered, and impossible to skim past</h3>
+  <div class="r-split">
+    <div class="r-split-main">
+      <div class="r-ask-here r-specimen">
+        <div class="r-ask-q">Is this loud enough to stop you scrolling?</div>
+        <div class="r-ask-why">It carries its own number, so you can answer by number — and the
+        index at the foot of the page counts from the same source, so the two can never disagree.</div>
+        <div class="r-mycall-inline"> — <strong>Yes</strong></div>
+      </div>
+      <div class="r-ask-here r-specimen r-stack">
+        <div class="r-ask-q">A specimen never takes a number off the page it sits on.</div>
+        <div class="r-ask-why">This one and the one above are demonstrations, so they wear a
+        question mark instead. The page's own three questions are numbered at the foot.</div>
+        <div class="r-mycall-inline"> — <strong>Yes</strong></div>
+      </div>
+    </div>
+    <div class="r-split-aside">
+      <div><b>for</b>a question, at the END of the section that makes it answerable.</div>
+      <div><b>holds</b>its number, the question, one line of context, my call under it.</div>
+      <div><b>never</b>only at the foot of the page — the recap at the end INDEXES these, it does not replace them. A question he meets before the section that answers it is one he has to scroll back for.</div>
+    </div>
+  </div>
+</section>
+
+<section class="r-sec">
+  <h3 class="r-h3">The drawn surface — a screen that does not exist yet</h3>
+  <div class="r-split">
+    <div class="r-split-main">
+      <div class="r-frame">
+        <div class="r-chrome">
+          <span class="r-dots"><span></span><span></span><span></span></span>
+          <span class="r-addr">book.northgatepottery.com/c/wheel-throwing-beginners</span>
+        </div>
+        <iframe src="mocks/canceled-class.html"
+                title="A drawn surface on the prototype kit" height="530" loading="lazy"></iframe>
+      </div>
+      <p class="r-scale-cap">Its own file, drawn on the prototype kit — the same stylesheet every
+      other mock uses. <a href="thing.html">the
+      page it lives on</a></p>
+    </div>
+    <div class="r-split-aside">
+      <div><b>for</b>a screen that does not exist yet. The deliverable IS the surface, so it gets drawn at full fidelity.</div>
+      <div><b>holds</b>its own file, framed here. Your product's surfaces are built on your own component kit, whose tokens mirror the real components; anything else gets its own stylesheet at the same fidelity.</div>
+      <div><b>never</b>a screen your kit has already drawn — frame that view instead. Never an address bar claiming a URL the frame is not showing.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DRAWINGS ============ -->
+<section class="r-sec">
+  <h2 class="r-h2">The drawings — five shapes, each claiming a different thing</h2>
+  <p class="r-body">Each one gets the whole stage and real content. A drawing shrunk into a thumbnail
+  teaches nothing, and a drawing full of gray placeholder boxes teaches less.</p>
+</section>
+
+<section class="r-sec">
+  <h3 class="r-h3">The assembly line — this goes in, this comes out</h3>
+  <div class="r-split">
+    <div class="r-split-main">
+      <p class="r-small" style="margin:0 0 18px">Three parts, one metaphor. What makes it read is not
+      the arrow — it is that each station shows what it actually holds.</p>
+      <div class="r-line">
+        <div class="r-station">
+          <div class="r-strong">The speech <span class="r-station-role">· the recipe card</span></div>
+          <div class="r-note">Said out loud first: what happened, what it means, what you have to
+          decide. Named blocks, in order, no pixels anywhere.</div>
+          <div class="r-spec">
+            <strong>Monitor roundup page</strong>
+            · verdict plate — the pick<br>
+            · flaws row — three<br>
+            · table — 45 screens<br>
+            · asks — two questions
+          </div>
+        </div>
+        <span class="r-arrow"></span>
+        <div class="r-station">
+          <div class="r-strong">The shelf <span class="r-station-role">· the kitchen</span></div>
+          <div class="r-note">Reads the speech, cooks the page. Every page leaves with the same house
+          rules stamped on, so you never think about them again.</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:14px">
+            <span class="r-chip r-chip-acc">both modes</span>
+            <span class="r-chip r-chip-acc">the four colors</span>
+            <span class="r-chip r-chip-acc">type scale</span>
+            <span class="r-chip r-chip-acc">phone at 390</span>
+            <span class="r-chip r-chip-acc">no eyebrows</span>
+            <span class="r-chip r-chip-acc">nothing dimmed</span>
+          </div>
+        </div>
+        <span class="r-arrow"></span>
+        <div class="r-station">
+          <div class="r-strong">The page <span class="r-station-role">· the plate</span></div>
+          <div class="r-note">Pixel-real, identical rules on every one. A page cannot get the type
+          scale or the colors wrong — the stylesheet owns those.</div>
+          <div class="r-wire">
+            <span style="height:20px;width:62%"></span>
+            <span style="height:9px;width:44%"></span>
+            <div class="r-wire-row" style="margin-top:5px"><span style="height:44px"></span><span style="height:44px;max-width:34%"></span></div>
+            <div class="r-wire-row"><span></span><span></span><span></span></div>
+            <span style="width:80%"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="r-split-aside">
+      <div><b>for</b>any transformation — input, machine, output.</div>
+      <div><b>holds</b>exactly three stations at equal size, each carrying a real miniature of its own contents — a spec listing, chips of what gets stamped on, a wireframe of the product.</div>
+      <div><b>never</b>stations that grow unless the thing itself grows; more than one metaphor per line; a station with nothing but a paragraph in it.</div>
+    </div>
+  </div>
+</section>
+
+<section class="r-sec">
+  <h3 class="r-h3">The nesting doll — this lives inside this, inside this</h3>
+  <div class="r-split">
+    <div class="r-split-main">
+      <p class="r-small" style="margin:0 0 18px">Containment drawn as containment. Every shell is a
+      real object with its own facts; the subject sits innermost and lit.</p>
+      <div class="r-shell">
+        <div class="r-shell-name">Northgate Pottery <span class="r-label">· the studio</span></div>
+        <div class="r-shell-fact">36 seats · 3 courses running · settles weekly</div>
+        <div class="r-shell">
+          <div class="r-shell-name">Wheel Throwing: Beginners <span class="r-label">· the course</span></div>
+          <div class="r-shell-fact">repeats weekly · 44 sessions to date · $65.00 a seat</div>
+          <div class="r-shell">
+            <div class="r-shell-name">Aug 15, 10:00 AM <span class="r-label">· the session</span>
+              <span class="r-status" style="margin-left:8px"><span class="r-mark r-m-done"></span>on sale</span></div>
+            <div class="r-shell-fact">2 instructors on · 9 of 12 booked</div>
+            <div class="r-shell r-shell-lit">
+              <div class="r-shell-name">$65.00 <span class="r-label">· the seat</span></div>
+              <div class="r-shell-fact">What the customer holds. Cancel the session above it and this
+              dies with it — nothing higher up notices.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="r-split-aside">
+      <div><b>for</b>hierarchy and scope — what belongs to what, and what dies with what.</div>
+      <div><b>holds</b>2–4 shells, each a real object: bold name, its role in faint text beside it, one line of its own facts. The subject innermost and lit.</div>
+      <div><b>never</b>empty shells carrying only a label; more than four deep — past that it is a tree.</div>
+    </div>
+  </div>
+</section>
+
+<section class="r-sec">
+  <h3 class="r-h3">The split bar — one number, cut into its true parts</h3>
+  <div class="r-split">
+    <div class="r-split-main">
+      <p class="r-small" style="margin:0 0 18px">On one $23.48 checkout. The slices are at true
+      proportion, so the shape argues on its own.</p>
+      <div class="r-splitbar" style="height:52px">
+        <span class="r-slice" style="flex:20;background:var(--acc-t);border-right:1px solid var(--line)">$20.00</span>
+        <span class="r-slice" style="flex:2.5;background:var(--green-t);border-right:1px solid var(--line)">$2.50</span>
+        <span class="r-slice" style="flex:.98;background:var(--amber-t)"></span>
+      </div>
+      <div class="r-slice-legend" style="margin-top:12px">
+        <span><strong style="color:var(--ink)">$20.00</strong> — the seat, the studio's money</span>
+        <span><strong style="color:var(--ink)">$2.50</strong> — our fee, the only part that is ours</span>
+        <span><strong style="color:var(--ink)">98¢</strong> — the card company, passed through at cost</span>
+      </div>
+      <p class="r-body">Drawn as a pie, the 98¢ would be a sliver nobody could read and the $2.50
+      would look like a quarter of the total. It is not. It is a tenth.</p>
+    </div>
+    <div class="r-split-aside">
+      <div><b>for</b>one number cut into its parts, when the proportion is the argument. The honest pie.</div>
+      <div><b>holds</b>2–4 slices at true proportion, the total spelled out, each part named under the bar.</div>
+      <div><b>never</b>a slice too narrow for its value — the value moves to the legend rather than clipping; a pie, ever.</div>
+    </div>
+  </div>
+</section>
+
+<section class="r-sec">
+  <h3 class="r-h3">The miniature — the whole page at half scale</h3>
+  <div class="r-split">
+    <div class="r-split-main">
+      <p class="r-small" style="margin:0 0 18px">A miniature draws the <em>subject</em>. When the
+      subject is one of your own screens, it is the real file from your kit, live and scaled — never
+      a hand-drawn version of a screen that already exists.</p>
+      <div class="r-scale r-scale-still" style="--r-w:1280px;--r-tall:680px">
+        <iframe src="mocks/settlement-review.html"
+                title="Post-class settlement review" loading="lazy" scrolling="no"></iframe>
+      </div>
+      <p class="r-scale-cap">Post-class settlement review, a screen the kit already covers.
+      <a href="mocks/settlement-review.html">open it full size</a></p>
+      <p class="r-body">Because it is the real prototype and not a picture, it never goes stale —
+      restyle the kit and every page carrying a miniature of it updates too.</p>
+    </div>
+    <div class="r-split-aside">
+      <div><b>for</b>talking about a screen without building it — a change to one of your pages, a layout argument, a what-changed overview.</div>
+      <div><b>holds</b>the SUBJECT drawn at half scale — normally one of your own screens — with real titles and numbers in every slot, and only the part under discussion colored.</div>
+      <div><b>never</b>a miniature of our own report blocks — draw the thing being discussed, not the page discussing it; gray placeholder blocks; a miniature too small to read.</div>
+    </div>
+  </div>
+</section>
+
+<section class="r-sec">
+  <h3 class="r-h3">Before and after — two renders, one size, only the change colored</h3>
+  <div class="r-split">
+    <div class="r-split-main">
+      <p class="r-small" style="margin:0 0 18px">The table bug you caught, drawn. Same table, same
+      widths, sorted by sharpness.</p>
+      <div class="r-minis">
+        <div class="r-mini r-mini-edge-red" style="padding:16px 18px;font-size:12.5px">
+          <div class="r-label" style="color:var(--red)">before — sorting re-measured every column</div>
+          <div style="display:grid;grid-template-columns:1.6fr 1fr .8fr;gap:6px 10px;margin-top:12px">
+            <div style="color:var(--mute)">Screen</div><div style="color:var(--mute)">Panel</div><div style="color:var(--mute);text-align:right">Sharp</div>
+            <div>Samsung 57"</div><div>VA 1000R</div><div style="text-align:right">140</div>
+            <div>HP E45c G5</div><div>VA 1500R</div><div style="text-align:right">120</div>
+          </div>
+          <div style="display:grid;grid-template-columns:2.4fr .7fr .9fr;gap:6px 10px;margin-top:14px;
+                      border-top:1px dashed var(--red);padding-top:12px">
+            <div style="color:var(--red)">Screen</div><div style="color:var(--red)">Panel</div><div style="color:var(--red);text-align:right">Sharp</div>
+            <div>Z-EDGE UG49W</div><div>IPS</div><div style="text-align:right">109</div>
+            <div>LG 52G930B</div><div>VA</div><div style="text-align:right">108</div>
+          </div>
+          <div style="color:var(--red);margin-top:10px">Every column jumped when the rows moved.</div>
+        </div>
+
+        <div class="r-mini r-mini-edge-green" style="padding:16px 18px;font-size:12.5px">
+          <div class="r-label" style="color:var(--green)">after — the widths are locked on load</div>
+          <div style="display:grid;grid-template-columns:1.6fr 1fr .8fr;gap:6px 10px;margin-top:12px">
+            <div style="color:var(--mute)">Screen</div><div style="color:var(--mute)">Panel</div><div style="color:var(--mute);text-align:right">Sharp</div>
+            <div>Samsung 57"</div><div>VA 1000R</div><div style="text-align:right">140</div>
+            <div>HP E45c G5</div><div>VA 1500R</div><div style="text-align:right">120</div>
+          </div>
+          <div style="display:grid;grid-template-columns:1.6fr 1fr .8fr;gap:6px 10px;margin-top:14px;
+                      border-top:1px solid var(--green);padding-top:12px">
+            <div style="color:var(--green)">Screen</div><div style="color:var(--green)">Panel</div><div style="color:var(--green);text-align:right">Sharp</div>
+            <div>Z-EDGE UG49W</div><div>IPS 3800R</div><div style="text-align:right">109</div>
+            <div>LG 52G930B</div><div>VA 1000R</div><div style="text-align:right">108</div>
+          </div>
+          <div style="color:var(--green);margin-top:10px">Only the rows move.</div>
+        </div>
+      </div>
+    </div>
+    <div class="r-split-aside">
+      <div><b>for</b>arguing that something changed, before the captures exist.</div>
+      <div><b>holds</b>two renders at identical size with real content, only the delta colored — red on the broken side, green on the fixed.</div>
+      <div><b>never</b>two renders at different sizes; a difference you have to hunt for.</div>
+    </div>
+  </div>
+</section>
+
+<section class="r-sec">
+  <h3 class="r-h3">The seven states — the mark and the word, never the mark alone</h3>
+  <div class="r-split">
+    <div class="r-split-main">
+      <div style="display:flex;flex-wrap:wrap;gap:12px 26px">
+        <span class="r-status"><span class="r-mark r-m-done"></span>done</span>
+        <span class="r-status"><span class="r-mark r-m-flight"></span>in flight</span>
+        <span class="r-status"><span class="r-mark r-m-moved"></span>just moved</span>
+        <span class="r-status"><span class="r-mark r-m-notstarted"></span>not started</span>
+        <span class="r-status"><span class="r-mark r-m-call"></span>needs your call</span>
+        <span class="r-status"><span class="r-mark r-m-degrading"></span>degrading</span>
+        <span class="r-status"><span class="r-mark r-m-broken"></span>broken</span>
+      </div>
+    </div>
+    <div class="r-split-aside">
+      <div><b>for</b>state, anywhere on a page. Filled means the state is firm; hollow means it is fading or pending.</div>
+      <div><b>holds</b>the mark and the word together, always.</div>
+      <div><b>never</b>in a terminal message — chat uses the seven glyphs instead, and a terminal cannot draw a dot.</div>
+    </div>
+  </div>
+
+
+  <div class="r-callout r-callout-green r-stack">Ruled 13 August: nothing to cut. One added — the
+  state matrix above, lifted from the series-actions proof.</div>
+</section>
+
+<section class="r-sec">
+  <p class="r-recap">Nineteen blocks drawn above, twenty-seven in the catalog, one stylesheet behind
+  all of them. A page is never a template — it is this shelf, shopped against what the content
+  actually is, with the rules settling every tie.</p>
+</section>
+
+</div>
+<script src="../assets/report-table.js"></script>
+<script>
+const b=document.body,t=document.getElementById('theme');
+const set=m=>{b.classList.toggle('light',m==='light');t.textContent=m==='light'?'☾':'☀';
+try{localStorage.setItem('report-theme',m)}catch(e){}};
+let m='dark';try{m=localStorage.getItem('report-theme')||'dark'}catch(e){}
+set(m);t.onclick=()=>set(b.classList.contains('light')?'dark':'light');
+</script>
+</body>
+</html>

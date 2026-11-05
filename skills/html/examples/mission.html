@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#15171b">
+<title>Rebuilding the HTML report format</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400..700;1,14..32,400..700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/report.css">
+</head>
+<body>
+<div class="r-page">
+
+<div class="r-nav">
+  <a href="system.html">The report system</a>
+  <a href="findings.html">findings</a>
+  <a href="decision.html">decision</a>
+  <a href="explainer.html">explainer</a>
+  <span class="r-here">mission map</span>
+  <a href="proof.html">proof</a>
+  <a href="thing.html">the thing itself</a>
+  <a href="drift.html">no drift</a>
+  <a href="newer.html">newer blocks</a>
+  <span class="r-spacer"></span>
+  <button id="theme" class="r-theme" title="Switch theme"></button>
+</div>
+
+<h1 class="r-title">Rebuilding the HTML report format</h1>
+<p class="r-dek">Where it stands, and what is left before it is finished.</p>
+
+<section class="r-sec" style="border-top-width:0;padding-top:0;margin-top:44px">
+  <div class="r-stats">
+    <div class="r-stat">
+      <div class="r-fig">6</div>
+      <div class="r-stat-why">of the six kinds built and looked at by you</div>
+    </div>
+    <div class="r-stat">
+      <div class="r-fig">14</div>
+      <div class="r-stat-why">defects caught by looking, each fixed in the stylesheet</div>
+    </div>
+    <div class="r-stat">
+      <div class="r-fig">1</div>
+      <div class="r-stat-why">step left, and it needs you in the room</div>
+    </div>
+  </div>
+  <p class="r-small" style="margin-top:10px">Everything but the writing sitting is finished.</p>
+</section>
+
+<section class="r-sec">
+  <h2 class="r-h2">Every report page runs on one stylesheet now.</h2>
+    <p class="r-body">Yesterday every page carried its own styling, written
+  onto each element one at a time, so changing the center changed nothing. Now every page links
+  one stylesheet and inherits every fix made to it. Measured before the rebuild: 1,627 styles written onto elements across nine pages, and not one CSS class anywhere in any of them.</p>
+  <p class="r-body">That is the difference the last two days bought. Not new pages — a center
+  that the pages hang off.</p>
+</section>
+
+<section class="r-sec">
+  <h2 class="r-h2">Where it stands</h2>
+  <div class="r-rail r-stack">
+
+    <div class="r-mile r-mile-done">
+      <div class="r-mile-n">1</div>
+      <div class="r-mile-when">Finished yesterday</div>
+      <div class="r-mile-head"><span class="r-mile-title">The design accepted</span>
+        <span class="r-status"><span class="r-mark r-m-done"></span>done</span></div>
+      <p class="r-mile-what">Nine pages came back from Claude Design and you accepted the look. The
+      work was not drawing anything — it was <strong>settling every place the new design
+      contradicted a ruling you had already made</strong>, so nothing had to be re-argued later.</p>
+
+      <div class="r-items">
+        <details class="r-item">
+          <summary><span class="r-mark r-m-done"></span>Every fork settled
+            <span class="r-item-count">7 of 7</span></summary>
+          <div class="r-piece"><span class="r-mark r-m-done"></span><b>Libraries dropped</b> — the design's own CSS replaces Basecoat, Tailwind and Preline</div>
+          <div class="r-piece"><span class="r-mark r-m-done"></span><b>Light mode kept</b> — already built, and the only extra cost is a contrast check</div>
+          <div class="r-piece"><span class="r-mark r-m-done"></span><b>Drawings are not a kind of page</b> — they are elements the six kinds build from</div>
+          <div class="r-piece"><span class="r-mark r-m-done"></span><b>Numerals off section headings</b> — kept only where something must be cited</div>
+          <div class="r-piece"><span class="r-mark r-m-done"></span><b>Dots on pages, glyphs in chat</b> — a terminal cannot draw a dot</div>
+          <div class="r-piece"><span class="r-mark r-m-done"></span><b>Long-table controls built</b> — search, sorting and filters past eight rows</div>
+          <div class="r-piece"><span class="r-mark r-m-done"></span><b>Sources line on findings and proof only</b> — decisions and explainers end clean</div>
+        </details>
+
+        <details class="r-item">
+          <summary><span class="r-mark r-m-done"></span>The submission moved into the skill
+            <span class="r-item-count">12 files</span></summary>
+          <div class="r-item-what">It was sitting in the Downloads folder, which gets emptied.</div>
+          <div class="r-piece"><span class="r-mark r-m-done"></span>The design spec<span class="r-piece-note">1</span></div>
+          <div class="r-piece"><span class="r-mark r-m-done"></span>Worked pages, one per kind<span class="r-piece-note">7</span></div>
+          <div class="r-piece"><span class="r-mark r-m-done"></span>The system page and its offcuts<span class="r-piece-note">3</span></div>
+          <div class="r-piece"><span class="r-mark r-m-done"></span>A note saying it is reference, not a dependency<span class="r-piece-note">1</span></div>
+        </details>
+
+        <details class="r-item">
+          <summary><span class="r-mark r-m-done"></span>Its project name struck out
+            <span class="r-item-count">4 places</span></summary>
+          <div class="r-item-what">You never wanted the name used, so it is gone from everything live.</div>
+          <div class="r-piece"><span class="r-mark r-m-done"></span>The folder it lived in</div>
+          <div class="r-piece"><span class="r-mark r-m-done"></span>Every class name in the stylesheet<span class="r-piece-note">260</span></div>
+          <div class="r-piece"><span class="r-mark r-m-done"></span>The setting that remembers light or dark</div>
+          <div class="r-piece"><span class="r-mark r-m-done"></span>The markup hooks the table script reads</div>
+        </details>
+      </div>
+    </div>
+
+    <div class="r-mile r-mile-done">
+      <div class="r-mile-n">2</div>
+      <div class="r-mile-when">Finished today</div>
+      <div class="r-mile-head"><span class="r-mile-title">The system built</span>
+        <span class="r-status"><span class="r-mark r-m-done"></span>done</span></div>
+      <p class="r-mile-what">One stylesheet, one catalog of blocks, and a skill that fires when you
+      ask for a page. The point of all three is the same: <strong>a fix lands once, in the
+      stylesheet, and every page that links it inherits the fix</strong>.</p>
+
+      <div class="r-items">
+        <details class="r-item">
+          <summary><span class="r-mark r-m-done"></span>The stylesheet
+            <span class="r-item-count">1 file, both modes</span></summary>
+          <div class="r-piece"><span class="r-mark r-m-done"></span><b>Four colors, each with one meaning</b> — a color without its meaning is a bug</div>
+          <div class="r-piece"><span class="r-mark r-m-done"></span><b>The type and spacing scales</b> — hierarchy by size, weight and color only</div>
+          <div class="r-piece"><span class="r-mark r-m-done"></span><b>Every block, with its rules beside it</b> — what it is for, holds, and must never hold</div>
+          <div class="r-piece"><span class="r-mark r-m-done"></span><b>The drift values, named at the top</b> — stage width, prose measure, both radii, section rhythm</div>
+        </details>
+
+        <details class="r-item">
+          <summary><span class="r-mark r-m-done"></span>The block catalog
+            <span class="r-item-count">27 blocks</span></summary>
+          <div class="r-item-what">Each tagged with the kinds it is at home on — a starting shelf, not a fence.</div>
+          <div class="r-piece"><span class="r-mark r-m-done"></span>Answer blocks, one per page<span class="r-piece-note">6</span></div>
+          <div class="r-piece"><span class="r-mark r-m-done"></span>Argument blocks for the teaching body<span class="r-piece-note">10</span></div>
+          <div class="r-piece"><span class="r-mark r-m-done"></span>Drawings — relationship, not chart<span class="r-piece-note">6</span></div>
+          <div class="r-piece"><span class="r-mark r-m-done"></span>Closing blocks, including the numbered question<span class="r-piece-note">5</span></div>
+        </details>
+
+        <details class="r-item">
+          <summary><span class="r-mark r-m-done"></span>The long-table controls
+            <span class="r-item-count">45 rows, 7 filters</span></summary>
+          <div class="r-item-what">It reads the table already in the page, so the data never gets written twice.</div>
+          <div class="r-piece"><span class="r-mark r-m-done"></span><b>Search, sorting, per-column filters</b> — with dismissable pills and clear all</div>
+          <div class="r-piece"><span class="r-mark r-m-done"></span><b>Columns lock their widths</b> — sorting moves rows, never columns</div>
+          <div class="r-piece"><span class="r-mark r-m-done"></span><b>The menu stays open while you tick</b> — you are almost always picking more than one</div>
+          <div class="r-piece"><span class="r-mark r-m-done"></span><b>On a phone each row becomes a card</b> — every value wearing its column name</div>
+        </details>
+
+        <details class="r-item">
+          <summary><span class="r-mark r-m-done"></span>The <strong>/html</strong> skill</summary>
+          <div class="r-item-what">A runner, not a second copy of the rules — anything that needs changing changes in the canon.</div>
+          <div class="r-piece"><span class="r-mark r-m-done"></span>Say it out loud, then name what you are presenting</div>
+          <div class="r-piece"><span class="r-mark r-m-done"></span>Shop the shelf, and say the relationship aloud before drawing</div>
+          <div class="r-piece"><span class="r-mark r-m-done"></span>Use the real file from the kit when one of your own screens appears</div>
+          <div class="r-piece"><span class="r-mark r-m-done"></span>Look at it at both widths before you ever see it</div>
+        </details>
+      </div>
+    </div>
+
+    <div class="r-mile r-mile-done">
+      <div class="r-mile-n">3</div>
+      <div class="r-mile-when">Finished today</div>
+      <div class="r-mile-head"><span class="r-mile-title">One worked page per kind</span>
+        <span class="r-status"><span class="r-mark r-m-done"></span>done</span></div>
+      <p class="r-mile-what">Six pages, each the format doing one job properly on real content.
+      <strong>You look at every one before the next starts</strong>, so a wrong shape gets caught
+      after one page instead of after six.</p>
+
+      <div class="r-items">
+        <details class="r-item" open>
+          <summary><span class="r-mark r-m-done"></span>Pages built and looked at
+            <span class="r-item-count">6 of 6</span></summary>
+          <div class="r-piece"><span class="r-mark r-m-done"></span><b>Findings</b> — the 45-monitor roundup, twelve columns, seven filterable<span class="r-piece-note">approved</span></div>
+          <div class="r-piece"><span class="r-mark r-m-done"></span><b>Decision</b> — whether Wheelhouse pays the instructor<span class="r-piece-note">approved</span></div>
+          <div class="r-piece"><span class="r-mark r-m-done"></span><b>Explainer</b> — what a canceled class does to somebody's money<span class="r-piece-note">approved</span></div>
+          <div class="r-piece"><span class="r-mark r-m-done"></span><b>Mission map</b> — this page<span class="r-piece-note">approved</span></div>
+          <div class="r-piece"><span class="r-mark r-m-done"></span><b>Proof</b> — the table driven and captured<span class="r-piece-note">approved</span></div>
+          <div class="r-piece"><span class="r-mark r-m-done"></span><b>The thing itself</b> — a screen that does not exist yet, drawn<span class="r-piece-note">approved</span></div>
+        </details>
+
+        <details class="r-item">
+          <summary><span class="r-mark r-m-done"></span>Defects caught by looking at the real render
+            <span class="r-item-count">14 fixed</span></summary>
+          <div class="r-item-what">Every one fixed in the stylesheet rather than on the page it appeared on, so no page carries a private repair.</div>
+          <div class="r-piece"><span class="r-mark r-m-done"></span>Numbers sitting off the right edge of a phone card</div>
+          <div class="r-piece"><span class="r-mark r-m-done"></span>A sentence spread across a row by a right-aligned rule</div>
+          <div class="r-piece"><span class="r-mark r-m-done"></span>A filter menu offering “0 · 60 · 100 · 120” with no unit</div>
+          <div class="r-piece"><span class="r-mark r-m-done"></span>Stacked sequence cards padded out to 180px of nothing</div>
+          <div class="r-piece"><span class="r-mark r-m-done"></span>The sort arrow leaking into a filter pill's label</div>
+          <div class="r-piece"><span class="r-mark r-m-done"></span>The whole table jumping sideways on every sort</div>
+          <div class="r-piece"><span class="r-mark r-m-done"></span>Six unbuyable monitors sorting above a real $2,006 screen</div>
+          <div class="r-piece"><span class="r-mark r-m-done"></span>A claim block adding its own section gap — 190px of nothing</div>
+          <div class="r-piece"><span class="r-mark r-m-done"></span>Two drawn screens clipped inside frames I had guessed the height of</div>
+          <div class="r-piece"><span class="r-mark r-m-done"></span>Question numbers that would not have matched their index</div>
+        </details>
+      </div>
+    </div>
+
+    <div class="r-mile r-mile-done">
+      <div class="r-mile-n">4</div>
+      <div class="r-mile-when">Finished today</div>
+      <div class="r-mile-head"><span class="r-mile-title">The no-drift proof</span>
+        <span class="r-status"><span class="r-mark r-m-done"></span>done</span></div>
+      <p class="r-mile-what">Corner radius changed 8 to 20, all six pages re-rendered without one
+      being opened, before and after photographed, the value put back. <strong>"Nothing drifts" is
+      now a demonstrated fact rather than a claim.</strong></p>
+
+      <div class="r-items">
+        <details class="r-item">
+          <summary><span class="r-mark r-m-done"></span>Pages that followed the change
+            <span class="r-item-count">6 of 6</span></summary>
+          <div class="r-piece"><span class="r-mark r-m-done"></span><b>One line edited</b> — in the stylesheet, nowhere else</div>
+          <div class="r-piece"><span class="r-mark r-m-done"></span><b>Zero page files opened</b> — they inherit or they do not</div>
+          <div class="r-piece"><span class="r-mark r-m-done"></span><b>Measured as well as photographed</b> — every change confined to the corners of rounded blocks</div>
+          <div class="r-piece"><span class="r-mark r-m-done"></span><b>Ruled: keep 8</b> — the number was never the point</div>
+        </details>
+      </div>
+    </div>
+
+    <div class="r-mile r-mile-call">
+      <div class="r-mile-n">5</div>
+      <div class="r-mile-when">The only thing left</div>
+      <div class="r-mile-head"><span class="r-mile-title">The writing sitting</span>
+        <span class="r-status"><span class="r-mark r-m-call"></span>needs your time</span>
+        <span class="r-here-mark">← we are here</span></div>
+      <p class="r-mile-what">The copy on the original nine pages was placeholder — the design was the
+      deliverable, not the words. Going through it with you, page by page, is <strong>the only step
+      here I cannot do without you in the room</strong>.</p>
+
+      <div class="r-items">
+        <details class="r-item">
+          <summary><span class="r-mark r-m-call"></span>A sitting, not a pass
+            <span class="r-item-count">6 pages</span></summary>
+          <div class="r-item-what">The register is already measured and written down. What it needs is you reading a page and saying where it still sounds wrong.</div>
+          <div class="r-piece"><span class="r-mark r-m-call"></span>One page at a time, out loud</div>
+          <div class="r-piece"><span class="r-mark r-m-call"></span>Every correction becomes a rule in the canon, not a note</div>
+        </details>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="r-ask-here r-stack">
+    <div class="r-ask-q">When do you want the writing sitting?</div>
+    <div class="r-ask-why">It is the only step that needs your time rather than your eye. All six pages are built, so nothing is waiting on it — but nothing improves without it either.</div>
+    <div class="r-mycall-inline"> — <strong>After the no-drift proof</strong></div>
+  </div>
+</section>
+
+<section class="r-sec">
+  <h2 class="r-h2">Every fix lands in the stylesheet, so no page carries a private repair.</h2>
+    <p class="r-body">Nine defects have been caught by looking at real
+  renders over the last two days. Every one was fixed in the stylesheet or its script rather
+  than on the page it appeared on, so no page carries a private repair.</p>
+  <p class="r-body">Six of those nine only showed up at phone width, which is the argument for
+  checking both every time rather than at the end.</p>
+
+  <div class="r-ask-here r-stack">
+    <div class="r-ask-q">Once the six pages are done, does the old report stack get deleted?</div>
+    <div class="r-ask-why">Basecoat, Tailwind and Preline are frozen but still on disk, because pages written before today link them by path and would stop rendering.</div>
+    <div class="r-mycall-inline"> — <strong>Leave them</strong></div>
+  </div>
+</section>
+
+<section class="r-sec r-sec-amber">
+  <h2 class="r-h2">Needs your attention</h2>
+  <div class="r-asks">
+    <div class="r-ask">
+      <span class="r-ask-n"></span>
+      <div class="r-ask-body">
+        <div class="r-ask-q">When do you want the writing sitting?</div>
+        <div class="r-mycall-inline"> — <strong>After the no-drift proof</strong></div>
+      </div>
+    </div>
+    <div class="r-ask">
+      <span class="r-ask-n"></span>
+      <div class="r-ask-body">
+        <div class="r-ask-q">Once the six pages are done, does the old report stack get deleted?</div>
+        <div class="r-mycall-inline"> — <strong>Leave them</strong></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div>
+<script>
+const b=document.body,t=document.getElementById('theme');
+const set=m=>{b.classList.toggle('light',m==='light');t.textContent=m==='light'?'☾':'☀';
+try{localStorage.setItem('report-theme',m)}catch(e){}};
+let m='dark';try{m=localStorage.getItem('report-theme')||'dark'}catch(e){}
+set(m);t.onclick=()=>set(b.classList.contains('light')?'dark':'light');
+</script>
+</body>
+</html>

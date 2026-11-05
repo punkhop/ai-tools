@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your bookings on a phone — next class first</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..750&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kit.css">
+<style>
+  /* phone-only: the shell every phone mock shares */
+  html,body{margin:0;background:var(--k-bg);color:var(--k-ink)}
+  .ph{width:390px;height:820px;box-sizing:border-box;border:1px solid var(--k-line);border-radius:44px;
+    overflow:hidden;display:flex;flex-direction:column;background:var(--k-bg);font-size:15px;line-height:1.4}
+  .ph-status{display:flex;justify-content:space-between;padding:16px 30px 6px;font-weight:600;font-size:14px}
+  .ph-top{display:flex;align-items:center;gap:10px;padding:10px 20px 14px}
+  .ph-top .buy-logo{flex:none}
+  .ph-top b{font-size:16px}
+  .ph-body{flex:1;padding:4px 20px 0;overflow:hidden}
+  .ph-h{font-size:26px;font-weight:700;letter-spacing:-.01em;margin:6px 0 14px}
+  .ph-tabs{display:flex;border-top:1px solid var(--k-line);padding:10px 14px 26px;font-size:11.5px;color:var(--k-faint)}
+  .ph-tabs span{flex:1;text-align:center}.ph-tabs .on{color:var(--k-brand);font-weight:600}
+  .ph-tabs i{display:block;width:22px;height:22px;margin:0 auto 4px;border-radius:7px;background:var(--k-line)}
+  .ph-tabs .on i{background:var(--k-brand)}
+  .row{display:flex;gap:14px;align-items:center;padding:14px 0;border-bottom:1px solid var(--k-line)}
+  .row .d{flex:none;width:48px;text-align:center;border-radius:10px;background:var(--k-panel);padding:7px 0;font-size:11.5px;color:var(--k-mute)}
+  .row .d b{display:block;font-size:19px;color:var(--k-ink);line-height:1.1}
+  .row .t{flex:1;min-width:0}.row .t b{display:block}.row .t span{color:var(--k-mute);font-size:13.5px}
+  .row .p{font-variant-numeric:tabular-nums;font-weight:600}
+  .lab{font-size:13px;font-weight:600;color:var(--k-mute);margin:20px 0 2px}
+  .hero{border-radius:18px;background:var(--k-brand);color:#fff;padding:20px;margin-bottom:6px}
+  .hero small{opacity:.8;font-size:13px}.hero h3{font-size:22px;margin:4px 0 2px}
+  .hero p{margin:0 0 16px;opacity:.9}
+  .hero .go{display:flex;gap:10px}.hero .go span{flex:1;text-align:center;border-radius:10px;padding:11px 0;font-weight:600;font-size:14px;background:#fff;color:var(--k-brand)}
+  .hero .go span+span{background:rgba(255,255,255,.18);color:#fff}
+  .week{display:flex;gap:6px;margin-bottom:18px}
+  .week span{flex:1;text-align:center;border-radius:12px;padding:9px 0;font-size:11.5px;color:var(--k-mute);background:var(--k-panel)}
+  .week span b{display:block;font-size:17px;color:var(--k-ink)}
+  .week .on{background:var(--k-brand);color:#fff}.week .on b{color:#fff}
+  .week .dot::after{content:"";display:block;width:5px;height:5px;border-radius:50%;background:var(--k-brand);margin:4px auto 0}
+  .week .on.dot::after{background:#fff}
+  .slot{border:1px solid var(--k-line);border-radius:14px;padding:14px 16px;margin-bottom:10px}
+  .slot small{color:var(--k-mute)}.slot b{display:block;font-size:16.5px;margin:2px 0}
+  .slot .badge{margin-top:8px;display:inline-block}
+</style>
+</head>
+<body>
+<div class="ph">
+  <div class="ph-status"><span>9:41</span><span>5G</span></div>
+  <div class="ph-top"><span class="buy-logo">N</span><b>Northgate Pottery</b></div>
+  <div class="ph-body">
+    <div class="ph-h">Your bookings</div>
+    <div class="hero"><small>Next up · Saturday, Aug 22</small><h3>Wheel Throwing: Beginners</h3><p>10:00 AM · Studio B · 2 seats</p>
+      <div class="go"><span>Directions</span><span>Add to calendar</span></div></div>
+    <div class="lab">After that</div>
+    <div class="row"><div class="d">Aug<b>29</b></div><div class="t"><b>Evening Glaze Lab</b><span>Fri 6:30 PM · 1 seat</span></div><div class="p">$40</div></div>
+    <div class="row"><div class="d">Sep<b>12</b></div><div class="t"><b>Hand Building for Two</b><span>Sat 1:00 PM · 2 seats</span></div><div class="p">$160</div></div>
+    <div class="row"><div class="d">Sep<b>19</b></div><div class="t"><b>Open Studio</b><span>Sat 9:00 AM · 1 seat</span></div><div class="p">$25</div></div>
+  </div>
+  <div class="ph-tabs"><span><i></i>Classes</span><span class="on"><i></i>Bookings</span><span><i></i>Studio</span><span><i></i>You</span></div>
+</div>
+</body>
+</html>

@@ -46,8 +46,8 @@ a{color:var(--accent)}
 .field>span{font-size:13.5px;font-weight:600;color:var(--ink2)}
 input[type=text],select{font:inherit;font-size:15px;color:var(--ink);background:var(--bg);border:1px solid var(--line2);border-radius:9px;padding:8px 10px;width:100%;min-width:0}
 input[type=text]:focus,select:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:transparent}
-.seg{display:inline-flex;border:1px solid var(--line2);border-radius:9px;overflow:hidden;background:var(--bg)}
-.seg button{font:inherit;font-size:14px;border:0;background:transparent;color:var(--ink2);padding:8px 12px;cursor:pointer}
+.seg{display:flex;border:1px solid var(--line2);border-radius:9px;overflow:hidden;background:var(--bg)}
+.seg button{flex:1;font:inherit;font-size:14px;border:0;background:transparent;color:var(--ink2);padding:8px 12px;cursor:pointer}
 .seg button+button{border-left:1px solid var(--line2)}
 .seg button[aria-pressed=true]{background:var(--accent);color:var(--on-accent);font-weight:600}
 .iconbtn{font:inherit;border:0;background:transparent;color:var(--muted);width:36px;height:38px;border-radius:9px;cursor:pointer;font-size:20px;line-height:1}
@@ -130,9 +130,11 @@ pre.out{white-space:pre-wrap;font:13px/1.5 ui-monospace,Menlo,monospace;backgrou
   h1{font-size:28px}
   .piece{grid-template-columns:1fr;gap:12px}
   .piece .art{margin-left:34px}
-  .comp{grid-template-columns:1fr 1fr;gap:10px}
-  .comp .field.nick{grid-column:1/-1}
-  .comp .iconbtn{justify-self:end}
+  .comp{grid-template-columns:1fr 1fr auto;grid-template-areas:"nick nick rm" "os role role";gap:10px}
+  .comp .field.nick{grid-area:nick}
+  .comp .field.os{grid-area:os}
+  .comp .field.role{grid-area:role}
+  .comp>.iconbtn,.comp>.rm{grid-area:rm;align-self:end}
   .bar .count{font-size:14px}
 }
 </style>
@@ -153,7 +155,7 @@ pre.out{white-space:pre-wrap;font:13px/1.5 ui-monospace,Menlo,monospace;backgrou
   <div class="card envs">
     <div>
       <h3 style="margin:0 0 6px">Your other computers in T3 Code</h3>
-      <p class="sub" style="margin:0">After the main computer is done, Claude gives you the steps for each other one. Then you add them in T3 Code, so one window can run Claude on any of your computers.</p>
+      <p class="sub" style="margin:0">When your main computer is done, Claude walks you through each other one. Then you add them to T3 Code, so one window runs Claude on any of your computers. The pairing link works once, for 5 minutes.</p>
     </div>
     <div class="art" data-art="t3env"></div>
   </div>
@@ -214,7 +216,7 @@ safety:`<svg viewBox="0 0 320 200"><path class="B" d="M160 18l62 22v44c0 44-28 7
 doctor:`<svg viewBox="0 0 320 200"><rect class="B" x="16" y="18" width="288" height="164" rx="10"/><text class="Ta" x="30" y="44">/doctor</text><g class="T" style="font-weight:500"><circle class="G" cx="38" cy="70" r="6"/><text x="54" y="75">Memory folder</text><circle class="G" cx="38" cy="96" r="6"/><text x="54" y="101">Memory search</text><circle class="G" cx="38" cy="122" r="6"/><text x="54" y="127">Links server</text><circle class="Y" cx="38" cy="148" r="6"/><text x="54" y="153">Phone can't reach links</text></g><text class="Tm" x="54" y="170">Fix: turn Tailscale on in the phone app</text></svg>`,
 spec:`<svg viewBox="0 0 320 200"><g transform="translate(14 40)"><rect class="B" width="86" height="110" rx="8"/><text class="Ta" x="12" y="24">/spec</text><path class="Lm" d="M12 42h60M12 56h50M12 70h62M12 84h40"/></g><path class="As" d="M106 95h14"/><g transform="translate(120 40)"><rect class="B" width="86" height="110" rx="8"/><text class="Ta" x="12" y="24">/logic</text><circle class="Asoft" cx="22" cy="50" r="7"/><circle class="Asoft" cx="22" cy="72" r="7"/><circle class="A" cx="22" cy="94" r="7"/><path class="Lm" d="M36 50h36M36 72h30M36 94h36"/></g><path class="As" d="M212 95h14"/><g transform="translate(226 40)"><rect class="B" width="86" height="110" rx="8"/><text class="Ta" x="12" y="24">/design</text><rect class="Asoft" x="12" y="36" width="28" height="30" rx="4"/><rect class="F" x="46" y="36" width="28" height="30" rx="4"/><rect class="F" x="12" y="72" width="28" height="30" rx="4"/><rect class="F" x="46" y="72" width="28" height="30" rx="4"/></g><text class="Tm" x="14" y="176">what it is · every case · how it looks</text></svg>`,
 review:`<svg viewBox="0 0 320 200"><rect class="B" x="16" y="34" width="124" height="132" rx="10"/><text class="T" x="30" y="60">Claude</text><path class="Lm" d="M30 80h90M30 96h76M30 112h90M30 128h60"/><rect class="B" x="180" y="34" width="124" height="132" rx="10"/><text class="T" x="194" y="60">Codex</text><circle class="G" cx="200" cy="84" r="6"/><path class="Lm" d="M212 84h76"/><circle class="Y" cx="200" cy="108" r="6"/><path class="Lm" d="M212 108h60"/><circle class="G" cx="200" cy="132" r="6"/><path class="Lm" d="M212 132h70"/><path class="As" d="M146 100h28m-9-8 9 8-9 8"/></svg>`,
-t3env:`<svg viewBox="0 0 640 300"><rect class="B" x="10" y="10" width="620" height="280" rx="12"/><rect class="F" x="10" y="10" width="160" height="280" rx="12"/><text class="T" x="28" y="44">Settings</text><text class="Tm" x="28" y="76">General</text><rect class="Asoft" x="20" y="88" width="140" height="28" rx="7"/><text class="T" x="28" y="107" style="fill:var(--accent)">Connections</text><text class="Tm" x="28" y="140">Providers</text><text class="T" x="196" y="46" style="font-size:16px">Connections</text><rect class="Bs" x="196" y="64" width="410" height="44" rx="9"/><circle class="G" cx="216" cy="86" r="6"/><text class="T" x="232" y="91">studio</text><text class="Tm" x="300" y="91">this computer</text><rect class="Bs" x="196" y="116" width="410" height="44" rx="9"/><circle class="G" cx="216" cy="138" r="6"/><text class="T" x="232" y="143">laptop</text><text class="Tm" x="300" y="143">laptop.tail1234.ts.net</text><rect class="A" x="196" y="178" width="150" height="34" rx="9"/><text class="Tw" x="214" y="200">Add environment</text><text class="Tm" x="196" y="244">Each other computer shows a pairing link.</text><text class="Tm" x="196" y="262">Paste it here, and its threads appear in this window.</text></svg>`
+t3env:`<svg viewBox="0 0 680 330"><text class="Tb" x="14" y="24">1 · On the other computer</text><rect class="B" x="10" y="38" width="320" height="282" rx="12"/><text class="Tm" x="26" y="62">Settings › Connections</text><rect class="Bs" x="22" y="74" width="296" height="44" rx="8"/><text class="T" x="34" y="101">Network access</text><rect x="270" y="86" width="34" height="20" rx="10" class="A"/><circle cx="294" cy="96" r="7" fill="var(--on-accent)"/><rect class="Bs" x="22" y="124" width="296" height="44" rx="8"/><text class="T" x="34" y="151">Tailscale HTTPS</text><rect x="270" y="136" width="34" height="20" rx="10" class="A"/><circle cx="294" cy="146" r="7" fill="var(--on-accent)"/><text class="T" x="26" y="196">Authorized clients</text><rect class="A" x="232" y="182" width="86" height="26" rx="7"/><text class="Tw" x="246" y="200">Create link</text><rect class="Asoft" x="22" y="220" width="296" height="86" rx="8"/><text class="T" x="34" y="242" style="font-size:12px">Share</text><text class="Ta" x="34" y="266" style="font-size:11px">https://laptop.tail1234.ts.net</text><text class="Ta" x="34" y="282" style="font-size:11px">/pair#token=…</text><rect class="B" x="246" y="252" width="62" height="24" rx="6"/><text class="T" x="254" y="268" style="font-size:11px">Copy link</text><path class="As" d="M336 262 C356 262 352 200 372 200"/><path class="As" d="M364 193l9 7-9 7"/><text class="Tb" x="356" y="24">2 · On your main computer</text><rect class="B" x="350" y="38" width="320" height="282" rx="12"/><text class="Tm" x="366" y="62">Settings › Connections</text><text class="T" x="366" y="90">Environments</text><rect class="Bs" x="526" y="74" width="132" height="26" rx="7"/><text class="T" x="536" y="92" style="font-size:12px">+ Add environment</text><rect class="Bs" x="362" y="112" width="296" height="196" rx="10"/><text class="T" x="376" y="136">Add Environment</text><rect class="Asoft" x="376" y="148" width="130" height="40" rx="8" style="stroke:var(--accent);stroke-width:2"/><text class="T" x="388" y="173">Remote link</text><rect class="Bs" x="514" y="148" width="130" height="40" rx="8"/><text class="Tm" x="526" y="173">SSH</text><text class="Tm" x="376" y="208">Host</text><rect class="B" x="376" y="214" width="268" height="28" rx="6"/><text class="Ta" x="384" y="233" style="font-size:11px">https://laptop.tail1234.ts.net/pair#…</text><rect class="A" x="376" y="256" width="268" height="34" rx="8"/><text class="Tw" x="462" y="278">Add environment</text></svg>`
 };
 
 const GROUPS = [
@@ -252,7 +254,7 @@ const KEY = 'ai-tools-setup-v1';
 const defaults = () => ({
   comps:[{nick:'',os:'Mac',role:'main'}], phone:true, where:'T3 Code',
   picks:Object.fromEntries(ALL.map(p=>[p.id,!p.off && p.id!=='syncthing'])),
-  memDir:'~/memory', shareWith:[], image:'OpenAI'
+  memDir:'~/memory', image:'OpenAI'
 });
 let S;
 try{ S = Object.assign(defaults(), JSON.parse(localStorage.getItem(KEY)||'{}')); }catch(e){ S = defaults(); }
@@ -267,9 +269,9 @@ function renderComps(){
   S.comps.forEach((c,i)=>{
     const el = document.createElement('div'); el.className='card comp';
     el.innerHTML = `<label class="field nick"><span>Nickname</span><input type="text" value="${esc(c.nick)}" data-i="${i}" data-k="nick" autocomplete="off"></label>
-      <label class="field"><span>Kind</span><select data-i="${i}" data-k="os">${['Mac','Windows','Linux'].map(o=>`<option${o===c.os?' selected':''}>${o}</option>`).join('')}</select></label>
-      <div class="field"><span>Role</span><div class="seg"><button type="button" data-i="${i}" data-role="main" aria-pressed="${c.role==='main'}">Main</button><button type="button" data-i="${i}" data-role="other" aria-pressed="${c.role!=='main'}">Other</button></div></div>
-      ${S.comps.length>1?`<button class="iconbtn" type="button" data-rm="${i}" aria-label="Remove">×</button>`:'<span></span>'}`;
+      <label class="field os"><span>Kind</span><select data-i="${i}" data-k="os">${['Mac','Windows','Linux'].map(o=>`<option${o===c.os?' selected':''}>${o}</option>`).join('')}</select></label>
+      <div class="field role"><span>Role</span><div class="seg"><button type="button" data-i="${i}" data-role="main" aria-pressed="${c.role==='main'}">Main</button><button type="button" data-i="${i}" data-role="other" aria-pressed="${c.role!=='main'}">Other</button></div></div>
+      ${S.comps.length>1?`<button class="iconbtn" type="button" data-rm="${i}" aria-label="Remove">×</button>`:'<span class="rm"></span>'}`;
     box.appendChild(el);
   });
 }
@@ -322,17 +324,15 @@ function renderMore(){
   if(syncSlot){
     if(S.picks.syncthing){
       const names = S.comps.map(nick);
-      if(!S.shareWith.length || S.shareWith.some(n=>!names.includes(n))) S.shareWith = S.shareWith.filter(n=>names.includes(n));
-      if(!S.shareInit){ S.shareWith = names.slice(); S.shareInit = true; save(); }
       const mac = S.comps.some(c=>c.os==='Mac');
       syncSlot.innerHTML = `<div class="more">
         <label class="field"><span>Memory folder</span><input type="text" id="memDir" value="${esc(S.memDir)}" autocomplete="off" spellcheck="false"></label>
         ${mac?'<p class="warn">On a Mac, keep it out of Documents, Desktop and Downloads. macOS stops background helpers from reading those folders.</p>':''}
         <div class="field"><span>Computers that share it</span>
-        ${S.comps.length<2?'<p class="note">Add your other computers above.</p>':names.map((n,i)=>`<label class="check"><input type="checkbox" data-share="${esc(n)}" ${S.shareWith.includes(n)?'checked':''}> ${esc(n)}</label>`).join('')}</div>
+        ${S.comps.length<2?'<p class="note">Add your other computers above.</p>':names.map((n,i)=>`<label class="check"><input type="checkbox" data-share="${i}" ${S.comps[i].share!==false?'checked':''}> ${esc(n)}</label>`).join('')}</div>
       </div>`;
       syncSlot.querySelector('#memDir').oninput = e=>{ S.memDir=e.target.value; save(); update(); };
-      syncSlot.querySelectorAll('[data-share]').forEach(cb=>cb.onchange=()=>{ const n=cb.dataset.share; S.shareWith = cb.checked ? [...new Set([...S.shareWith,n])] : S.shareWith.filter(x=>x!==n); save(); update(); });
+      syncSlot.querySelectorAll('[data-share]').forEach(cb=>cb.onchange=()=>{ S.comps[+cb.dataset.share].share = cb.checked; save(); update(); });
     } else syncSlot.innerHTML='';
   }
   const imgSlot = document.querySelector('.piece[data-id="image"] .more-slot');
@@ -357,7 +357,7 @@ function answers(){
   on.forEach(p=>L.push(`- ${p.id}  (${p.name}${p.cmd?' '+p.cmd:''})`));
   const offs = ALL.filter(p=>!on.includes(p));
   if(offs.length) L.push('Not wanted: '+offs.map(p=>p.id).join(', '));
-  if(S.picks.syncthing){ L.push('','Memory folder: '+(S.memDir.trim()||'~/memory')); L.push('Syncthing shares it between: '+(S.shareWith.join(', ')||'(not chosen yet)')); }
+  if(S.picks.syncthing){ L.push('','Memory folder: '+(S.memDir.trim()||'~/memory')); L.push('Syncthing shares it between: '+(S.comps.map((c,i)=>c.share!==false?nick(c,i):null).filter(Boolean).join(', ')||'(none chosen)')); }
   if(S.picks.image) L.push('','Image service: '+S.image);
   L.push('','(answers v1 from the ai-tools setup page)');
   return L.join('\n');

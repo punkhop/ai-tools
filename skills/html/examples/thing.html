@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#15171b">
+<title>The page a canceled class should show</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400..700;1,14..32,400..700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/report.css">
+</head>
+<body>
+<div class="r-page">
+
+<div class="r-nav">
+  <a href="system.html">The report system</a>
+  <a href="findings.html">findings</a>
+  <a href="decision.html">decision</a>
+  <a href="explainer.html">explainer</a>
+  <a href="mission.html">mission map</a>
+  <a href="proof.html">proof</a>
+  <span class="r-here">the thing itself</span>
+  <a href="drift.html">no drift</a>
+  <a href="newer.html">newer blocks</a>
+  <span class="r-spacer"></span>
+  <button id="theme" class="r-theme" title="Switch theme"></button>
+</div>
+
+<h1 class="r-title">The page a canceled class should show</h1>
+<p class="r-dek">Drawn here, because it does not exist yet — today the link breaks.</p>
+
+<section class="r-sec" style="border-top-width:0;padding-top:0;margin-top:44px">
+  <p class="r-body">A customer opens the link in their confirmation email after the class is called off,
+  and gets "not found". No explanation, no mention of their money, no way back. This is the screen
+  that should be there instead.</p>
+
+  <div class="r-frame r-stack">
+    <div class="r-chrome">
+      <span class="r-dots"><span></span><span></span><span></span></span>
+      <span class="r-addr">book.northgatepottery.com/c/wheel-throwing-beginners</span>
+    </div>
+    <iframe src="mocks/canceled-class.html" title="What a customer sees when a class is canceled"
+            style="height:max(500px,calc(1300px - 100vw))" loading="lazy"></iframe>
+  </div>
+  <p class="r-scale-cap">Drawn on the studio’s own prototype kit — the same stylesheet every other mock uses,
+  whose tokens mirror the real components. <a href="mocks/canceled-class.html">open it full size</a></p>
+
+  <div class="r-shot-notes">
+    <div><span class="r-shot-n">1</span><span>The banner answers the only two questions a customer has — is it off, and what happens to my money — before they have to look for anything.</span></div>
+    <div><span class="r-shot-n">2</span><span>The refund is stated as already happening, with the card and the window, so nobody emails the studio to ask.</span></div>
+    <div><span class="r-shot-n">3</span><span>The class’s own details stay on the page. Someone arriving from a text message needs to know which session was called off.</span></div>
+    <div><span class="r-shot-n">4</span><span>Other dates are the only thing on the page trying to sell anything, and they sit after the refund, not before it.</span></div>
+  </div>
+
+  <div class="r-ask-here r-stack">
+    <div class="r-ask-q">Does the refund amount belong on a public page?</div>
+    <div class="r-ask-why">Anyone with the link can open it. Showing the total means showing what
+    that customer paid — the alternative is "your refund is on its way" with no figure.</div>
+    <div class="r-mycall-inline"> — <strong>Only behind their order link</strong></div>
+  </div>
+</section>
+
+<section class="r-sec">
+  <h2 class="r-h2">Postponed is a different screen, not the same one in another color.</h2>
+  <p class="r-body">A postponed class still has a future, so the page keeps selling. The money stays
+  where it is, the seats stay booked, and the only thing missing is a date. Same layout, three
+  different answers.</p>
+
+  <div class="r-mock-pair r-stack">
+    <div class="r-frame">
+      <div class="r-chrome">
+        <span class="r-dots"><span></span><span></span><span></span></span>
+        <span class="r-addr">book.northgatepottery.com/c/evening-glaze-lab</span>
+      </div>
+      <iframe src="mocks/postponed-class.html" title="What a customer sees when a class is postponed"
+              style="height:max(420px,calc(900px - 100vw))" loading="lazy"></iframe>
+    </div>
+    <div class="r-frame">
+      <div class="r-chrome">
+        <span class="r-dots"><span></span><span></span><span></span></span>
+        <span class="r-addr">on a phone</span>
+      </div>
+      <iframe src="mocks/canceled-class.html" title="The canceled screen at phone width"
+              height="955" loading="lazy"></iframe>
+    </div>
+  </div>
+
+  <div class="r-shot-notes">
+    <div><span class="r-shot-n">1</span><span>Canceled ends the transaction; postponed suspends it. The refund block becomes a seats block, and Book goes dead rather than disappearing.</span></div>
+    <div><span class="r-shot-n">2</span><span>On the phone the banner shortens to one line and the refund detail moves under the total — the two facts that matter stay above the fold.</span></div>
+  </div>
+
+  <div class="r-ask-here r-stack">
+    <div class="r-ask-q">Should a postponed class offer a refund up front?</div>
+    <div class="r-ask-why">It is the difference between the studio keeping the money while it finds a
+    date, and handing back anyone who cannot wait. Right now there is no path either way.</div>
+    <div class="r-mycall-inline"> — <strong>Offer it, quietly</strong></div>
+  </div>
+</section>
+
+<section class="r-sec">
+  <h2 class="r-h2">This surface has never been drawn, which is why it is drawn here.</h2>
+  <p class="r-body">The studio’s prototype kit covers every screen the product already has, and none of
+  them covers what a customer sees after a class is called off. When something is already drawn,
+  this page links or frames that view instead — drawing a second version of an existing screen is
+  how two versions start disagreeing.</p>
+  <p class="r-body">Both screens are real files drawn on the prototype kit, not pictures and not
+  markup improvised for this report. They inherit the same tokens the real components use, they
+  follow light and dark on their own, and either one can be moved into the kit as a new screen
+  without being redrawn.</p>
+
+  <div class="r-ask-here r-stack">
+    <div class="r-ask-q">Should these two screens go into the prototype kit?</div>
+    <div class="r-ask-why">They would sit beside every other screen, where the next person
+    looks first — rather than living inside one report.</div>
+    <div class="r-mycall-inline"> — <strong>Yes</strong></div>
+  </div>
+</section>
+
+<section class="r-sec r-sec-amber">
+  <h2 class="r-h2">Needs your attention</h2>
+  <div class="r-asks">
+    <div class="r-ask">
+      <span class="r-ask-n"></span>
+      <div class="r-ask-body">
+        <div class="r-ask-q">Does the refund amount belong on a public page?</div>
+        <div class="r-mycall-inline"> — <strong>Only behind their order link</strong></div>
+      </div>
+    </div>
+    <div class="r-ask">
+      <span class="r-ask-n"></span>
+      <div class="r-ask-body">
+        <div class="r-ask-q">Should a postponed class offer a refund up front?</div>
+        <div class="r-mycall-inline"> — <strong>Offer it, quietly</strong></div>
+      </div>
+    </div>
+    <div class="r-ask">
+      <span class="r-ask-n"></span>
+      <div class="r-ask-body">
+        <div class="r-ask-q">Should these two screens go into the prototype kit?</div>
+        <div class="r-mycall-inline"> — <strong>Yes</strong></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div>
+<script>
+const b=document.body,t=document.getElementById('theme');
+const set=m=>{b.classList.toggle('light',m==='light');t.textContent=m==='light'?'☾':'☀';
+try{localStorage.setItem('report-theme',m)}catch(e){}};
+let m='dark';try{m=localStorage.getItem('report-theme')||'dark'}catch(e){}
+set(m);t.onclick=()=>set(b.classList.contains('light')?'dark':'light');
+</script>
+</body>
+</html>

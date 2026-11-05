@@ -18,17 +18,24 @@ CMD=$(echo "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)
 # Only fire on rm -rf (or rm -fr, -Rf, etc.)
 echo "$CMD" | grep -qE 'rm\s+(-[a-zA-Z]*[rR]f|-[a-zA-Z]*f[rR]|-rf|-fr|-Rf|-fR)\b' || exit 0
 
+# The paths after each `rm`, up to the end of that command (; && || | and newlines end it),
+# so `rm -rf x && find .` checks x, not the `.` that belongs to find.
 PATHS=$(echo "$CMD" | python3 -c '
 import sys, shlex
-try:
-  toks = shlex.split(sys.stdin.read())
-except: sys.exit(0)
-for i, t in enumerate(toks):
-  if t == "rm":
-    for x in toks[i+1:]:
-      if x.startswith("-"): continue
-      print(x)
-    break
+for line in sys.stdin.read().splitlines():
+  try:
+    lex = shlex.shlex(line, posix=True, punctuation_chars=True)
+    lex.whitespace_split = True
+    toks = list(lex)
+  except Exception: continue
+  in_rm = False
+  for t in toks:
+    if set(t) <= set(";&|()"):
+      in_rm = False
+    elif t == "rm":
+      in_rm = True
+    elif in_rm and not t.startswith("-"):
+      print(t)
 ')
 
 [ -z "$PATHS" ] && exit 0

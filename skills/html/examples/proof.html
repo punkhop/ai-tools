@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#15171b">
+<title>The report table, driven and captured</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400..700;1,14..32,400..700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/report.css">
+</head>
+<body>
+<div class="r-page">
+
+<div class="r-nav">
+  <a href="system.html">The report system</a>
+  <a href="findings.html">findings</a>
+  <a href="decision.html">decision</a>
+  <a href="explainer.html">explainer</a>
+  <a href="mission.html">mission map</a>
+  <span class="r-here">proof</span>
+  <a href="thing.html">the thing itself</a>
+  <a href="drift.html">no drift</a>
+  <a href="newer.html">newer blocks</a>
+  <span class="r-spacer"></span>
+  <button id="theme" class="r-theme" title="Switch theme"></button>
+</div>
+
+<h1 class="r-title">The report table, driven and captured</h1>
+<p class="r-dek">Six claims about the comparison table, each with the render that shows it.</p>
+
+<section class="r-sec" style="border-top-width:0;padding-top:0;margin-top:44px">
+  <div class="r-tally">
+    <span class="r-fig" style="font-size:26px">6 / 6</span>
+    <span class="r-small">proven</span>
+    <span class="r-status"><span class="r-mark r-m-done"></span>columns never move</span>
+    <span class="r-status"><span class="r-mark r-m-done"></span>the pick survives sorting</span>
+    <span class="r-status"><span class="r-mark r-m-done"></span>the menu stays open</span>
+    <span class="r-status"><span class="r-mark r-m-done"></span>a missing price never wins</span>
+    <span class="r-status"><span class="r-mark r-m-done"></span>rows become cards on a phone</span>
+    <span class="r-status"><span class="r-mark r-m-done"></span>both modes</span>
+  </div>
+  <p class="r-body">Every capture below is the real findings page, driven in a browser and
+  photographed. Nothing is drawn or described.</p>
+</section>
+
+<section class="r-sec">
+
+  <div class="r-claim r-claim-fixed">
+    <div class="r-claim-head"><span class="r-claim-n">1</span>Sorting moves rows, never columns</div>
+    <p class="r-claim-saw"><span class="r-tick">✓</span>Sort by any of the six sortable columns and
+    every column heading stays on the pixel it was on.</p>
+    <p class="r-claim-walk">You open the findings page and the table is in source order, 45 rows
+    across 12 columns. You click Price. The rows reorder, the arrow appears on that heading, and
+    nothing else on the page moves — not the column you were reading, not the one your eye was
+    about to go to.</p>
+    <div class="r-shots">
+      <div>
+        <div class="r-shot"><img src="shots/rest.png" alt="The table at rest, 45 monitors, unsorted"></div>
+        <p class="r-scale-cap">At rest — source order.</p>
+      </div>
+      <div>
+        <div class="r-shot"><img src="shots/sorted.png" alt="The same table sorted by price, columns unmoved"></div>
+        <p class="r-scale-cap">Sorted by price. Same columns, different rows.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="r-claim r-claim-fixed">
+    <div class="r-claim-head"><span class="r-claim-n">2</span>The pick keeps its green edge wherever it lands</div>
+    <p class="r-claim-saw"><span class="r-tick">✓</span>Filtered to the eight screens that read
+    sharper, the recommendation sits seventh — still tinted, still edged green.</p>
+    <p class="r-claim-walk">You open the Reads filter and tick "sharper". The table drops from 45
+    rows to 8, the count above changes to 8 of 45, and the filter appears under the search box as a
+    pill. The LG is not at the top of what is left. It is not the cheapest or the sharpest — it is the one
+    worth buying, and it says so with its edge rather than its position.</p>
+    <div class="r-shot"><img src="shots/filtered.png" alt="Filtered to eight sharper screens, the pick seventh and still green-edged"></div>
+  </div>
+
+  <div class="r-claim r-claim-fixed">
+    <div class="r-claim-head"><span class="r-claim-n">3</span>The filter menu stays open while you tick</div>
+    <p class="r-claim-saw"><span class="r-tick">✓</span>In the same capture the menu is still open,
+    one box ticked, and the table underneath has already filtered.</p>
+    <p class="r-claim-walk">You click Reads, the menu opens over the table, you tick "sharper" and
+    the rows change under it. The menu is still there, so you can tick the second value without
+    reopening anything. Clicking anywhere outside closes it.</p>
+  </div>
+
+  <div class="r-claim r-claim-fixed">
+    <div class="r-claim-head"><span class="r-claim-n">4</span>A missing price never outranks a real one</div>
+    <p class="r-claim-saw"><span class="r-tick">✓</span>Sorted by price, the most expensive screen
+    that exists is top at $2,006, and the six with no price sit at the bottom either way.</p>
+    <p class="r-claim-walk">Six of the 45 cannot be bought — the seller's page is gone, or it is out
+    of stock with no restock date. They are still on the table, because a monitor you cannot buy is
+    a finding. Their price cell reads a dash. Sort ascending or descending and they stay at the
+    bottom.</p>
+  </div>
+
+  <div class="r-claim r-claim-fixed">
+    <div class="r-claim-head"><span class="r-claim-n">5</span>On a phone every row becomes a card</div>
+    <p class="r-claim-saw"><span class="r-tick">✓</span>At 390 pixels the table stops being a table:
+    each row is a card and every value wears its column name.</p>
+    <p class="r-claim-walk">You open the same page on your phone. There is no sideways scrolling and
+    no pinching. Numbers keep a right edge so they line up down the card; words start at the left,
+    because a sentence does not want a ragged right margin. The magnitude bar is dropped — the
+    number is right beside it, so the bar would only repeat itself.</p>
+    <div class="r-shot" style="max-width:390px"><img src="shots/phone.png" alt="The table at 390px, each row a card wearing its column names"></div>
+  </div>
+
+  <div class="r-claim r-claim-fixed">
+    <div class="r-claim-head"><span class="r-claim-n">6</span>Both modes are drawn, not dimmed</div>
+    <p class="r-claim-saw"><span class="r-tick">✓</span>The same table in light keeps its banding,
+    its green edge and its ruled-out chip.</p>
+    <p class="r-claim-walk">You press the sun in the top right. Every color swaps to its light value
+    — the four meanings hold, and the contrast was picked for white rather than inherited from the
+    dark version and lightened.</p>
+    <div class="r-shot"><img src="shots/light.png" alt="The same table in light mode"></div>
+  </div>
+
+</section>
+
+<section class="r-sec r-sec-amber">
+  <h2 class="r-h2">What this does not cover</h2>
+  <div class="r-flaws r-stack">
+    <div class="r-flaw">
+      <div class="r-flaw-title">One browser</div>
+      <div class="r-flaw-body">Chrome only. Safari and Firefox are untested, and the column locking
+      leans on how the browser measures a table.</div>
+    </div>
+    <div class="r-flaw">
+      <div class="r-flaw-title">One table</div>
+      <div class="r-flaw-body">45 rows and 12 columns. Nothing here says what happens at 500 rows,
+      which is where sorting in the page stops being the right answer.</div>
+    </div>
+    <div class="r-flaw">
+      <div class="r-flaw-title">No keyboard or screen-reader pass</div>
+      <div class="r-flaw-body">Headings are focusable and sort on Enter, but that is asserted from
+      the code rather than driven and captured.</div>
+    </div>
+  </div>
+</section>
+
+<section class="r-sec">
+  <p class="r-small">Captured 12 August 2026 from the live findings page at 1440 and 390 pixels,
+  in Chrome, by driving the real controls. The six unbuyable monitors are real: their pages are
+  gone or out of stock with no restock date.</p>
+</section>
+
+</div>
+<script>
+const b=document.body,t=document.getElementById('theme');
+const set=m=>{b.classList.toggle('light',m==='light');t.textContent=m==='light'?'☾':'☀';
+try{localStorage.setItem('report-theme',m)}catch(e){}};
+let m='dark';try{m=localStorage.getItem('report-theme')||'dark'}catch(e){}
+set(m);t.onclick=()=>set(b.classList.contains('light')?'dark':'light');
+</script>
+</body>
+</html>

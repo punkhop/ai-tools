@@ -1,5 +1,5 @@
 {
-  "_comment": "Grouped per piece. The installer merges 'base' always, then only the groups for the pieces the user chose, into ~/.claude/settings.json (arrays are appended without duplicates; existing settings are kept).",
+  "_comment": "Grouped per piece. tools/aitools.py merges 'base' always, then only the groups for the pieces the user chose, into ~/.claude/settings.json (lists are appended without duplicates; existing settings are kept). Uninstall removes only what the merge added.",
   "base": {
     "permissions": {
       "allow": [
@@ -43,13 +43,29 @@
         {
           "matcher": "Edit|Write|Read",
           "hooks": [
-            { "type": "command", "command": "python3 ~/.claude/hooks/block-secrets.py" }
+            {
+              "type": "command",
+              "command": "python3 ~/.claude/hooks/block-secrets.py"
+            }
           ]
         },
         {
           "matcher": "Bash",
           "hooks": [
-            { "type": "command", "command": "~/.claude/hooks/block-rm-untracked.sh" }
+            {
+              "type": "command",
+              "command": "~/.claude/hooks/block-rm-untracked.sh"
+            }
+          ]
+        }
+      ],
+      "UserPromptSubmit": [
+        {
+          "hooks": [
+            {
+              "type": "command",
+              "command": "~/.claude/hooks/context-budget-feedback.sh"
+            }
           ]
         }
       ]
@@ -61,18 +77,10 @@
         {
           "matcher": ".*",
           "hooks": [
-            { "type": "command", "command": "~/.claude/hooks/session-save.sh" }
-          ]
-        }
-      ]
-    }
-  },
-  "pass-handoff": {
-    "hooks": {
-      "UserPromptSubmit": [
-        {
-          "hooks": [
-            { "type": "command", "command": "~/.claude/hooks/context-budget-feedback.sh" }
+            {
+              "type": "command",
+              "command": "~/.claude/hooks/session-save.sh"
+            }
           ]
         }
       ]

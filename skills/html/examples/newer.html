@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#15171b">
+<title>The bookings screen on a phone</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400..700;1,14..32,400..700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/report.css">
+</head>
+<body>
+<div class="r-page">
+
+<div class="r-nav">
+  <a href="system.html">The report system</a>
+  <a href="findings.html">findings</a>
+  <a href="decision.html">decision</a>
+  <a href="explainer.html">explainer</a>
+  <a href="mission.html">mission map</a>
+  <a href="proof.html">proof</a>
+  <a href="thing.html">the thing itself</a>
+  <a href="drift.html">no drift</a>
+  <span class="r-here">newer blocks</span>
+  <span class="r-spacer"></span>
+  <button id="theme" class="r-theme" title="Switch theme"></button>
+</div>
+
+<h1 class="r-title">The bookings screen on a phone</h1>
+<p class="r-dek">Three layouts of one screen, the menu that sits on it, and where it lives in the app.</p>
+
+<section class="r-sec">
+  <h2 class="r-h2">Three layouts of the same four bookings, at real size.</h2>
+  <p class="r-body">Each phone is drawn at 390 points wide, the size it will be in a hand. Same customer, same four upcoming classes, same tab bar. Only the order of what you see first changes.</p>
+  <div class="r-compare r-stack">
+    <button class="r-compare-btn is-on" data-pick="a">A</button><button class="r-compare-btn is-on" data-pick="b">B</button><button class="r-compare-btn" data-pick="c">C</button>
+    <span class="r-compare-sep"></span><button class="r-compare-btn" data-pick="all">Show all three</button>
+    <span class="r-compare-note">pick two to weigh them side by side</span>
+  </div>
+  <div class="r-phonewall r-stack">
+    <div class="r-phoneset">
+      <div class="r-phoneset-row"><div>
+        <div class="r-phoneset-tag">A</div>
+        <div class="r-scale r-scale-still"><iframe src="mocks/phone-bookings-a.html" title="One list" scrolling="no"></iframe></div>
+      </div></div>
+      <p class="r-scale-cap"><strong>One list</strong><br>Every booking the same size, soonest first. Nothing to learn, nothing stands out.</p>
+    </div>
+    <div class="r-phoneset">
+      <div class="r-phoneset-row"><div>
+        <div class="r-phoneset-tag">B</div>
+        <div class="r-scale r-scale-still"><iframe src="mocks/phone-bookings-b.html" title="Next class first" scrolling="no"></iframe></div>
+      </div></div>
+      <p class="r-scale-cap"><strong>Next class first</strong><br>The next class gets the top half and its two actions. The rest is the list.</p>
+    </div>
+    <div class="r-phoneset">
+      <div class="r-phoneset-row"><div>
+        <div class="r-phoneset-tag">C</div>
+        <div class="r-scale r-scale-still"><iframe src="mocks/phone-bookings-c.html" title="Week strip" scrolling="no"></iframe></div>
+      </div></div>
+      <p class="r-scale-cap"><strong>Week strip</strong><br>A week of days across the top; tap a day to see it. Good with many bookings, empty with one.</p>
+    </div>
+  </div>
+  <div class="r-ask-here r-stack">
+    <div class="r-ask-q">Which layout does the bookings screen ship with?</div>
+    <div class="r-ask-why">Nine in ten customers hold one or two bookings at a time, and the question they open the app with is "when and where is my next one".</div>
+    <div class="r-mycall-inline"> &mdash; <strong>B, next class first</strong></div>
+  </div>
+</section>
+
+<section class="r-sec">
+  <h2 class="r-h2">The class menu lists every class before the three you booked.</h2>
+  <p class="r-body">The filter at the top of the screen is alphabetical. A customer looking for their own class reads past classes they never took, and the one sold-out row looks the same as a broken one.</p>
+  <div class="r-menus r-stack">
+    <div class="r-menu-wrap">
+      <div class="r-menu-name">Today</div>
+      <div class="r-menu-trigger">All classes</div>
+      <div class="r-menu">
+        <div class="r-menu-row is-current is-tint"><span class="r-menu-check">✓</span>All classes</div>
+        <div class="r-menu-row "><span class="r-menu-check"> </span>Evening Glaze Lab<span class="r-menu-key">3 dates</span></div>
+        <div class="r-menu-row "><span class="r-menu-check"> </span>Hand Building for Two<span class="r-menu-key">2 dates</span></div>
+        <div class="r-menu-row "><span class="r-menu-check"> </span>Open Studio<span class="r-menu-key">8 dates</span></div>
+        <div class="r-menu-row "><span class="r-menu-check"> </span>Wheel Throwing: Beginners<span class="r-menu-key">1 date</span></div>
+        <div class="r-menu-row is-dim"><span class="r-menu-check"> </span>Wheel Throwing: Next Steps<span class="r-menu-key">sold out</span></div>
+        <div class="r-menu-sep"></div>
+        <div class="r-menu-row is-dim"><span class="r-menu-check"> </span>Canceled classes<span class="r-menu-key">1</span></div>
+      </div>
+      <p class="r-menu-cap">Alphabetical. Your Saturday class is fifth, under three you have never booked.</p>
+    </div>
+    <div class="r-menu-wrap">
+      <div class="r-menu-name">Proposed</div>
+      <div class="r-menu-trigger">All classes</div>
+      <div class="r-menu">
+        <div class="r-menu-head">You have booked</div>
+        <div class="r-menu-row is-hover"><span class="r-menu-check"> </span>Wheel Throwing: Beginners<span class="r-menu-key">Sat, Aug 22</span></div>
+        <div class="r-menu-row "><span class="r-menu-check"> </span>Evening Glaze Lab<span class="r-menu-key">Fri, Aug 29</span></div>
+        <div class="r-menu-row "><span class="r-menu-check"> </span>Hand Building for Two<span class="r-menu-key">Sat, Sep 12</span></div>
+        <div class="r-menu-sep"></div>
+        <div class="r-menu-head">Everything else</div>
+        <div class="r-menu-row is-current"><span class="r-menu-check">✓</span>All classes</div>
+        <div class="r-menu-row "><span class="r-menu-check"> </span>Open Studio<span class="r-menu-key">8 dates</span></div>
+        <div class="r-menu-row is-dim"><span class="r-menu-check"> </span>Wheel Throwing: Next Steps<span class="r-menu-key">sold out</span></div>
+      </div>
+      <p class="r-menu-cap">Your bookings lead, each with its date. Everything else follows under its own heading.</p>
+    </div>
+    <div class="r-menu-wrap">
+      <div class="r-menu-name">On one booking</div>
+      <div class="r-menu-trigger">Wheel Throwing: Beginners</div>
+      <div class="r-menu">
+        <div class="r-menu-row "><span class="r-menu-check"> </span>Add to calendar</div>
+        <div class="r-menu-row "><span class="r-menu-check"> </span>Get directions</div>
+        <div class="r-menu-row "><span class="r-menu-check"> </span>Move to another date<span class="r-menu-key">3 open</span></div>
+        <div class="r-menu-sep"></div>
+        <div class="r-menu-row is-danger"><span class="r-menu-check"> </span>Cancel booking<span class="r-menu-key">refund $130</span></div>
+      </div>
+      <p class="r-menu-cap">The four things people do with a booking, with the one that costs money last and red.</p>
+    </div>
+  </div>
+</section>
+
+<section class="r-sec">
+  <h2 class="r-h2">The bookings screen is one of eleven, two taps from the front door.</h2>
+  <p class="r-body">The bar on the right is how often each tab is opened, on one scale. A dot marks a screen's state: green in use, amber fading, red unvisited.</p>
+  <div class="r-tree r-stack"><ul><li class="r-tree-root"><div class="r-tree-row"><div><span class="r-tree-name">Northgate Pottery app</span><span class="r-tree-fact">4 tabs, 11 screens</span></div><span></span></div><ul><li class="r-tree-live"><div class="r-tree-row"><div><span class="r-mark r-m-done"></span><span class="r-tree-name">Classes</span><span class="r-tree-fact">browse and book</span></div><span class="r-tree-bar" style="--w:150px"></span></div><ul><li class=""><div class="r-tree-row"><div><span class="r-tree-name">Class list</span><span class="r-tree-fact">62% of visits</span></div><span></span></div></li><li class=""><div class="r-tree-row"><div><span class="r-tree-name">Class page</span><span class="r-tree-fact">where a booking starts</span></div><span></span></div></li></ul></li><li class="r-tree-live"><div class="r-tree-row"><div><span class="r-mark r-m-done"></span><span class="r-tree-name">Bookings</span><span class="r-tree-fact">what this page is about</span></div><span class="r-tree-bar" style="--w:96px"></span></div><ul><li class=""><div class="r-tree-row"><div><span class="r-tree-name">Your bookings</span><span class="r-tree-fact">the screen being redrawn</span></div><span></span></div></li><li class=""><div class="r-tree-row"><div><span class="r-tree-name">One booking</span><span class="r-tree-fact">move, cancel, directions</span></div><span></span></div></li><li class="r-tree-dormant"><div class="r-tree-row"><div><span class="r-mark r-m-call"></span><span class="r-tree-name">Refund receipt</span><span class="r-tree-fact">reached only from an email</span></div><span></span></div></li></ul></li><li class="r-tree-dormant"><div class="r-tree-row"><div><span class="r-mark r-m-call"></span><span class="r-tree-name">Studio</span><span class="r-tree-fact">open studio hours</span></div><span class="r-tree-bar" style="--w:34px"></span></div><ul><li class=""><div class="r-tree-row"><div><span class="r-tree-name">Hours this week</span><span class="r-tree-fact"></span></div><span></span></div></li></ul></li><li class="r-tree-live"><div class="r-tree-row"><div><span class="r-mark r-m-done"></span><span class="r-tree-name">You</span><span class="r-tree-fact">profile and cards</span></div><span class="r-tree-bar" style="--w:58px"></span></div><ul><li class=""><div class="r-tree-row"><div><span class="r-tree-name">Saved cards</span><span class="r-tree-fact"></span></div><span></span></div></li><li class="r-tree-dead"><div class="r-tree-row"><div><span class="r-mark r-m-broken"></span><span class="r-tree-name">Gift cards</span><span class="r-tree-fact">no visits in 90 days</span></div><span></span></div></li></ul></li></ul></li></ul></div>
+</section>
+
+<section class="r-sec">
+  <h2 class="r-h2">Needs your attention</h2>
+  <div class="r-asks">
+    <div class="r-ask">
+      <span class="r-ask-n"></span>
+      <div class="r-ask-body">
+        <div class="r-ask-q">Which layout does the bookings screen ship with?</div>
+        <div class="r-mycall-inline"> &mdash; <strong>B, next class first</strong></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div>
+<script>
+// compare bar: two letters on = those two side by side; "Show all three" resets
+const picks=[...document.querySelectorAll('.r-compare-btn[data-pick]')],sets=[...document.querySelectorAll('.r-phoneset')];
+const show=()=>{const on=picks.filter(p=>p.dataset.pick!=='all'&&p.classList.contains('is-on')).map(p=>p.dataset.pick);
+  sets.forEach((s,i)=>s.hidden=on.length>0&&!on.includes('abc'[i]))};
+picks.forEach(p=>p.onclick=()=>{if(p.dataset.pick==='all'){picks.forEach(q=>q.classList.remove('is-on'))}else{p.classList.toggle('is-on')}show()});
+</script>
+<script>
+const b=document.body,t=document.getElementById('theme');
+const set=m=>{b.classList.toggle('light',m==='light');t.textContent=m==='light'?'☾':'☀';
+try{localStorage.setItem('report-theme',m)}catch(e){}};
+let m='dark';try{m=localStorage.getItem('report-theme')||'dark'}catch(e){}
+set(m);t.onclick=()=>set(b.classList.contains('light')?'dark':'light');
+</script>
+</body>
+</html>

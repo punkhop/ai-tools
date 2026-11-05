@@ -108,8 +108,9 @@ else echo "WARN no transcripts yet — normal on a fresh install (sessions under
 
 ```bash
 registered block-secrets.py; registered block-rm-untracked.sh; runnable block-rm-untracked.sh
+registered context-budget-feedback.sh; runnable context-budget-feedback.sh
 [ -f ~/.claude/hooks/block-secrets.py ] && echo "OK block-secrets.py present" || echo "FAIL block-secrets.py missing — rerun the installer and pick safety-hooks"
-command -v jq >/dev/null && echo "OK jq (the rm guard needs it)" || echo "FAIL jq missing — the rm guard silently does nothing (Mac: brew install jq · Linux: install jq with your package manager)"
+command -v jq >/dev/null && echo "OK jq (the rm guard and the long-thread warning need it)" || echo "FAIL jq missing — the rm guard and the long-thread warning silently do nothing (Mac: brew install jq · Linux: install jq with your package manager)"
 echo '{"tool_input":{"file_path":"/x/.env"}}' | python3 ~/.claude/hooks/block-secrets.py 2>/dev/null
 [ $? -eq 2 ] && echo "OK secrets guard blocks .env files" || echo "FAIL secrets guard let a .env file through — rerun the installer and pick safety-hooks"
 T=$(mktemp -d); (cd "$T" && git init -q && touch scratch.txt)
@@ -163,8 +164,6 @@ for s in pass handoff; do
   [ -f ~/.claude/skills/$s/SKILL.md ] && echo "OK /$s" || echo "FAIL /$s missing — rerun the installer and pick pass-handoff"
 done
 [ -d ~/memory/handoffs ] && echo "OK ~/memory/handoffs" || echo "FAIL ~/memory/handoffs missing — mkdir -p ~/memory/handoffs"
-registered context-budget-feedback.sh; runnable context-budget-feedback.sh
-command -v jq >/dev/null && echo "OK jq (the context-size warning needs it)" || echo "WARN jq missing — Claude gets no warning when a thread grows long (Mac: brew install jq · Linux: install jq)"
 ```
 
 ## qmd
@@ -278,8 +277,11 @@ command -v gemini >/dev/null && echo "OK gemini CLI (optional third voice for /m
 
 ```bash
 [ -f ~/.claude/skills/image/SKILL.md ] && echo "OK /image" || echo "FAIL /image missing — rerun the installer and pick image"
-if [ -n "${GEMINI_API_KEY:-}" ] || [ -n "${OPENAI_API_KEY:-}" ]; then echo "OK an image API key is set"
-else echo "FAIL no GEMINI_API_KEY or OPENAI_API_KEY — add one to your shell profile (e.g. export GEMINI_API_KEY=...), then restart Claude"; fi
+if [ -n "${GEMINI_API_KEY:-}" ] || [ -n "${OPENAI_API_KEY:-}" ] || grep -qE '^(export )?(GEMINI|OPENAI)_API_KEY=.' ~/.claude/ai-tools/keys.env 2>/dev/null; then echo "OK an image API key is saved"
+else echo "FAIL no OpenAI or Gemini key saved — save one with: python3 ~/.claude/skills/image/scripts/save_key.py OPENAI_API_KEY (run it in your own terminal; the paste stays hidden)"; fi
+PY_=~/.claude/ai-tools/venv/bin/python; [ -x "$PY_" ] || PY_=python3
+"$PY_" ~/.claude/skills/image/scripts/generate-template.py --check 2>/dev/null | grep -q '^pillow: installed' \
+  && echo "OK image packages (pillow)" || echo "FAIL pillow missing — python3 -m venv ~/.claude/ai-tools/venv && ~/.claude/ai-tools/venv/bin/python -m pip install pillow openai google-genai"
 command -v python3 >/dev/null && echo "OK python3" || echo "FAIL python3 missing — the image scripts need it (Mac: brew install python · Linux: install python3)"
 ```
 

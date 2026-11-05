@@ -1,0 +1,1672 @@
+/* ==========================================================================
+   The one stylesheet every report page links.
+   Change a value here and every page that links it changes. That is the point.
+
+   The catalog that names every block and where it is at home:
+   ~/.claude/skills/html/BLOCKS.md. The rules for choosing between them:
+   ~/.claude/skills/html/report-method.md.
+   Every class is namespaced `r-` — a bare modifier name once matched a component
+   and turned a panel into an inline-block that ran off the page.
+
+   Contents
+     1  Tokens          light + dark, four semantic hues, nothing else colored
+     2  Base + frame    body, page width, links, selection
+     3  Type            title, dek, section heading, component title, body, small
+     4  Furniture       nav row, section, rules, theme toggle
+     5  Components      each with FOR / HOLDS / NEVER at the source
+     6  Drawings        assembly line, nesting doll, split bar, miniature, before/after
+     7  Phone           ≤720px — tables become cards, sequences stack, rows shrink
+   ========================================================================== */
+
+/* == 1 · Tokens =========================================================== */
+
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased;
+  font-variant-numeric:tabular-nums;
+
+  --bg:#15171b; --plate:#1c1f24; --plate2:#242830;
+  --line:#33373f; --line2:#262a31; --band:rgba(255,255,255,.024);
+  --ink:#e8e9ec; --mute:#9aa0aa; --faint:#70757f;
+
+  --green:#4dbd8b; --green-t:rgba(77,189,139,.10);
+  --amber:#d2a247; --amber-t:rgba(210,162,71,.10);
+  --red:#e0655c;   --red-t:rgba(224,101,92,.10);
+  --acc:#4aa4c9;   --acc-t:rgba(74,164,201,.12);
+
+  /* Spacing canon — four steps, and nothing invents a fifth.
+       --sec-gap   80px  between top-level sections, and nowhere else
+       --comp-gap  28px  between blocks inside a section (.r-stack)
+       --peer-gap  56px  between peers of the same kind inside one section
+                         (claim after claim, milestone after milestone)
+       12px              between lines inside a single block
+     A BLOCK NEVER CARRIES ITS OWN SECTION-SIZED MARGIN. Spacing belongs to the
+     container. A block that adds --sec-gap to itself inside a section that already
+     has one produces a 190px hole, which is how this rule got written. */
+  --stage:1680px;          /* content width ceiling */
+  --measure:none;          /* prose runs the stage. Every prose
+                              block reads this one token: dek, body, lead, callout,
+                              milestone paragraph, ask. Nothing carries its own cap. */
+  --r-plate:8px;           /* radius on plates and cards */
+  --r-chip:4px;            /* radius on chips, buttons, inputs */
+  --sec-gap:68px;          /* between top-level sections */
+  --comp-gap:28px;         /* between blocks inside a section */
+  --peer-gap:56px;         /* between peers of one kind inside a section */
+  --rule-heavy:3px;        /* the colored top rule that names a section's mood */
+}
+
+body.light{
+  --bg:#f6f6f7; --plate:#ffffff; --plate2:#ebecee;
+  --line:#d5d7db; --line2:#e4e5e8; --band:rgba(20,22,26,.03);
+  --ink:#1b1d22; --mute:#5b606a; --faint:#848992;
+
+  --green:#187a4d; --green-t:rgba(24,122,77,.09);
+  --amber:#8f6512; --amber-t:rgba(143,101,18,.10);
+  --red:#b23a32;   --red-t:rgba(178,58,50,.08);
+  --acc:#1f7da0;   --acc-t:rgba(31,125,160,.10);
+}
+
+/* == 2 · Base + frame ===================================================== */
+
+body,body *{transition:background-color .25s ease,color .25s ease,border-color .25s ease}
+@media (prefers-reduced-motion:reduce){body,body *{transition:none}}
+
+a{color:var(--acc);text-decoration:none;border-bottom:1px solid rgba(128,150,160,.4)}
+a:hover{color:var(--ink);border-bottom-color:var(--ink)}
+::selection{background:var(--acc-t)}
+img{max-width:100%;height:auto;display:block}
+/* Containment is a rule. Never overflow-x:hidden on html/body — it kills scrolling. */
+*,*::before,*::after{box-sizing:border-box}
+
+.r-page{counter-reset:ask askindex;max-width:var(--stage);margin:0 auto;
+  padding:clamp(16px,2.5vw,40px) clamp(16px,3vw,48px) 100px}
+
+
+
+/* == 3 · Type ============================================================= */
+
+/* Reads like a book title: short, one thought, no data. */
+.r-title{font-size:clamp(34px,3.6vw,54px);font-weight:640;letter-spacing:-.02em;
+  line-height:1.05;margin:36px 0 10px;max-width:26ch;text-wrap:balance}
+
+/* Describes the page in a handful of words. No data — the data lives in components. */
+.r-dek{font-size:17.5px;color:var(--mute);margin:0;max-width:var(--measure)}
+
+/* Every heading is a sentence of the argument. Read alone they carry the whole thing. */
+.r-h2{font-size:clamp(21px,1.9vw,26px);font-weight:600;letter-spacing:-.012em;
+  margin:0;text-wrap:balance}
+.r-h3{font-size:18px;font-weight:600;margin:0 0 16px}
+
+.r-body{font-size:16px;line-height:1.55;max-width:var(--measure);margin:12px 0 0}
+.r-lead{font-size:15.5px;line-height:1.5;margin:14px 0 0;max-width:52ch}
+.r-small{font-size:13.5px;line-height:1.5;color:var(--mute)}
+.r-note{font-size:14px;line-height:1.5;color:var(--mute);margin-top:4px}
+/* POINTS — claims "and": 2–6 peer facts under one heading sentence, one line each.
+   FOR a section whose body is several plain facts. HOLDS short bullets, one bold noun optional.
+   NEVER order (that is .r-seq), never a second level, never a paragraph per bullet. */
+.r-points{margin:14px 0 0;padding-left:1.2em;font-size:16px;line-height:1.5;max-width:var(--measure)}
+.r-points > li{margin:6px 0;padding-left:2px}
+.r-points > li::marker{color:var(--mute)}
+.r-label{font:500 12.5px 'Inter',system-ui,sans-serif;color:var(--faint)}
+.r-strong{font-size:15.5px;font-weight:600}
+
+/* A figure always arrives with its unit spelled out beside it. */
+.r-fig{font:500 clamp(22px,2.2vw,32px) 'Inter',system-ui,sans-serif}
+.r-unit{font-size:14px;color:var(--mute)}
+
+.r-green{color:var(--green)} .r-amber{color:var(--amber)}
+.r-red{color:var(--red)}     .r-acc{color:var(--acc)}
+
+/* A literal — a path, a field name, a route. Breaks anywhere it has to, because
+   an unbreakable 60-character path is exactly the thing that pushes a page wider
+   than a phone. Added 2026-08-21; `code` had no rule at all before. */
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em;
+  overflow-wrap:anywhere}
+
+/* == 4 · Furniture ======================================================== */
+
+/* Nav row — siblings of this page, then the theme toggle hard right. */
+.r-nav{display:flex;align-items:center;gap:8px 22px;flex-wrap:wrap;
+  font:500 13px 'Inter',system-ui,sans-serif;color:var(--faint)}
+.r-nav a{border-bottom:none}
+.r-nav a:hover{border-bottom:1px solid var(--ink)}
+.r-nav .r-here{color:var(--ink);font-weight:600}
+.r-nav .r-spacer{flex:1}
+
+.r-theme{font-size:15px;line-height:1;font-family:inherit;color:var(--mute);
+  background:none;border:1px solid var(--line);width:32px;height:32px;
+  display:grid;place-items:center;cursor:pointer;border-radius:var(--r-chip)}
+.r-theme:hover{color:var(--ink);border-color:var(--ink)}
+
+/* Sections breathe at 80. A colored top rule names the section's mood; gray is neutral. */
+.r-sec{margin-top:var(--sec-gap);border-top:1px solid var(--line2);padding-top:28px}
+.r-sec-amber{border-top:var(--rule-heavy) solid var(--amber)}
+.r-sec-green{border-top:var(--rule-heavy) solid var(--green)}
+.r-sec-red{border-top:var(--rule-heavy) solid var(--red)}
+.r-sec > * + *{margin-top:12px}
+.r-stack{margin-top:var(--comp-gap)}
+
+/* The two-column stage: the component runs wide, its note sits in the margin. */
+.r-split{display:flex;flex-wrap:wrap;gap:32px 56px}
+.r-split-main{flex:1 1 640px;min-width:min(100%,300px)}
+.r-split-aside{flex:1 1 250px;max-width:360px;font-size:13.5px;line-height:1.5;
+  color:var(--mute);border-top:2px solid var(--line);padding-top:12px}
+.r-split-aside > * + *{margin-top:10px}
+/* A gutter note carries NO rule and NO box — use this when the margin holds notes,
+   not a for/holds/never spec rail. */
+.r-split-aside.r-plain{border-top:none;padding-top:0}
+.r-split-aside b{font:500 12px 'Inter',system-ui,sans-serif;color:var(--faint);
+  font-weight:500;margin-right:6px}
+
+/* == 5 · Components ======================================================= */
+
+/* --- Verdict plate -------------------------------------------------------
+   FOR    the one conclusion of a page that reached one.
+   HOLDS  ribbon word · the name set large · one figure with its unit ·
+          a one-line verdict · exactly three reasons · a rail of runner-up + ruled-outs.
+   NEVER  twice on one page. The figure never wears the ribbon — the ribbon
+          labels the name. Never a page that ends open.                     */
+.r-verdict{background:var(--plate);border:1px solid var(--line);
+  border-top:var(--rule-heavy) solid var(--green);border-radius:var(--r-plate);
+  display:flex;flex-wrap:wrap}
+.r-verdict-main{flex:1 1 380px;min-width:min(100%,280px);padding:26px 30px 28px}
+.r-ribbon{display:flex;align-items:center;gap:10px;
+  font:500 13px 'Inter',system-ui,sans-serif;color:var(--green)}
+.r-ribbon::before{content:"";width:18px;height:2px;background:var(--green)}
+.r-verdict-name{font-size:clamp(26px,2.4vw,36px);font-weight:650;
+  letter-spacing:-.015em;line-height:1.1;margin-top:10px}
+.r-verdict-fig{margin-top:8px}
+.r-verdict-fig .r-fig{font-size:clamp(22px,1.9vw,28px)}
+.r-reasons{margin-top:16px;display:grid;gap:8px;font-size:14.5px;
+  line-height:1.45;max-width:56ch}
+.r-reasons > li,.r-reasons > div{display:flex;gap:10px;list-style:none}
+.r-reasons{padding:0;margin-left:0}
+.r-tick{color:var(--green);font-weight:600}
+.r-cross{color:var(--red);font-weight:600}
+.r-verdict-rail{flex:1 1 230px;min-width:min(100%,220px);
+  border-left:1px solid var(--line);padding:24px 28px;
+  font-size:13.5px;line-height:1.5;color:var(--mute)}
+.r-verdict-rail strong,.r-verdict-rail .r-rail-head{color:var(--ink)}
+.r-verdict-rail > * + *{margin-top:4px}
+.r-verdict-rail > .r-rail-gap{margin-top:18px}
+
+/* --- Admitted-flaws row --------------------------------------------------
+   FOR    the case against the thing that just won. This is what makes a page
+          read reported, not sold.
+   HOLDS  exactly three columns — amber rule, short title, two lines.
+   NEVER  omitted when a verdict plate exists. Never a flaw softened into praise. */
+.r-flaws{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));
+  gap:14px 28px}
+.r-flaw{border-top:var(--rule-heavy) solid var(--amber);padding-top:12px}
+.r-flaw-title{font-weight:600;font-size:15px}
+.r-flaw-body{font-size:13.5px;line-height:1.5;color:var(--mute);margin-top:4px}
+
+/* --- Decision cards ------------------------------------------------------
+   FOR    a choice that is the reader's, answerable in one word from a phone.
+   HOLDS  2–4 options at IDENTICAL size — tag, figure, title, two lines,
+          radio top-right with the recommendation pre-filled. Two is the best shape.
+   NEVER  one card smaller than another; more than four (that is the table's job). */
+.r-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));
+  gap:16px}
+.r-card{position:relative;background:var(--plate);border:1.5px solid var(--line);
+  border-radius:var(--r-plate);padding:22px 24px}
+.r-card-picked{border-color:var(--green)}
+.r-radio{position:absolute;top:18px;right:18px;width:18px;height:18px;
+  border-radius:50%;border:2px solid var(--line);display:grid;place-items:center}
+.r-card-picked .r-radio{border-color:var(--green)}
+.r-radio::after{content:"";width:8px;height:8px;border-radius:50%;background:transparent}
+.r-card-picked .r-radio::after{background:var(--green)}
+.r-card-fig{font:500 30px 'Inter',system-ui,sans-serif;margin-top:10px}
+.r-card-title{font-weight:600;font-size:15.5px;margin-top:8px}
+.r-card-body{font-size:13.5px;line-height:1.5;color:var(--mute);margin-top:4px}
+
+/* --- My call -------------------------------------------------------------
+   FOR    the recommendation, wherever a choice of the reader's sits. An OPINION.
+   HOLDS  green rules above and below, "My call" in green rolled into the
+          sentence, set 21px semibold. Identical on every page.
+   NEVER  a badge or a pill — pills read as states, and a recommendation is
+          not a state. Never body-sized gray text.                          */
+.r-mycall{border-top:2px solid var(--green);border-bottom:2px solid var(--green);
+  padding:20px 2px;max-width:58ch;
+  font-size:clamp(18px,1.5vw,21px);font-weight:600;line-height:1.45}
+.r-mycall::before{content:"My call";color:var(--green)}
+.r-mycall-amber{border-color:var(--amber)}
+.r-mycall-amber::before{color:var(--amber)}
+/* the inline form, used inside a needs-your-attention row */
+.r-mycall-inline{font-size:14.5px;margin-top:10px}
+.r-mycall-inline::before{content:"My call";color:var(--green);font-weight:600}
+
+/* --- Comparison table ----------------------------------------------------
+   FOR    one decision across 5+ candidates, or 3+ attributes.
+   HOLDS  3–12 banded rows. The winner's whole row tinted with a colored left
+          edge. Magnitude drawn as a bar inside its own cell.
+   NEVER  dimming or striking a ruled-out row — the reader is still comparing against
+          it. It keeps FULL contrast and wears a chip instead.              */
+.r-tablebox{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.r-table{width:100%;border-collapse:collapse;font-size:13.5px;line-height:1.5}
+.r-table th{font:500 12.5px 'Inter',system-ui,sans-serif;color:var(--mute);
+  text-align:left;padding:0 16px 10px 0;border-bottom:1px solid var(--line);
+  white-space:nowrap}
+.r-table td{padding:11px 16px 11px 0;border-bottom:1px solid var(--line2);
+  vertical-align:top}
+.r-table tbody tr:nth-child(even){background:var(--band)}
+/* The winner keeps its tint at any position, banded or not — hence the extra weight. */
+.r-table tbody tr.r-row-win,.r-table.r-js tbody tr.r-row-win{
+  background:var(--green-t);box-shadow:inset 3px 0 0 var(--green)}
+.r-table .r-row-win td:first-child{padding-left:12px}
+.r-table .r-num{text-align:right}
+.r-table th:last-child,.r-table td:last-child{padding-right:0}
+/* The picked COLUMN — when the candidates are columns and the rows are the cases they are
+   tried on (three voices across five pages), the recommendation tints its whole column,
+   header green. Same meaning as .r-row-win, turned 90°. Added 2026-10-12.
+   NEVER more than one column; never dims the others — the reader is comparing against them. */
+.r-table .r-col-win{background:var(--green-t)}
+.r-table th.r-col-win{color:var(--green);padding-left:12px}
+.r-table td.r-col-win{padding-left:12px;padding-right:12px}
+.r-table .r-col-win + td,.r-table .r-col-win + th{padding-left:16px}
+/* Card mode with long cells: the column name sits on its own line above the value,
+   instead of floating beside a 40-word paragraph. */
+@media (max-width:720px){
+  .r-table-cards.r-table-stack td::before{float:none;display:block;margin:0 0 2px;min-width:0}
+  .r-table-cards td.r-col-win{padding:8px 10px;border-radius:6px;margin:4px 0}
+  .r-table-cards td.r-col-win::before{color:var(--green)}
+}
+/* Magnitude is a small bar inside its own cell — never a bar the width of the column. */
+.r-table .r-bar-track{max-width:140px;margin-left:auto}
+.r-chip{display:inline-block;font:500 12px 'Inter',system-ui,sans-serif;
+  padding:2px 8px;border-radius:var(--r-chip);border:1px solid var(--red);
+  color:var(--red);max-width:100%;overflow-wrap:anywhere}
+/* No nowrap: an inline-block chip already keeps to one line unless it is wider than its
+   whole container — then it wraps instead of running off a phone screen (2026-09-25). */
+.r-chip-acc{border-color:var(--acc);color:var(--acc)}
+/* A chip is red by default because its first job was saying why a row is ruled out.
+   These two carry the other two meanings a chip ever needs: teal informational,
+   green already-true. Color keeps its meaning or it is a bug. */
+.r-chip-green{border-color:var(--green);color:var(--green)}
+/* Amber was the one hue a chip could not wear, so "your call" and "waiting" kept
+   coming out red, which means broken. Added 2026-09-12. */
+.r-chip-amber{border-color:var(--amber);color:var(--amber)}
+.r-bar{display:block;height:6px;border-radius:2px;background:var(--acc);opacity:.75}
+.r-bar-track{display:block;height:6px;border-radius:2px;background:var(--line2)}
+/* the controls a table grows past 8 rows */
+.r-controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px}
+.r-input{font:400 13.5px 'Inter',system-ui,sans-serif;color:var(--ink);
+  background:var(--plate);border:1px solid var(--line);border-radius:var(--r-chip);
+  padding:7px 11px;min-width:190px}
+.r-input::placeholder{color:var(--faint)}
+.r-pill{display:inline-flex;align-items:center;gap:6px;font:500 12.5px 'Inter',system-ui,sans-serif;
+  color:var(--acc);border:1px solid var(--acc);background:var(--acc-t);
+  border-radius:var(--r-chip);padding:3px 8px}
+.r-pill button{background:none;border:none;color:inherit;cursor:pointer;
+  font:inherit;padding:0;line-height:1}
+.r-clear{background:none;border:none;color:var(--mute);cursor:pointer;
+  font:500 12.5px 'Inter',system-ui,sans-serif;padding:3px 2px;
+  border-bottom:1px solid var(--line)}
+.r-clear:hover{color:var(--ink);border-bottom-color:var(--ink)}
+
+.r-menu{position:relative}
+.r-menu-btn{font:500 13px 'Inter',system-ui,sans-serif;color:var(--mute);
+  background:var(--plate);border:1px solid var(--line);border-radius:var(--r-chip);
+  padding:7px 11px;cursor:pointer}
+.r-menu-btn::after{content:" ▾";color:var(--faint)}
+.r-menu-btn:hover,.r-menu-btn[aria-expanded="true"]{color:var(--ink);border-color:var(--ink)}
+.r-menu-panel{position:absolute;top:calc(100% + 6px);left:0;z-index:20;
+  background:var(--plate);border:1px solid var(--line);border-radius:var(--r-chip);
+  padding:8px;min-width:190px;max-height:280px;overflow:auto;
+  box-shadow:0 12px 28px rgba(0,0,0,.35)}
+.r-menu-panel label{display:flex;align-items:center;gap:9px;padding:5px 6px;
+  font-size:13.5px;cursor:pointer;border-radius:var(--r-chip)}
+.r-menu-panel label:hover{background:var(--band)}
+.r-menu-panel input{accent-color:var(--acc);width:15px;height:15px;margin:0}
+
+.r-th-sort{cursor:pointer;user-select:none}
+.r-th-sort:hover{color:var(--ink)}
+.r-th-arrow{color:var(--acc)}
+/* With no script, banding is every other row. Once the controls attach, sorting
+   reorders rows, so banding follows position instead. */
+.r-table.r-js tbody tr:nth-child(even){background:none}
+.r-table.r-js tbody tr.r-band{background:var(--band)}
+
+/* --- State matrix ---------------------------------------------------------
+   FOR    every action crossed with every state a thing can be in. The point is the
+          SHAPE of the answer: a row that is green all the way across behaves; one
+          red square in a field of green is the whole finding.
+   HOLDS  a comparison table whose rows are actions and columns are states. Each
+          cell is a `.r-cell` carrying a status mark, what happened in one phrase,
+          and — optionally — a second line for what the system claimed happened.
+          Add `.r-table-wide` past about five columns so it scrolls rather than
+          crushing. A square nobody measured says so; a square nobody has ruled on
+          wears the needs-your-call mark.
+   NEVER  a square left blank — untested and unchanged are different answers, and a
+          blank one reads as neither. Never a matrix whose cells hold a sentence:
+          if the cell needs a sentence, the finding belongs under the grid.  */
+.r-cell{white-space:normal;vertical-align:top}
+.r-cell .r-mark{margin-right:7px}
+.r-cell-what{font-size:13.5px}
+.r-cell-said{display:block;font-size:12.5px;color:var(--faint);margin-top:3px;
+  margin-left:16px}
+
+/* --- Stat row ------------------------------------------------------------
+   FOR    2–4 figures sharing one unit, one period, one subject.
+   HOLDS  a figure and the consequence line under it. Rules between, no boxes.
+   NEVER  spread across the whole stage — a row of figures reads as a set only while
+          they stay near each other; numbers that disagree in kind. Never a count with no so-what.     */
+.r-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));
+  border-top:2px solid var(--line);max-width:940px}
+.r-stat{padding:16px 18px 0}
+.r-stat:first-child{padding-left:0}
+.r-stat:last-child{padding-right:0}
+.r-stat + .r-stat{border-left:1px solid var(--line2)}
+.r-stat-why{font-size:13.5px;line-height:1.45;color:var(--mute);margin-top:5px}
+
+/* --- Small multiples -----------------------------------------------------
+   FOR    placing one value among its peers — "compared to what?" answered
+          without a sentence.
+   HOLDS  4–10 horizontal rows: name, bar, value. One shared scale, one row lit.
+   NEVER  stacking on a phone. It SHRINKS — side by side IS the component.  */
+.r-multi{display:grid;gap:9px}
+.r-multi-row{display:grid;grid-template-columns:minmax(90px,150px) minmax(0,1fr) auto;
+  align-items:center;gap:12px;font-size:13.5px}
+.r-multi-name{color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* The track is a faint guide, not a second bar — if it reads as solid, every row
+   looks full length and the comparison dies. */
+.r-multi-track{height:10px;border-radius:2px;background:var(--band);
+  box-shadow:inset 0 0 0 1px var(--line2);overflow:hidden}
+.r-multi-fill{display:block;height:100%;background:var(--faint);border-radius:2px}
+.r-multi-lit .r-multi-name{color:var(--ink)}
+.r-multi-lit .r-multi-fill{background:var(--acc)}
+.r-multi-val{font-variant-numeric:tabular-nums;white-space:nowrap}
+
+/* --- Sequence ------------------------------------------------------------
+   FOR    a path walked once — a flow, a migration, a checkout.
+   HOLDS  3–6 cards; the ARROW carries the order, so no numerals.
+          The stuck step tinted amber.
+   NEVER  history — things that already happened belong to the timeline.    */
+.r-seq{display:flex;flex-wrap:wrap;align-items:stretch;gap:12px}
+.r-step{flex:1 1 180px;min-width:min(100%,170px);background:var(--plate);
+  border:1px solid var(--line);border-radius:var(--r-plate);padding:16px 18px}
+.r-step-stuck{border-color:var(--amber);background:var(--amber-t)}
+.r-step-title{font-weight:600;font-size:15px}
+.r-step-body{font-size:13.5px;line-height:1.5;color:var(--mute);margin-top:4px}
+.r-arrow{align-self:center;color:var(--faint);font-size:18px;line-height:1;flex:0 0 auto}
+.r-arrow::before{content:"→"}
+/* Down variant — a long path (7+ steps) whose cards hold real sentences. In a row they
+   wrap into a grid of narrow columns and the arrows lose their order; stacked, each
+   step reads at full width and the arrow keeps saying "then". */
+.r-seq-down{flex-direction:column}
+.r-seq-down .r-step{flex:0 0 auto}
+.r-seq-down .r-arrow{align-self:flex-start;margin-left:14px}
+.r-seq-down .r-arrow::before{content:"↓"}
+
+/* --- Timeline / milestone rail -------------------------------------------
+   FOR    history and missions — what happened, what is left, whose move it is.
+   HOLDS  2–6 milestones on a rail. Each carries a numbered marker, a short state
+          line, a title with its status, one paragraph of prose that can bold the
+          thing that matters, and 2–6 sub-items — each a BOLD TITLE on its own line
+          with a description under it, divided by a rule.
+   NEVER  steps someone walks once — that is the sequence. Never a stack of
+          identical bulleted lines: if every sub-item looks the same, none of them
+          reads. Never a milestone whose sub-items hide their counts. Show what is
+          DONE, not only what is left.
+   Numbered markers, a prose paragraph and divided sub-items, on our status
+   vocabulary.    */
+.r-rail{border-left:2px solid var(--line);margin-left:17px;padding-left:36px}
+.r-mile{position:relative;padding:0 0 44px}
+.r-mile:last-child{padding-bottom:0}
+
+/* The numbered marker sits ON the rail — an address, so a milestone can be cited. */
+.r-mile-n{position:absolute;left:-53px;top:-2px;width:34px;height:23px;
+  border-radius:var(--r-chip);background:var(--plate2);border:1px solid var(--line);
+  color:var(--mute);font:600 12.5px/21px ui-monospace,SFMono-Regular,Menlo,monospace;
+  text-align:center;letter-spacing:.04em}
+.r-mile-done .r-mile-n{color:var(--green);border-color:var(--green);background:var(--green-t)}
+.r-mile-now  .r-mile-n{color:var(--acc);border-color:var(--acc);background:var(--acc-t)}
+.r-mile-call .r-mile-n{color:var(--amber);border-color:var(--amber);background:var(--amber-t)}
+
+/* Where this milestone sits in time. Sentence case — never a capitalized eyebrow. */
+.r-mile-when{font-size:12.5px;color:var(--acc);margin-bottom:4px}
+.r-mile-done .r-mile-when{color:var(--green)}
+.r-mile-call .r-mile-when{color:var(--amber)}
+
+.r-mile-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px}
+.r-mile-title{font-size:21px;font-weight:600;letter-spacing:-.015em}
+.r-here-mark{font-size:13px;color:var(--acc)}
+/* One paragraph, and it may bold the phrase the milestone turns on. */
+.r-mile-what{font-size:15px;line-height:1.55;color:var(--mute);margin-top:7px;max-width:var(--measure)}
+.r-mile-what strong{color:var(--ink);font-weight:600}
+
+/* Sub-items are CHAPTERS, not bullets. Each is a bold title with a count, and it
+   opens to the individual pieces underneath — so a milestone reads at three depths:
+   what it is, what it is made of, and what each of those actually contains.
+   Native <details>/<summary>: no script, works with the stylesheet alone. */
+.r-items{margin-top:18px;max-width:var(--measure)}
+.r-item{border-top:1px solid var(--line2)}
+.r-item > summary{list-style:none;cursor:pointer;padding:12px 0;
+  display:flex;align-items:baseline;gap:9px;color:var(--ink);
+  font-size:15px;font-weight:600}
+.r-item > summary::-webkit-details-marker{display:none}
+.r-item > summary:hover{color:var(--acc)}
+.r-item-count{margin-left:auto;color:var(--faint);font-weight:400;font-size:13px;
+  white-space:nowrap;font-variant-numeric:tabular-nums}
+/* The chevron turns; it is the only thing on the row that says "this opens". */
+.r-item > summary::after{content:"›";flex:0 0 auto;color:var(--faint);font-size:16px;
+  line-height:1;transform:rotate(90deg);transition:transform .18s ease}
+.r-item[open] > summary::after{transform:rotate(270deg)}
+.r-item-what{font-size:14px;line-height:1.5;color:var(--mute);
+  margin:-2px 0 12px 18px;max-width:var(--measure)}
+/* The pieces themselves — own mark, nothing bolder than the chapter. A BLOCK, not a
+   flex row: flexing it makes the bold opening its own column and the rest of the
+   sentence a second one, so the line breaks into a ragged two-column mess when the
+   stage narrows. The text has to flow as one run. */
+.r-piece{display:block;padding:6px 0 6px 18px;
+  font-size:14px;line-height:1.5;color:var(--mute)}
+.r-piece:last-child{padding-bottom:14px}
+.r-piece > .r-mark{margin-right:9px}
+.r-piece b{color:var(--ink);font-weight:600}
+.r-piece-note{float:right;color:var(--faint);font-size:13px;white-space:nowrap;
+  margin-left:14px}
+
+/* Status marks — always the mark AND the word. Filled = firm, hollow = pending. */
+.r-mark{width:9px;height:9px;flex:0 0 9px;border-radius:2px;display:inline-block;
+  transform:translateY(-1px)}
+.r-mark-round{border-radius:50%}
+.r-m-done{background:var(--green)}
+.r-m-flight{background:var(--acc)}
+.r-m-moved{background:transparent;box-shadow:inset 0 0 0 1.5px var(--acc)}
+.r-m-notstarted{background:transparent;box-shadow:inset 0 0 0 1.5px var(--faint)}
+.r-m-call{background:var(--amber)}
+.r-m-degrading{background:transparent;box-shadow:inset 0 0 0 1.5px var(--amber)}
+.r-m-broken{background:var(--red)}
+.r-status{display:inline-flex;align-items:center;gap:7px;
+  font:500 13px 'Inter',system-ui,sans-serif;color:var(--mute)}
+
+/* --- Gutter note — RETIRED 2026-08-13 -------------------------------------
+   The margin blocks are almost all filler. If they are truly relevant or drive a
+   decision, make them inline, otherwise get rid of them.
+   The block stays defined so older pages keep rendering. Do not put one on a new
+   page. A fact that changes what the reader does belongs in the sentence it changes; a
+   fact that does not belongs nowhere.
+   The two-column stage (.r-split) survives for a SPEC beside its specimen — the
+   for/holds/never rails on the system page — and for nothing else. */
+.r-gutter{font:italic 400 13px/1.55 'Inter',system-ui,sans-serif;color:var(--mute)}
+.r-gutter + .r-gutter{margin-top:12px}
+.r-dagger{color:var(--acc);font-style:normal}
+
+/* --- Evidence pair -------------------------------------------------------
+   FOR    proof pages. The verdict lives in the HEADLINE — the mark, the word,
+          then the claim — on a colored left rule.
+   HOLDS  one numbered claim, its capture (or a before/after pair) at full
+          width, then numbered notes saying what to look for.
+   NEVER  an evidence pile at the end. Never code as evidence — behavior is
+          the evidence.                                                     */
+.r-tally{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 18px;
+  border-top:2px solid var(--line);padding-top:12px}
+.r-claim{border-left:var(--rule-heavy) solid var(--line);padding-left:20px}
+.r-claim + .r-claim{margin-top:var(--peer-gap)}
+.r-claim-fixed{border-left-color:var(--green)}
+.r-claim-broken{border-left-color:var(--red)}
+.r-claim-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px;
+  font-size:18px;font-weight:600}
+.r-claim-n{font:500 14px 'Inter',system-ui,sans-serif;color:var(--faint);flex:0 0 auto}
+
+/* What was actually seen, in one line, verdict first. The mark opens it. */
+.r-claim-saw{font-size:15.5px;line-height:1.5;margin-top:8px;max-width:var(--measure)}
+.r-claim-saw > .r-tick,.r-claim-saw > .r-cross{margin-right:8px}
+
+/* How you get there — the walk, in order, as prose. Never a numbered list: the
+   reader is being told a story, not given instructions. */
+.r-claim-walk{font-size:15px;line-height:1.6;color:var(--mute);margin-top:12px;
+  max-width:var(--measure)}
+
+/* No consequence block: a claim that needs a paragraph explaining why it matters
+   was not written as a claim. */
+/* Hugs its capture rather than stretching: a crop narrower than the stage left a
+   slab of empty plate beside it, which reads as a broken image. Blocks size to
+   their content — a full-width capture still fills, because the cap is the parent. */
+.r-shot{margin-top:16px;border:1px solid var(--line);border-radius:var(--r-plate);
+  overflow:hidden;background:var(--plate);width:fit-content;max-width:100%}
+.r-shots{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));
+  gap:16px;margin-top:16px;align-items:start;justify-items:start}
+
+/* A capture OF A PHONE. A phone screenshot is ~1100px of pixels describing a
+   390px screen, so at natural size it lands three times the size of a desktop
+   crop and dwarfs every block around it. This caps it at a believable phone
+   width so it reads as a phone, and hands the width back on a phone.
+   Added 2026-09-12 for the performer first-visit walk, which is all phone. */
+.r-shot-phone{width:340px}
+.r-shot-phone img{width:100%}
+/* In a .r-shots grid a column can be narrower than 340px — cap instead of fix the width. */
+.r-shots .r-shot-phone{width:100%;max-width:340px}
+@media (max-width:720px){.r-shot-phone{width:100%}}
+
+/* A capture that MOVES. Motion is the only evidence for a motion claim — a still
+   frame of an animation proves the frame, never the animation. Sits in .r-shot
+   like any other capture, so it inherits the plate, the rule and the radius, and
+   sizes to the stage the same way. `controls` always: the reader judges shape by
+   scrubbing, and a clip that plays once and stops cannot be judged twice. */
+.r-shot video{display:block;width:100%;height:auto;background:#000}
+/* A capture you LISTEN to: sound evidence (a crackle, a dropout, a mix) where a
+   waveform picture proves nothing. A labeled player filling its plate; pairs sit
+   side by side in .r-shots as before / after. Added 2026-10-06 for a film playback check. */
+.r-shot-sound{width:100%;padding:12px 14px}
+.r-shot-sound audio{display:block;width:100%;margin-top:8px}
+
+/* --- State gallery -------------------------------------------------------
+   Claims "this surface, in each of its states". Built 2026-10-12 for the staff
+   booking guide, where the reader was hunting through prototypes for one state.
+   FOR    every state of one of OUR OWN prototype surfaces, or an app screen beside
+          the version that copies it — two captures side by side at a readable size.
+   HOLDS  .r-shot plates two across on a desktop, one on a phone; each image wraps a
+          link to itself (full size), each caption names the state (.r-shot-app) and
+          links the prototype state. .r-states-phone packs phone captures 3-4 across.
+          A plate with no capture (the app surface never drawn) holds the real labels
+          in words inside .r-shot-cap — never a faked screenshot.
+   NEVER  three desktop captures across — at a third of the stage the copy stops being
+          readable. Never other products' screens (that is .r-shots-wide).          */
+.r-states{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;
+  margin-top:16px;align-items:start}
+.r-states .r-shot{margin:0;width:auto}
+.r-states .r-shot img{display:block;width:100%;height:auto}
+.r-states-phone{grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr))}
+.r-states-phone .r-shot{max-width:340px}
+@media (max-width:720px){.r-states{grid-template-columns:minmax(0,1fr)}}
+
+/* --- Reference gallery ---------------------------------------------------
+   FOR    a wall of captures from OTHER products, where the caption carries the
+          point and the picture only has to be legible enough to recognize.
+   HOLDS  plates in a grid wide enough to read an app's chrome — 3 across on a
+          desktop stage, 2 on a laptop, 1 on a phone — each plate an image over
+          a caption naming the app and the one thing worth taking from it.
+   NEVER  a grid so tight the screenshots become thumbnails; below ~440px an app
+          screenshot stops being evidence and becomes texture. Never a caption
+          that describes the picture — it names what to steal.                */
+.r-shots-wide{display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));
+  gap:18px;margin-top:16px;align-items:start}
+.r-shots-wide .r-shot{margin-top:0;width:auto;display:flex;flex-direction:column}
+/* A phone capture is a third the width of a desktop one. Left-aligned it leaves a
+   slab of empty plate that reads as a broken image, so a narrow capture centers in
+   its tile rather than stretching to fill it — upscaling a 299px screenshot to 660
+   is worse than the gap. */
+.r-shots-wide .r-shot img{margin-inline:auto}
+.r-shot-cap{padding:12px 15px 14px;border-top:1px solid var(--line);
+  font-size:13.5px;line-height:1.5;color:var(--mute)}
+.r-shot-app{display:block;color:var(--ink);font-weight:600;font-size:14px;
+  margin-bottom:3px}
+/* A heading ABOVE a capture — when the reader must know whose screen it is before looking
+   (evidence: "To Justin · 7:45 PM"). Big who, small when/which under it. */
+.r-shot-head{padding:12px 15px 11px;border-bottom:1px solid var(--line)}
+.r-shot-who{display:block;color:var(--ink);font-weight:650;font-size:19px;line-height:1.25}
+.r-shot-when{display:block;color:var(--mute);font-size:13.5px;margin-top:2px}
+.r-shot-notes{display:grid;gap:6px;margin-top:12px;font-size:13.5px;color:var(--mute)}
+.r-shot-notes > *{display:flex;gap:9px}
+.r-shot-n{color:var(--acc);flex:0 0 auto}
+
+/* --- Embedded prototype --------------------------------------------------
+   FOR    thing-itself pages. The deliverable IS the surface.
+   HOLDS  one prototype at full stage width in a browser frame, its address
+          visible, numbered notes under it.
+   NEVER  a redescription of what the prototype already shows. Never an address bar
+          claiming a URL the frame is not showing — the chrome states where the
+          thing actually lives, or it carries no address at all.                */
+.r-frame{border:1px solid var(--line);border-radius:var(--r-plate);overflow:hidden;
+  background:var(--plate)}
+.r-chrome{display:flex;align-items:center;gap:8px;padding:9px 12px;
+  border-bottom:1px solid var(--line);background:var(--plate2)}
+.r-dots{display:flex;gap:6px;flex:0 0 auto}
+.r-dots span{width:10px;height:10px;border-radius:50%;background:var(--line)}
+.r-addr{flex:1;font:400 12.5px 'Inter',system-ui,sans-serif;color:var(--faint);
+  background:var(--bg);border-radius:var(--r-chip);padding:4px 10px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.r-frame iframe{display:block;width:100%;border:0}
+
+/* --- Callout -------------------------------------------------------------
+   FOR    the one fact that changes how the rest reads.
+   HOLDS  one or two lines. Colored by meaning.
+   NEVER  more than two per page. An alert under every component alerts nobody. */
+.r-callout{border-left:var(--rule-heavy) solid var(--amber);background:var(--amber-t);
+  padding:14px 20px;font-size:14.5px;line-height:1.55;max-width:var(--measure);
+  border-radius:0 var(--r-plate) var(--r-plate) 0}
+.r-callout-red{border-left-color:var(--red);background:var(--red-t)}
+.r-callout-green{border-left-color:var(--green);background:var(--green-t)}
+.r-callout-acc{border-left-color:var(--acc);background:var(--acc-t)}
+
+/* --- Needs your attention ------------------------------------------------
+   FOR    indexing every open question the page raised, in one place, at the end.
+   HOLDS  1–6 rows. Amber rule on top — this section is the reader's.
+   NEVER  questions the page already answered. Never absent when questions exist. */
+.r-asks{display:grid;gap:0}
+.r-ask{display:flex;flex-wrap:wrap;gap:8px 24px;align-items:baseline;
+  padding:18px 0;border-bottom:1px solid var(--line2);counter-increment:askindex}
+.r-ask-n{font:600 15px 'Inter',system-ui,sans-serif;color:var(--amber);flex:0 0 24px}
+.r-ask-n::before{content:counter(askindex)}
+.r-ask-body{flex:1 1 380px;min-width:min(100%,260px);max-width:var(--measure)}
+.r-ask-q{font-weight:600;font-size:15.5px}
+.r-ask-why{font-size:13.5px;color:var(--mute);margin-top:3px}
+
+/* --- Ask, inline -----------------------------------------------------------
+   FOR    a question at the END of the section that makes it answerable, where the
+          reader has just read the thing they need in order to answer.
+   HOLDS  amber left rule, the question bold, one line of context, my call under it.
+   NEVER  only at the foot of the page. The recap at the end INDEXES these; it does
+          not replace them. A question the reader meets before the
+          section that answers it is a question they have to scroll back for.        */
+.r-ask-here{position:relative;background:var(--amber-t);
+  border:1px solid var(--amber);border-left-width:var(--rule-heavy);
+  border-radius:0 var(--r-plate) var(--r-plate) 0;
+  padding:20px 26px 20px 74px;margin-top:var(--comp-gap);max-width:var(--measure)}
+/* Numbered, so the reader can answer them by number. The counter also feeds the index at
+   the foot, which means the two can never fall out of step.
+   A SPECIMEN of this block — the shelf page showing what it looks like — must not
+   take a number off the page's real questions. It wears a dash instead. */
+.r-ask-here{counter-increment:ask}
+.r-ask-here.r-specimen{counter-increment:none}
+.r-ask-here.r-specimen::before{content:"?";font-size:24px;line-height:38px}
+.r-ask-here::before{content:counter(ask);position:absolute;left:18px;top:15px;
+  width:38px;height:38px;border-radius:50%;background:var(--amber);color:var(--bg);
+  font:700 19px/38px 'Inter',system-ui,sans-serif;text-align:center}
+.r-ask-here .r-ask-q{font-weight:600;font-size:clamp(17px,1.4vw,19px);line-height:1.4;
+  color:var(--ink)}
+.r-ask-here .r-ask-why{font-size:14.5px;color:var(--mute);margin-top:5px}
+.r-ask-here .r-mycall-inline{margin-top:12px}
+
+/* The recap — how a page with no open questions ends instead. */
+.r-recap{border-top:var(--rule-heavy) solid var(--line);padding-top:20px;
+  margin-top:var(--sec-gap);font-size:15.5px;line-height:1.6;max-width:var(--measure)}
+
+/* --- Screen cards --------------------------------------------------------
+   FOR    reviewing a form or a flow one screen at a time — the exact question
+          a screen asks and every answer it offers, at READING size, with all
+          the screens side by side so wording can be compared across them.
+   HOLDS  a numbered grid of plates. Each carries its number, the question as
+          the user reads it, its answer rows, and an optional note. The number
+          exists to be cited: "screen 9" has to mean one thing to both of us.
+   NEVER  a miniature of the rendered screen — that is `.r-mini`, and a screen
+          whose copy you cannot read reviews nothing. Never for peers with no
+          order: the numbers claim a sequence, so only number a real one.     */
+.r-screens{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));
+  gap:18px;counter-reset:screen}
+
+.r-screen{position:relative;min-width:0;counter-increment:screen;
+  border:1px solid var(--line);border-radius:var(--r-plate);background:var(--plate);
+  padding:16px 18px 18px 46px}
+
+.r-screen::before{content:counter(screen);position:absolute;left:14px;top:17px;
+  width:24px;text-align:right;color:var(--faint);
+  font:500 13px/1.4 'Inter',system-ui,sans-serif}
+
+.r-screen-q{font-weight:600;font-size:17px;line-height:1.35;color:var(--ink)}
+
+.r-screen-a{margin-top:11px;display:grid;gap:5px;font-size:14.5px;line-height:1.4;
+  color:var(--mute)}
+
+.r-screen-note{margin-top:12px;font-size:13px;line-height:1.5;color:var(--faint)}
+
+/* A screen the user only sometimes sees, or one that grew a typed box. */
+.r-screen-cond{border-left:var(--rule-heavy) solid var(--acc);padding-left:42px}
+.r-screen-cond::before{left:11px}
+
+/* --- Test card (a screen card the user runs and marks) -----------------------
+   CLAIMS "do this, expect that, then say if it did". FOR a hands-on device
+   checklist: each numbered card holds what to do, what should happen, an
+   optional code to scan (.r-screen-qr, a LOCAL png on a white quiet zone so a
+   phone camera reads it in dark mode), and a works/broken pair (.r-check).
+   The pair feeds the answer bar, which builds the one line the user copies back.
+   NEVER a third button — "skip" is simply leaving it unmarked. NEVER a QR
+   below 150px: a phone camera across a desk needs the size.               */
+.r-screen-qrs{display:flex;flex-wrap:wrap;gap:12px;margin-top:12px}
+.r-screen-qr{margin:0;display:grid;gap:4px;justify-items:center}
+.r-screen-qr img{width:170px;height:170px;background:#fff;padding:6px;border-radius:6px;image-rendering:pixelated}
+.r-screen-qr figcaption{font-size:12.5px;color:var(--faint)}
+.r-check{display:flex;gap:8px;margin-top:14px}
+.r-check button{font:600 13.5px 'Inter',system-ui,sans-serif;border:1px solid var(--line);background:transparent;
+  color:var(--mute);border-radius:var(--r-chip);padding:7px 14px;cursor:pointer}
+.r-check button[data-v="pass"][aria-pressed="true"]{background:var(--green);border-color:var(--green);color:#15171b}
+.r-check button[data-v="fail"][aria-pressed="true"]{background:var(--red);border-color:var(--red);color:#fff}
+.r-screen:has(.r-check [data-v="pass"][aria-pressed="true"]){border-color:var(--green)}
+.r-screen:has(.r-check [data-v="fail"][aria-pressed="true"]){border-color:var(--red)}
+.r-check-note{display:block;width:100%;margin-top:8px;background:var(--bg);border:1px solid var(--line);
+  border-radius:var(--r-chip);padding:7px 10px;color:var(--ink);font:13.5px 'Inter',system-ui,sans-serif}
+.r-check-note[hidden]{display:none}
+
+/* == 6 · Glance shapes ==================================================== */
+/* Draw the relationship, not a chart. Size = importance, position = order,
+   nesting = containment. Micro-renders carry REAL content at half scale and
+   FILL the stage — never gray placeholder blocks beside a text column. */
+
+/* Assembly line — input → machine → output. Three EQUAL stations by default: what
+   makes it read is that each one carries a real miniature of its own contents — a
+   spec listing, chips of what gets stamped on, a wireframe of the finished page.
+   Add .r-line-grow only when the thing itself genuinely grows along the line. */
+.r-line{display:flex;align-items:stretch;gap:14px;flex-wrap:wrap}
+.r-station{flex:1 1 240px;background:var(--plate);border:1px solid var(--line);
+  border-radius:var(--r-plate);padding:18px 20px;min-width:min(100%,200px)}
+.r-line-grow .r-station-1{flex:1 1 200px}
+.r-line-grow .r-station-2{flex:1.4 1 260px}
+.r-line-grow .r-station-3{flex:1.9 1 320px}
+.r-station-role{color:var(--faint);font-weight:400}
+/* the spec listing a station can hold — the only monospace on a page */
+.r-spec{background:var(--bg);border:1px solid var(--line2);border-radius:var(--r-chip);
+  padding:12px 14px;margin-top:14px;
+  font:400 12.5px/1.7 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--mute)}
+.r-spec strong{color:var(--ink);font-weight:600;display:block;margin-bottom:4px}
+/* a wireframe of a page — the one place gray boxes are right, because the claim is
+   "any page", not this page */
+.r-wire{display:grid;gap:7px;margin-top:14px}
+.r-wire span{display:block;height:14px;border-radius:3px;background:var(--plate2)}
+.r-wire .r-wire-row{display:flex;gap:7px}
+.r-wire .r-wire-row span{flex:1}
+
+/* Nesting doll — containment as nested shells, 2–4 deep, subject innermost and lit. */
+.r-shell{border:1px solid var(--line);border-radius:var(--r-plate);
+  padding:18px;background:var(--plate)}
+.r-shell .r-shell{margin-top:12px;background:var(--plate2)}
+.r-shell-lit{border-color:var(--acc);background:var(--acc-t)}
+.r-shell-name{font-weight:600;font-size:15px}
+.r-shell-fact{font-size:13.5px;color:var(--mute);margin-top:3px}
+
+/* Tree — containment past four deep. Claims "inside", like the nesting doll, but for a whole
+   page tree or folder structure where four shells run out. FOR: mapping a workspace, a repo, a
+   site. HOLDS: one row per node — a state mark on databases only (live / fading / dead), the
+   name, a fact in mute, an optional bar on one shared scale for size. Children indent under a
+   guide line. NEVER: arrows between nodes (that claims "then"); more than ~40 visible rows per
+   tree — collapse a subtree into one summarizing row instead. Built 2026-09-07 for a workspace map. */
+.r-tree{font-size:14px;line-height:1.45}
+.r-tree ul{list-style:none;margin:0;padding:0}
+.r-tree ul ul{margin:4px 0 0 7px;padding-left:18px;border-left:1px solid var(--line)}
+.r-tree li{margin:6px 0}
+.r-tree-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center}
+.r-tree-row .r-mark{margin-right:8px;vertical-align:middle}
+.r-tree-name{font-weight:500;color:var(--ink)}
+.r-tree-root>.r-tree-row .r-tree-name{font-weight:600;font-size:15.5px}
+.r-tree-fact{color:var(--mute);font-size:13px;margin-left:8px}
+.r-tree-kind{color:var(--faint);font-size:12.5px;margin-right:6px}
+.r-tree-bar{display:block;height:6px;width:var(--w,0px);max-width:180px;border-radius:2px;
+  background:var(--faint)}
+.r-tree-live .r-tree-bar{background:var(--green)}
+.r-tree-dormant .r-tree-bar{background:var(--amber)}
+.r-tree-dead .r-tree-bar{background:var(--red)}
+.r-tree-off{opacity:1}
+@media (max-width:720px){.r-tree-bar{display:none}.r-tree ul ul{padding-left:12px}}
+
+/* Split bar — one number cut into its true parts. The honest pie. */
+.r-splitbar{display:flex;height:34px;border-radius:var(--r-chip);overflow:hidden;
+  border:1px solid var(--line)}
+.r-slice{display:grid;place-items:center;font:500 13.5px 'Inter',system-ui,sans-serif;
+  color:var(--ink);min-width:0}
+.r-slice-legend{display:flex;flex-wrap:wrap;gap:6px 24px;margin-top:8px;
+  font-size:13px;color:var(--mute)}
+
+/* A shelf of peers — equal cards, NO arrows. Arrows claim order; peers have none.
+   Use wherever the relationship is "and", not "then". */
+.r-glances{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));
+  gap:20px 22px}
+.r-glance-art{border:1px solid var(--line2);border-radius:var(--r-plate);
+  background:var(--band);padding:14px;height:136px;display:grid;align-content:center;
+  overflow:hidden}
+/* Inside a specimen box the shapes shrink but keep their arrangement — an assembly
+   line stays a line, it does not become a stack. */
+.r-glance-art{font-size:11px;line-height:1.35}
+.r-glance-art .r-station{flex-basis:0;min-width:0;padding:7px 8px;overflow-wrap:anywhere}
+.r-glance-art .r-line{gap:5px;flex-wrap:nowrap}
+.r-glance-name{font-weight:600;font-size:15px;margin-top:10px}
+.r-glance-for{font-size:13.5px;line-height:1.5;color:var(--mute);margin-top:3px}
+
+/* Miniature / before-after — half-scale renders with REAL content, filling the stage. */
+.r-minis{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));
+  gap:20px}
+.r-mini{border:1px solid var(--line);border-radius:var(--r-plate);
+  background:var(--plate);padding:14px 16px;font-size:11.5px;line-height:1.4}
+.r-mini-cap{font-size:13px;color:var(--mute);margin-top:8px}
+.r-mini-edge-red{box-shadow:inset var(--rule-heavy) 0 0 var(--red)}
+.r-mini-edge-green{box-shadow:inset var(--rule-heavy) 0 0 var(--green)}
+
+/* Menu specimen — a product menu, drawn at full size, for pages that argue about menus,
+   dropdowns and pickers. Claims "this is what the menu looks like". Built 2026-10-01 for the
+   menu-system audit.
+   FOR    showing a real menu state: the trigger, the open list, which row reads how.
+   HOLDS  an optional .r-menu-trigger (field showing its value) over one .r-menu panel of rows.
+          Row states: .is-hover (pointer on it) · .is-current (the chosen value, weight) ·
+          .is-tint (the current-row fill) · .is-dim (gray text: disabled, or the bug being shown) ·
+          .is-danger (destructive). .r-menu-check is the leading check slot, .r-menu-key the
+          muted right-hand detail, .r-menu-sep a divider, .r-menu-head a group caption.
+          .r-menu-clip cuts the panel at a height to show a scroll cap.
+   NEVER  a generic box diagram — real labels from the real screen, or nothing. */
+.r-menus{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));
+  gap:22px 26px;align-items:start}
+.r-menu-wrap{min-width:0}
+.r-menu-trigger{display:flex;justify-content:space-between;align-items:center;gap:10px;
+  border:1px solid var(--line);border-radius:var(--r-chip);background:var(--plate);
+  padding:8px 12px;font-size:14px;color:var(--ink);margin-bottom:6px}
+.r-menu-trigger::after{content:"⌄";color:var(--mute);font-size:14px;line-height:1;
+  margin-top:-6px}
+.r-menu-trigger.is-icon{display:inline-flex;padding:4px 10px;letter-spacing:2px}
+.r-menu-trigger.is-icon::after{content:none}
+.r-menu{border:1px solid var(--line);border-radius:var(--r-plate);background:var(--plate);
+  padding:4px;box-shadow:0 8px 24px rgba(0,0,0,.18);font-size:14px;line-height:1.4}
+.r-menu-clip{overflow:hidden;position:relative}
+.r-menu-clip::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;
+  background:var(--amber)}
+.r-menu-row{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:5px;
+  color:var(--ink);white-space:nowrap}
+.r-menu-row.is-hover{background:var(--plate2)}
+.r-menu-row.is-current{font-weight:600}
+.r-menu-row.is-tint{background:var(--acc-t)}
+.r-menu-row.is-dim{color:var(--faint)}
+.r-menu-row.is-danger{color:var(--red)}
+.r-menu-check{display:inline-block;width:14px;flex:none;color:var(--acc);font-size:13px}
+.r-menu-key{margin-left:auto;padding-left:18px;color:var(--mute);font-size:12.5px}
+.r-menu-sep{height:1px;background:var(--line);margin:4px 6px}
+.r-menu-head{padding:8px 10px 3px;color:var(--mute);font-size:12px;font-weight:500}
+.r-menu-cap{font-size:13px;color:var(--mute);margin-top:9px;line-height:1.45}
+.r-menu-name{font-weight:600;font-size:15px;margin-bottom:8px}
+
+/* == 7 · Phone (≤720px) =================================================== */
+
+@media (max-width:720px){
+  body{--sec-gap:56px}
+
+  /* A table stops being a table: every row becomes a card, every value wears
+     its column name from data-label. */
+  .r-table-cards thead{position:absolute;width:1px;height:1px;overflow:hidden;
+    clip:rect(0 0 0 0);white-space:nowrap}
+  .r-table-cards,.r-table-cards tbody,.r-table-cards tr,.r-table-cards td{display:block;width:100%}
+  .r-table-cards tr{background:var(--plate);border:1px solid var(--line);
+    border-radius:var(--r-plate);padding:12px 14px;margin-bottom:12px}
+  .r-table-cards tbody tr:nth-child(even){background:var(--plate)}
+  /* The label floats left and the value flows right as ONE run. A flex row here would
+     break "A becomes B" into three children and space them apart. */
+  /* Numbers want a right edge so they line up; a sentence never does. */
+  .r-table-cards td{border:none;padding:5px 0;display:block;text-align:left;overflow:hidden}
+  .r-table-cards td.r-num{text-align:right}
+  .r-table-cards td::before{content:attr(data-label);float:left;text-align:left;
+    font:500 12.5px 'Inter',system-ui,sans-serif;color:var(--faint);
+    margin-right:14px;min-width:92px}
+  /* a note under a value takes its own line rather than fighting for the right edge */
+  .r-table-cards td .r-small{display:block;margin-top:2px}
+  /* the magnitude bar is redundant once the row is a card — the number is right there */
+  .r-table-cards .r-bar-track{display:none}
+
+  /* Sequences stack; the arrow turns down. The step's flex basis is a WIDTH in a row
+     and would become a HEIGHT in a column — every card padded out to 180px of nothing. */
+  .r-seq{flex-direction:column}
+  .r-seq .r-step{flex:0 0 auto}
+  .r-arrow{align-self:flex-start;margin-left:14px}
+  .r-arrow::before{content:"↓"}
+
+  /* Small multiples and stat rows SHRINK, never stack — side by side is the point. */
+  .r-multi-row{grid-template-columns:minmax(64px,128px) minmax(0,1fr) auto;
+    gap:8px;font-size:12.5px}
+  .r-stats{grid-template-columns:repeat(auto-fit,minmax(0,1fr))}
+  .r-stat{padding:12px 10px 0}
+  .r-stat .r-fig{font-size:19px}
+  .r-stat-why{font-size:12px}
+
+  .r-verdict-rail{border-left:none;border-top:1px solid var(--line)}
+  /* 62, not 54: the number is 38px wide starting at 16, so 54 leaves it touching
+     the first word — it read as "1What address". */
+  .r-ask-here{padding:16px 18px 18px 62px}
+  .r-ask-here::before{left:16px;top:12px;font-size:26px}
+  .r-rail{margin-left:5px;padding-left:22px}
+  .r-mile-n{left:-38px;width:28px}
+  .r-mile-title{font-size:18px}
+  .r-split{gap:24px}
+}
+
+/* Fixed layout needs somewhere for long words to break, or a cell overflows its column. */
+.r-table.r-js td,.r-table.r-js th{overflow-wrap:anywhere}
+@media (max-width:720px){
+  /* card mode has no columns to lock — hand the widths back, and drop the wide-table
+     minimum with them, or every card is a screen and a half across and its values
+     right-align off the edge. */
+  .r-table-cards.r-js{table-layout:auto!important}
+  .r-table-cards.r-js th{width:auto!important}
+  .r-table-cards.r-table-wide{min-width:0}
+}
+
+/* --- Scaled prototype (a miniature of a product screen) ------------------
+   FOR    a miniature whose subject is a product surface.
+   HOLDS  the REAL page or prototype file, live and scaled — never a hand-drawn
+          fake of a screen that already exists.
+   NEVER  a screenshot (it goes stale), or a redrawn approximation (it goes wrong).
+   Set --r-zoom for the scale, --r-tall for the visible height, and --r-top to
+   scroll past the top of a long prototype to the one screen being discussed.  */
+.r-scale{position:relative;overflow:hidden;border:1px solid var(--line);
+  border-radius:var(--r-plate);background:var(--plate);
+  width:min(100%,calc(var(--r-w,1440px) * var(--r-zoom,.5)));
+  height:calc(var(--r-tall,900px) * var(--r-zoom,.5))}
+.r-scale iframe{border:0;display:block;zoom:var(--r-zoom,.5);
+  width:var(--r-w,1440px);height:calc(var(--r-tall,900px) + var(--r-top,0px));
+  margin-top:calc(var(--r-top,0px) * -1)}
+/* the whole miniature is a picture of a screen, not a place to click */
+.r-scale-still iframe{pointer-events:none}
+@media (max-width:720px){.r-scale{--r-zoom:.26}}
+/* .r-scale-lg — the miniature at 0.8 on a desktop stage, for a page whose subject IS a
+   1440-wide screen and whose text must stay readable; it still drops to .26 on a phone.
+   Built 2026-10-07 for the alert-banner directions page. */
+.r-scale.r-scale-lg{--r-zoom:.8}
+@media (max-width:1200px){.r-scale.r-scale-lg{--r-zoom:.6}}
+@media (max-width:720px){.r-scale.r-scale-lg{--r-zoom:.26}}
+.r-scale-cap{font-size:13px;color:var(--mute);margin-top:8px}
+
+/* --- Phone screens side by side --------------------------------------------
+   FOR    2–4 versions of one phone screen compared — the options ARE the pictures.
+   HOLDS  one column per version: an .r-scale miniature of a 390px-wide drawn or
+          prototype phone file, and one caption under it.
+   NEVER  stacked on a phone. It SHRINKS — side by side IS the comparison.
+          Never more than four; past that it is a table.
+   Added 2026-09-13 for the Ethnicity sheet options page.                      */
+.r-phones{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:24px}
+.r-phones > *{min-width:0;display:grid;justify-items:center;align-content:start;text-align:center}
+.r-phones .r-scale{--r-w:390px;--r-tall:820px;--r-zoom:.66;border:0;background:none}
+@media (max-width:1180px){.r-phones{gap:14px}.r-phones .r-scale{--r-zoom:.38}}
+@media (max-width:720px){.r-phones{gap:6px}.r-phones .r-scale{--r-zoom:.21}
+  .r-phones .r-scale-cap{font-size:11px;line-height:1.3}}
+
+/* --- Phones at true size ---------------------------------------------------
+   FOR    a page whose job is comparing phone screens by eye — 5+ options, or
+          options that each come in two versions (with and without money).
+   HOLDS  .r-phonewall of .r-phonesets. A set = one option: .r-phoneset-row of
+          1–2 phones (each a .r-phoneset-tag over an .r-scale of a 390px file at
+          zoom 1, 1:1 with the device), then one .r-scale-cap (title + one line).
+   NEVER  shrunk below 1:1 on a desktop. It WRAPS instead — 2–3 phones a row on
+          a wide screen, one a row on a phone (zoomed to fit the gutter only).
+          Pair with .r-compare for picking two to sit side by side.
+   Added 2026-10-02 for the phone Dashboard round-three page, after .r-phones
+   squeezed five screens into one unreadable row.                            */
+.r-phonewall{display:flex;flex-wrap:wrap;gap:56px 48px;align-items:flex-start}
+.r-phoneset{display:grid;gap:10px;justify-items:start;min-width:0}
+.r-phoneset-row{display:flex;flex-wrap:wrap;gap:16px}
+.r-phoneset-row > *{display:grid;gap:8px;align-content:start}
+.r-phoneset[hidden],.r-phoneset-row > [hidden]{display:none}
+.r-phoneset-tag{font:500 12.5px 'Inter',system-ui,sans-serif;color:var(--mute)}
+.r-phoneset .r-scale{--r-w:390px;--r-tall:820px;--r-zoom:1;border:0;background:none;border-radius:44px}
+.r-phoneset .r-scale-cap{margin-top:0;max-width:390px}
+.r-phoneset .r-scale-cap strong{color:var(--ink);font-size:15px}
+@media (max-width:440px){.r-phoneset .r-scale{--r-zoom:.9}}
+/* Tablets in the same wall: .r-scale-tablet on the .r-scale, with --r-w / --r-tall
+   set to the device's size in points (iPad mini 744x1133, 11" 1180x820, 13" 1376x1032).
+   FOR    comparing tablet layouts by eye beside each other. HOLDS one live tablet file.
+   NEVER  1:1 on a desktop (a 13" iPad is wider than the stage) — half size there,
+          a quarter on a phone. Added 2026-10-03 for the iPad layout page.        */
+.r-phoneset .r-scale.r-scale-tablet{--r-zoom:.5;border-radius:12px}
+@media (max-width:720px){.r-phoneset .r-scale.r-scale-tablet{--r-zoom:.26}}
+
+/* --- Compare bar -----------------------------------------------------------
+   FOR    narrowing a wall of options to the two being weighed, and flipping a
+          shared variant (with / without money) across all of them at once.
+   HOLDS  .r-compare (sticky at the top) of .r-compare-btn buttons; the pressed
+          one wears .is-on. A .r-compare-sep splits option letters from variant
+          and reset buttons. The page script owns the behavior.
+   NEVER  a filter on data rows — that is report-table.js's pills.
+   Added 2026-10-02 with Phones at true size.                                */
+.r-compare{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;
+  display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:12px 0;
+  background:var(--bg);border-bottom:1px solid var(--line)}
+.r-compare-btn{font:600 13.5px 'Inter',system-ui,sans-serif;color:var(--mute);
+  background:var(--plate);border:1px solid var(--line);border-radius:var(--r-chip);
+  min-width:36px;height:32px;padding:0 10px;cursor:pointer}
+.r-compare-btn:hover{color:var(--ink);border-color:var(--ink)}
+.r-compare-btn.is-on{color:var(--bg);background:var(--acc);border-color:var(--acc)}
+.r-compare-sep{width:1px;height:20px;background:var(--line);margin:0 4px}
+.r-compare-note{font-size:13px;color:var(--faint)}
+
+/* --------------------------------------------------------------------------
+   Year strip — "when, across a year"
+   FOR    every message one person receives over 52 weeks, in the order they
+          arrived, so the shape of a cadence is visible without reading a number
+   HOLDS  one column per week, one cell per message, colored by which of the
+          four kinds it is — the room talking, triggered by the person, always
+          sends, and the one that costs money; a legend once per page
+   NEVER  more than about six on a page — past that it is a table. Never without
+          its legend, and never a color that does not mean what color means
+          everywhere else on the sheet.
+   -------------------------------------------------------------------------- */
+.r-year{background:var(--plate);border:1px solid var(--line);border-radius:var(--r-plate);padding:20px 22px}
+.r-year-top{display:flex;justify-content:space-between;gap:24px;align-items:baseline;flex-wrap:wrap}
+.r-year-who{font-size:17px;font-weight:600;color:var(--ink)}
+.r-year-where{font-size:13px;color:var(--faint)}
+.r-year-note{font-size:14px;color:var(--mute);margin-top:3px;max-width:var(--measure)}
+.r-year-nums{display:flex;gap:26px}
+.r-year-nums div{text-align:right}
+.r-year-nums b{display:block;font-size:21px;font-weight:600;color:var(--ink);line-height:1.2}
+.r-year-nums span{font-size:12px;color:var(--mute)}
+.r-year-grid{display:grid;grid-template-columns:repeat(52,minmax(0,1fr));gap:3px;align-items:end;min-height:60px;margin-top:18px}
+.r-year-wk{display:flex;flex-direction:column-reverse;gap:3px}
+.r-year-m{height:10px;border-radius:2px;background:var(--plate2)}
+.r-year-m.is-cal{background:var(--acc)}
+.r-year-m.is-disc{background:var(--amber)}
+.r-year-m.is-trig{background:var(--green)}
+.r-year-m.is-tx{background:var(--faint)}
+.r-year-axis{display:flex;justify-content:space-between;color:var(--faint);font-size:12px;margin-top:8px;border-top:1px solid var(--line2);padding-top:8px}
+.r-year-made{font-size:13px;color:var(--mute);margin-top:10px}
+.r-year-key{display:flex;gap:18px;flex-wrap:wrap;font-size:13px;color:var(--mute);margin-bottom:6px}
+.r-year-key i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+@media (max-width:720px){
+  .r-year-nums{gap:16px}
+  .r-year-nums b{font-size:17px}
+  .r-year-grid{gap:2px;min-height:44px}
+  .r-year-m{height:7px}
+}
+
+/* A table with many columns scrolls inside its box rather than crushing every
+   column to nothing. The box already scrolls; this is what makes it decide to. */
+.r-table-wide{min-width:1180px}
+
+/* == 8 · The drawn surface ================================================
+   FOR    a screen that does not exist yet. The deliverable IS the surface, so it
+          gets DRAWN at full fidelity — not described, not screenshotted.
+   HOLDS  its own file, framed on the report page with .r-frame. It is a file and
+          not markup inside the report because a product's own styles reset `*`
+          and `body`, so they cannot share a document with this stylesheet — and a
+          file can be reused elsewhere without redrawing.
+          Build it on the product's own styles when it has them, so a mock reads
+          as the real UI and inherits light and dark; otherwise its own stylesheet
+          in its own style, at the same fidelity.
+   NEVER  a screen that is already drawn somewhere — frame that file instead; a
+          second drawing of one screen is two drawings that will disagree. Never an
+          address bar claiming a URL the frame is not showing.                  */
+
+.r-frame iframe{display:block;width:100%;border:0;background:#fff}
+
+/* Two widths of one drawn surface, side by side. The phone is a real 390 column,
+   not a squeezed copy of the desktop. */
+.r-mock-pair{display:grid;grid-template-columns:minmax(0,1fr) 390px;gap:20px;
+  align-items:start}
+@media (max-width:1100px){.r-mock-pair{grid-template-columns:minmax(0,1fr)}}
+
+/* --- Width switch --------------------------------------------------------
+   FOR    a surface that has to be judged at more than one width — an email, a
+          responsive page — where the whole point is that BOTH are right.
+   HOLDS  one two-button switch at the top, and every framed surface below it
+          following that switch at once. The frame is the real file in an
+          iframe, so what is judged is the shipping artifact, never a picture
+          of it.
+   NEVER  three widths — two is a decision, a third is a spec sheet. Never a
+          switch per frame: the comparison is the page, so the page switches.
+   Built 2026-08-20 for an email type audit, as a mobile/desktop slider. */
+.r-widths{--r-vw:640px}
+.r-widths.is-phone{--r-vw:390px}
+
+.r-wswitch{display:inline-flex;border:1px solid var(--line);border-radius:var(--r-chip);
+  overflow:hidden;background:var(--plate)}
+.r-wswitch button{font:500 13px 'Inter',system-ui,sans-serif;color:var(--mute);
+  background:none;border:0;padding:7px 16px;cursor:pointer}
+.r-wswitch button + button{border-left:1px solid var(--line)}
+.r-wswitch button:hover{color:var(--ink)}
+.r-wswitch button[aria-pressed="true"]{background:var(--acc-t);color:var(--acc)}
+
+/* The wall of surfaces. They size to the switch, so at phone width three fit
+   where two did — the reflow IS part of what is being judged. */
+.r-wall{display:flex;flex-wrap:wrap;gap:22px;align-items:flex-start;margin-top:var(--comp-gap)}
+.r-wframe{flex:0 0 auto;width:var(--r-vw);max-width:100%;
+  border:1px solid var(--line);border-radius:var(--r-plate);overflow:hidden;background:var(--plate)}
+.r-wframe iframe{display:block;width:100%;border:0;background:#fff;
+  height:var(--r-fh,760px)}
+.r-wframe-cap{padding:10px 14px 12px;border-top:1px solid var(--line);
+  font-size:13px;line-height:1.45;color:var(--mute)}
+.r-wframe-cap b{display:block;color:var(--ink);font-weight:600;font-size:14px}
+@media (max-width:720px){.r-widths,.r-widths.is-phone{--r-vw:100%}}
+
+/* == Database view miniature ==============================================
+   CLAIMS "this is how it looks in the database app"
+   FOR    showing a database view (or a page holding views) as
+          the reader will actually meet it: the view tab bar, the filter line,
+          grouped table rows, board columns of cards, select pills. Fill it
+          with REAL rows read from the database, never lorem.
+   HOLDS  .r-nv (the frame) → optional .r-nv-page title/.r-nv-h headings →
+          .r-nv-tabs (.r-nv-tab, .is-on = the open tab) → .r-nv-rules (the
+          filter / group / sort line) → a .r-nv-table (.r-nv-group header +
+          .r-nv-row of .r-nv-c cells, .r-nv-head for column names) OR a
+          .r-nv-board (.r-nv-col, .r-nv-colhead, .r-nv-card). .r-nv-pill for
+          select values: gray by default; -on teal (in flight), -call amber
+          (your call / waiting), -done green, -off red. .r-nv-more closes a
+          cut list ("+ 40 more"). .r-nv-empty for an honestly empty view.
+   NEVER  a view that does not exist or will not be built — a mockup of an
+          option says so in its caption. Never invented rows. Never a pill
+          color without its meaning. Boards scroll sideways INSIDE the frame,
+          as the app does; the page never scrolls sideways.
+   Built 2026-09-22 for a database views page.                               */
+.r-nv{background:var(--plate);border:1px solid var(--line);border-radius:var(--r-plate);
+  padding:18px 20px 16px;font:400 14px/1.45 'Inter',system-ui,sans-serif;color:var(--ink);min-width:0}
+.r-nv-ptitle{font:700 26px/1.2 'Inter',system-ui,sans-serif;margin:4px 0 14px}
+.r-nv-h{font:600 17px/1.3 'Inter',system-ui,sans-serif;margin:22px 0 8px;padding:3px 6px;
+  background:var(--band);border-radius:3px}
+.r-nv-h:first-child{margin-top:0}
+.r-nv-note{font-size:13px;color:var(--mute);margin:0 0 8px}
+.r-nv-tabs{display:flex;gap:2px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:8px}
+.r-nv-tab{font-size:13.5px;color:var(--mute);padding:6px 9px 7px;white-space:nowrap}
+.r-nv-tab.is-on{color:var(--ink);font-weight:500;box-shadow:inset 0 -2px 0 var(--ink)}
+.r-nv-rules{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 10px}
+.r-nv-rules span{font-size:12px;color:var(--mute);background:var(--band);border:1px solid var(--line2);
+  border-radius:var(--r-chip);padding:2px 8px}
+.r-nv-table{overflow-x:auto}
+.r-nv-row{display:grid;grid-template-columns:var(--r-nv-cols,minmax(0,1fr));gap:0;
+  border-bottom:1px solid var(--line2);min-width:var(--r-nv-min,0)}
+.r-nv-c{padding:6px 8px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13.5px}
+.r-nv-c + .r-nv-c{border-left:1px solid var(--line2)}
+.r-nv-head .r-nv-c{color:var(--faint);font-size:12.5px;font-weight:500}
+.r-nv-group{font-size:13.5px;font-weight:600;padding:12px 4px 5px;display:flex;gap:8px;align-items:center}
+.r-nv-group::before{content:"▾";color:var(--faint);font-size:11px}
+.r-nv-group.is-shut::before{content:"▸"}
+.r-nv-group b{font-weight:400;color:var(--faint)}
+.r-nv-more{font-size:12.5px;color:var(--faint);padding:6px 8px}
+.r-nv-empty{font-size:13px;color:var(--faint);padding:10px 8px;border-bottom:1px solid var(--line2)}
+.r-nv-board{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px;align-items:flex-start}
+.r-nv-col{flex:0 0 232px;background:var(--band);border-radius:6px;padding:8px}
+.r-nv-colhead{font-size:13px;font-weight:600;padding:2px 4px 8px;display:flex;gap:8px}
+.r-nv-colhead b{font-weight:400;color:var(--faint)}
+.r-nv-card{background:var(--plate2);border:1px solid var(--line2);border-radius:5px;
+  padding:8px 10px;margin-bottom:6px;font-size:13px;line-height:1.35}
+.r-nv-card small{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;color:var(--faint);font-size:11.5px}
+.r-nv-pill{display:inline-block;font-size:12px;line-height:1.5;padding:0 7px;border-radius:3px;
+  background:var(--plate2);color:var(--mute);white-space:nowrap}
+.r-nv-pill-on{background:var(--acc-t);color:var(--acc)}
+.r-nv-pill-call{background:var(--amber-t);color:var(--amber)}
+.r-nv-pill-done{background:var(--green-t);color:var(--green)}
+.r-nv-pill-off{background:var(--red-t);color:var(--red)}
+/* Two views side by side, for comparing options. Stacks on a phone: each is a
+   whole screen of its own, not a value to compare on one scale. */
+.r-nv-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;align-items:start}
+.r-nv-cap{font-size:13px;color:var(--mute);margin-top:8px}
+.r-nv-cap b{color:var(--ink);font-weight:600}
+/* Three views side by side — one layout filled from three different records
+   (e.g. three Areas' dashboards). Stacks under 1100px for the same reason the
+   pair does: each is a whole screen, not a value on a shared scale. */
+.r-nv-trio{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;align-items:start}
+@media (max-width:1100px){.r-nv-trio{grid-template-columns:minmax(0,1fr)}}
+/* A toggle heading: .r-nv-h.is-toggle, open by default, .is-shut folded.
+   Folded holds nothing under it — that is the point of drawing it shut. */
+.r-nv-h.is-toggle::before{content:"▾";color:var(--faint);font-size:12px;margin-right:7px}
+.r-nv-h.is-toggle.is-shut::before{content:"▸"}
+@media (max-width:900px){.r-nv-pair{grid-template-columns:minmax(0,1fr)}
+  .r-nv{padding:14px 12px}}
+
+/* ── Answer bar ───────────────────────────────────────────────────────────
+   CLAIMS "here is what you changed". FOR a page where the user approves many rows
+   and may skip or edit some: every row carries a Skip toggle (.r-skip) and an
+   editable cell (.r-edit); the bar pinned to the foot counts their changes and
+   builds ONE line they copy back into the session. Copy-paste is the whole
+   mechanism — no server, no POST.
+   HOLDS the count, a read-only one-line box, Copy, Clear.
+   NEVER dims or strikes a skipped row — it wears an amber "Skipped" chip and
+   stays full contrast. NEVER a POST button. */
+.r-answerbar{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--plate);
+  border-top:var(--rule-heavy) solid var(--amber);padding:12px 20px calc(12px + env(safe-area-inset-bottom,0px))}
+.r-answerbar-row{max-width:var(--stage);margin:0 auto;display:flex;gap:10px;align-items:center}
+.r-answerbar-count{font-size:13.5px;color:var(--mute);white-space:nowrap;font-variant-numeric:tabular-nums}
+.r-answerbar-count b{color:var(--ink)}
+.r-answerbar input{flex:1;min-width:0;background:var(--bg);border:1px solid var(--line);
+  border-radius:var(--r-chip);padding:9px 12px;color:var(--mute);
+  font:12.5px ui-monospace,SFMono-Regular,Menlo,monospace}
+.r-answerbar button{border-radius:var(--r-chip);padding:9px 16px;font:600 14px 'Inter',system-ui,sans-serif;
+  cursor:pointer;white-space:nowrap;border:1px solid var(--line);background:transparent;color:var(--mute)}
+.r-answerbar button.r-answerbar-copy{background:var(--amber);border-color:var(--amber);color:#15171b}
+body:has(.r-answerbar){padding-bottom:90px}
+.r-skip{font:500 12px 'Inter',system-ui,sans-serif;border:1px solid var(--line);background:transparent;
+  color:var(--mute);border-radius:var(--r-chip);padding:3px 9px;cursor:pointer;white-space:nowrap}
+.r-skip[aria-pressed="true"]{border-color:var(--amber);color:var(--amber);background:var(--amber-t)}
+.r-edit{border-radius:3px;outline:0;padding:1px 2px;margin:-1px -2px;cursor:text}
+.r-edit:hover{box-shadow:inset 0 -1px 0 var(--faint)}
+.r-edit:focus{box-shadow:0 0 0 1px var(--acc);background:var(--acc-t)}
+.r-edit.is-edited{box-shadow:inset 3px 0 0 var(--amber);padding-left:8px}
+@media (max-width:720px){.r-answerbar{padding:10px 12px}.r-answerbar input{display:none}}
+
+/* Test cards numbered straight through a page: .r-run-scope on the page frame
+   starts the count once; .r-screens-run grids continue it instead of
+   restarting at 1, so "card 12" means one card on the whole page. */
+.r-run-scope{counter-reset:screen}
+.r-screens.r-screens-run{counter-reset:none}
+
+/* == Storyboard ============================================================
+   FOR    a film or video planned shot by shot: every shot in cut order with
+          its timing and the words heard over it, a strip of candidate frames
+          to pick from, and a player that runs the picks against the sound.
+          Claims "this shot, then this one" — the rows ARE the cut's order.
+   HOLDS  .r-board-player (stage image, .r-board-sub line, .r-board-controls,
+          .r-board-track of .r-board-seg buttons sized by shot length — a
+          picked shot's segment is green, the playing one teal) and .r-board
+          rows: .r-board-shot = .r-board-meta (.r-board-id, .r-board-time,
+          .r-board-scene, .r-board-vo, .r-board-sound, .r-board-note) beside a
+          .r-board-strip of .r-board-frame figures. A picked frame wears
+          .is-picked (green ring + "Pick"). .r-board-viewer is the full-size
+          dialog. Frames keep the film's aspect via --r-board-aspect.
+   NEVER  dims an unpicked frame — the reader is still comparing against it. NEVER
+          reorders shots: the order is the cut. NEVER a frame without its
+          room and angle under it. Built 2026-10-02 for a commercial. */
+.r-board{--r-board-aspect:2.39/1;display:grid;gap:0}
+.r-board-shot{display:grid;grid-template-columns:minmax(0,270px) minmax(0,1fr);gap:24px;
+  padding:26px 0;border-top:1px solid var(--line2)}
+.r-board-id{font:640 26px 'Inter',system-ui,sans-serif;letter-spacing:-.01em;line-height:1}
+.r-board-time{font-size:13px;color:var(--faint);margin-top:6px;font-variant-numeric:tabular-nums}
+.r-board-scene{font-size:14.5px;font-weight:600;margin-top:12px;line-height:1.35}
+.r-board-blocking{font-size:13.5px;color:var(--mute);margin-top:4px;line-height:1.45}
+.r-board-vo{font-size:15.5px;line-height:1.4;margin-top:12px;padding-left:12px;border-left:3px solid var(--acc)}
+.r-board-sound{font-size:12.5px;color:var(--faint);margin-top:10px;line-height:1.45}
+.r-board-note{display:block;font-size:13.5px;margin-top:12px;min-height:1.5em;color:var(--ink)}
+.r-board-note-label{font:500 12px 'Inter',system-ui,sans-serif;color:var(--faint);margin-top:12px;display:block}
+/* Frames wrap into a grid, never a sideways scroll — a frame hidden off the right
+   edge of a scrolling strip goes unseen. Every frame of a shot is on screen at once. */
+.r-board-strip{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr));gap:18px 12px;align-content:start}
+.r-board-frame{margin:0;position:relative;min-width:0}
+.r-board-frame[hidden]{display:none}
+.r-board-frame img{width:100%;aspect-ratio:var(--r-board-aspect);object-fit:cover;cursor:zoom-in;
+  border-radius:var(--r-chip);background:var(--plate2);outline:2px solid transparent;outline-offset:2px}
+.r-board-frame.is-picked img{outline-color:var(--green)}
+.r-board-frame figcaption{display:flex;gap:8px;align-items:baseline;justify-content:space-between;
+  margin-top:7px;font-size:12.5px;color:var(--mute);line-height:1.35}
+.r-board-frame figcaption b{color:var(--ink);font-weight:600;margin-right:6px}
+.r-board-pick{font:600 12px 'Inter',system-ui,sans-serif;border:1px solid var(--line);background:transparent;
+  color:var(--mute);border-radius:var(--r-chip);padding:3px 9px;cursor:pointer;white-space:nowrap;flex:none}
+.r-board-pick:hover{color:var(--ink);border-color:var(--ink)}
+.r-board-frame.is-picked .r-board-pick{background:var(--green);border-color:var(--green);color:var(--bg)}
+.r-board-player{display:grid;gap:12px;max-width:1240px}
+.r-board-stage{position:relative;aspect-ratio:var(--r-board-aspect,2.39/1);background:#000;
+  border-radius:var(--r-plate);overflow:hidden}
+.r-board-stage img{width:100%;height:100%;object-fit:cover}
+.r-board-stage-tag{position:absolute;left:12px;top:10px;font:600 12.5px 'Inter',system-ui,sans-serif;
+  color:#e8e9ec;background:rgba(0,0,0,.55);padding:3px 8px;border-radius:var(--r-chip)}
+.r-board-sub{min-height:1.5em;font-size:17px;text-align:center;color:var(--ink)}
+.r-board-controls{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.r-board-controls button{font:600 13.5px 'Inter',system-ui,sans-serif;height:32px;padding:0 14px;cursor:pointer;
+  border-radius:var(--r-chip);border:1px solid var(--line);background:var(--plate);color:var(--ink)}
+.r-board-clock{font-size:13px;color:var(--mute);font-variant-numeric:tabular-nums}
+.r-board-track{display:flex;gap:2px;height:28px}
+.r-board-seg{flex:var(--dur) 1 0;min-width:0;border:0;padding:0;cursor:pointer;background:var(--plate2);
+  border-radius:2px;font:600 10px 'Inter',system-ui,sans-serif;color:var(--faint);overflow:hidden}
+.r-board-seg.is-picked{background:var(--green-t);color:var(--green)}
+.r-board-seg.is-now{background:var(--acc);color:var(--bg)}
+.r-board-viewer{border:0;padding:0;max-width:100vw;max-height:100vh;width:100vw;height:100vh;
+  background:rgba(8,9,11,.96);color:#e8e9ec}
+.r-board-viewer::backdrop{background:rgba(0,0,0,.7)}
+.r-board-viewer-in{height:100%;display:grid;grid-template-rows:minmax(0,1fr) auto;gap:12px;padding:20px}
+.r-board-viewer img{width:100%;height:100%;object-fit:contain;cursor:default}
+.r-board-viewer-bar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;font-size:14px}
+.r-board-viewer-bar .r-spacer{flex:1}
+.r-board-viewer-bar button{font:600 13.5px 'Inter',system-ui,sans-serif;height:32px;padding:0 12px;cursor:pointer;
+  border-radius:var(--r-chip);border:1px solid #33373f;background:#1c1f24;color:#e8e9ec}
+.r-board-viewer-bar button.is-picked{background:var(--green);border-color:var(--green);color:#15171b}
+@media (max-width:720px){
+  .r-board-shot{grid-template-columns:minmax(0,1fr);gap:14px}
+  .r-board-seg{font-size:0}
+}
+/* Storyboard frame number — the one thing the reviewer says out loud ("lock 212"), so it sits big on the frame. */
+.r-board-frame-tag{position:absolute;left:8px;top:8px;font:640 17px 'Inter',system-ui,sans-serif;
+  color:#e8e9ec;background:rgba(0,0,0,.6);padding:2px 8px;border-radius:var(--r-chip);pointer-events:none}
+.r-board-frame.is-locked img{outline-color:var(--green);outline-width:3px}
+.r-board-locked{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr));gap:18px 12px}
+.r-board-viewer-num{font:640 26px 'Inter',system-ui,sans-serif}
+/* Storyboard: the reason a shot is framed and moves the way it does — the shot's argument, set by weight, never a hue. */
+.r-board-why{font-size:13.5px;line-height:1.45;margin-top:10px}
+.r-board-why b{display:block;font-weight:600;font-size:12.5px;color:var(--ink)}
+/* A filtered-out storyboard row must actually vanish: .r-board-shot sets display:grid, which beats the
+   browser's [hidden] rule — the place filter "did nothing" until this. */
+.r-board-shot[hidden]{display:none}
+
+/* Storyboard viewer, fitted to how a reviewer works: full screen, arrowing, saying "lock 542".
+   Tier 1 the picture. Tier 2, shouted over it: WHICH SHOT (number + its name) and WHICH FRAME (the number
+   they say). Support: the frame currently locked for this shot, in the corner — the thing they are deciding
+   against (hold Space to flip to it) — and a filmstrip of the set, Lightroom-style, so they know where they
+   are. Nothing else: no round, no source frame, no "new" — none of it changes "lock this or not". */
+.r-board-viewer-in{grid-template-rows:minmax(0,1fr) auto;gap:10px;padding:16px}
+.r-board-viewer-stage{position:relative;min-height:0;display:grid}
+.r-board-viewer-stage > img{width:100%;height:100%;object-fit:contain}
+.r-board-viewer-head{position:absolute;left:0;right:0;top:0;display:flex;justify-content:space-between;
+  align-items:flex-start;padding:14px 18px;background:linear-gradient(rgba(0,0,0,.75),rgba(0,0,0,0));pointer-events:none}
+.r-board-viewer-shot{font:640 30px 'Inter',system-ui,sans-serif;letter-spacing:-.01em;color:#fff}
+.r-board-viewer-place{font-size:15px;color:#c9ccd2;margin-top:2px}
+.r-board-viewer-right{text-align:right}
+.r-board-viewer-num{display:block;font:700 46px 'Inter',system-ui,sans-serif;color:#fff;line-height:1}
+.r-board-viewer-state{display:inline-block;margin-top:8px;font:600 15px 'Inter',system-ui,sans-serif;
+  padding:3px 10px;border-radius:var(--r-chip);background:#4dbd8b;color:#15171b}
+.r-board-viewer-pip{position:absolute;right:18px;bottom:18px;width:min(24%,300px);margin:0;
+  border:2px solid #4dbd8b;border-radius:var(--r-chip);overflow:hidden;background:#000}
+.r-board-viewer-pip img{width:100%;display:block;aspect-ratio:2.39/1;object-fit:cover}
+.r-board-viewer-pip figcaption{font:600 13px 'Inter',system-ui,sans-serif;color:#e8e9ec;padding:5px 8px;
+  display:flex;justify-content:space-between;background:rgba(0,0,0,.8)}
+.r-board-viewer-pip kbd{font:500 11px 'Inter',system-ui,sans-serif;border:1px solid #70757f;border-radius:3px;padding:0 5px;color:#9aa0aa}
+.r-board-viewer-strip{display:flex;gap:6px;overflow-x:auto;padding:2px}
+.r-board-viewer-strip button{flex:0 0 120px;border:2px solid transparent;border-radius:3px;padding:0;background:#000;
+  cursor:pointer;position:relative}
+.r-board-viewer-strip button img{width:100%;display:block;aspect-ratio:2.39/1;object-fit:cover;opacity:.75}
+.r-board-viewer-strip button span{position:absolute;left:4px;top:2px;font:700 12px 'Inter',system-ui,sans-serif;color:#fff;
+  text-shadow:0 1px 2px #000}
+.r-board-viewer-strip button.is-locked{border-color:#4dbd8b}
+.r-board-viewer-strip button.is-now{border-color:#4aa4c9}
+.r-board-viewer-strip button.is-now img{opacity:1}
+.r-board-viewer-close{position:absolute;top:14px;left:50%;transform:translateX(-50%);pointer-events:auto;
+  font:600 13px 'Inter',system-ui,sans-serif;height:30px;padding:0 12px;border-radius:var(--r-chip);
+  border:1px solid #33373f;background:rgba(28,31,36,.85);color:#e8e9ec;cursor:pointer}
+/* Same scar as .r-board-shot[hidden]: an element given a display value ignores the browser's [hidden]. In the
+   storyboard and its viewer, hidden always wins (a "Locked" label showed on an unlocked frame, 2026-10-03). */
+.r-board [hidden],.r-board-viewer [hidden]{display:none!important}
+
+/* == Take check ==============================================================
+   FOR    checking what a tagger (a model or a person) said about one video take:
+          the take playing, and right beside it every claim a viewer can verify
+          by watching. Claims "this is what was said about THIS take".
+   HOLDS  .r-takes, a column of .r-take rows. Each: .r-take-head (the take's
+          name the way the reviewer says it), .r-take-film (a .r-shot video over a
+          .r-timebar) beside .r-take-said (the .r-take-grade, then .r-take-facts
+          pairs — label left, value right — and .r-take-faults).
+          The TIME BAR is the point: .r-timebar is one lane per kind of thing,
+          all on one 0-to-length scale (--len, in seconds). A .r-timebar-band
+          runs --from to --to (green = the suggested cut, .is-action teal =
+          while the action runs, .is-fault red = something wrong on screen); a
+          .r-timebar-mark sits at --at (.is-peak wears a dot). Every band, mark
+          and .r-timebar-jump chip is a button that seeks the video; the track's
+          thin line (--now) is the playhead. .r-timebar-times repeats each time
+          in words, so two marks too close to tell apart can still be read.
+   NEVER  a time on the bar that is not clickable. NEVER a second scale in one
+          bar. NEVER colors beyond the three: green cut, teal action, red fault.
+          Built 2026-10-05 for a commercial tag trial.                         */
+.r-takes{display:grid;gap:var(--peer-gap)}
+.r-take{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:14px 36px;align-items:start}
+.r-take-head{grid-column:1/-1;font:650 21px/1.25 'Inter',system-ui,sans-serif;margin:0}
+.r-take-film,.r-take-said{min-width:0}
+.r-take-film .r-shot{margin-top:0;width:100%}
+.r-take-film video{aspect-ratio:var(--r-take-aspect,832/480);object-fit:contain}
+.r-take-grade{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px}
+.r-take-grade-letter{font:650 30px/1 'Inter',system-ui,sans-serif}
+.r-take-grade-letter.is-a{color:var(--green)}
+.r-take-grade-letter.is-c{color:var(--amber)}
+.r-take-grade-letter.is-out{color:var(--red)}
+.r-take-facts{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:7px 18px;
+  margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line2);font-size:14.5px;line-height:1.45}
+.r-take-facts dt{color:var(--faint)}
+.r-take-facts dd{margin:0;overflow-wrap:anywhere}
+.r-take-facts-lead{font-size:15.5px}
+.r-take-faults{display:grid;gap:10px;margin-top:16px;padding-top:14px;border-top:1px solid var(--line2);
+  font-size:14.5px;line-height:1.45}
+.r-take-fault{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px}
+.r-take-fault-kind{font-weight:600}
+.r-take-fault-what{flex:1 1 100%;color:var(--mute)}
+
+.r-timebar{--len:5;--now:0;display:grid;gap:3px;margin-top:12px}
+.r-timebar-lane{display:grid;grid-template-columns:48px minmax(0,1fr);align-items:center;gap:8px}
+.r-timebar-label{font-size:12px;color:var(--faint)}
+.r-timebar-track{position:relative;height:18px;background:var(--plate2);border-radius:3px;cursor:pointer}
+.r-timebar-track::after{content:"";position:absolute;top:-1px;bottom:-1px;width:1px;background:var(--ink);
+  left:clamp(0px,calc(var(--now)/var(--len)*100%),calc(100% - 1px));pointer-events:none}
+.r-timebar-band{position:absolute;top:0;bottom:0;border:0;padding:0;cursor:pointer;border-radius:3px;
+  left:calc(var(--from)/var(--len)*100%);
+  width:max(6px,calc((var(--to) - var(--from))/var(--len)*100%));
+  max-width:calc(100% - var(--from)/var(--len)*100%);background:var(--green)}
+.r-timebar-band.is-action{background:var(--acc-t)}
+.r-timebar-band.is-fault{background:var(--red)}
+.r-timebar-band:hover,.r-timebar-mark:hover{filter:brightness(1.25)}
+/* A mark at 0 or at the full length still sits ON the bar: the clamp keeps its line inside the track. */
+.r-timebar-mark{position:absolute;top:0;bottom:0;width:15px;margin-left:-7.5px;border:0;padding:0;
+  background:none;cursor:pointer;left:clamp(1.5px,calc(var(--at)/var(--len)*100%),calc(100% - 1.5px))}
+.r-timebar-mark::before{content:"";position:absolute;left:6px;top:0;bottom:0;width:3px;border-radius:1px;
+  background:var(--acc)}
+.r-timebar-mark.is-peak::after{content:"";position:absolute;left:2.5px;top:50%;width:10px;height:10px;
+  margin-top:-5px;border-radius:50%;background:var(--acc);box-shadow:0 0 0 2px var(--plate2)}
+.r-timebar-axis{position:relative;height:16px;font-size:11px;color:var(--faint)}
+.r-timebar-axis span{position:absolute;top:2px;white-space:nowrap;left:calc(var(--at)/var(--len)*100%);transform:translateX(-50%)}
+.r-timebar-axis span:first-child{transform:none}
+.r-timebar-axis span:last-child{transform:translateX(-100%)}
+.r-timebar-times{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.r-timebar-jump{display:inline-flex;align-items:center;gap:7px;font:500 13px 'Inter',system-ui,sans-serif;
+  color:var(--ink);background:var(--plate);border:1px solid var(--line);border-radius:var(--r-chip);
+  padding:4px 9px;cursor:pointer;font-variant-numeric:tabular-nums}
+.r-timebar-jump:hover{border-color:var(--ink)}
+/* .r-timebar-wide — the same time bar where each lane is a NAMED thing, not a short kind
+   (a demo's acts, a plan's phases). The label column widens to hold the name; on a phone it
+   narrows and the name wraps. Lanes top to bottom are the intended order, time runs left to
+   right, so a run that keeps changing lanes is the jumping, visible. Built 2026-10-27 for a
+   demo plan. */
+.r-timebar-wide .r-timebar-lane{grid-template-columns:210px minmax(0,1fr)}
+.r-timebar-wide .r-timebar-label{font-size:12.5px;color:var(--mute);line-height:1.25}
+.r-timebar-wide .r-timebar-axis{margin-left:218px}
+.r-timebar-wide .r-timebar-band.is-action{background:var(--acc)}
+.r-timebar-wide .r-timebar-track{cursor:default}
+.r-timebar-wide .r-timebar-track::after{display:none}   /* no playhead: nothing plays */
+@media (max-width:640px){
+  .r-timebar-wide .r-timebar-lane{grid-template-columns:96px minmax(0,1fr)}
+  .r-timebar-wide .r-timebar-label{font-size:11px}
+  .r-timebar-wide .r-timebar-axis{margin-left:104px}
+}
+@media (max-width:860px){
+  .r-take{grid-template-columns:minmax(0,1fr)}
+  .r-take-head{font-size:19px}
+  .r-take-said{margin-top:10px}
+}
+
+/* --- Sidebar specimen ------------------------------------------------------
+   Claims "this is what the list looks like, at its real width".
+   FOR    a terminal app's sidebar or list panel — an agents list — drawn in
+          monospace at the panel's true column count, so a label that would truncate
+          in the real thing truncates here too. Several side by side in .r-sides read
+          as peers being compared ("and").
+   HOLDS  .r-side (set --cols to the panel's width in characters) of .r-side-row lines.
+          A row is one terminal line: an optional .r-side-dot (.is-working filled amber ·
+          .is-idle hollow green · .is-blocked filled red · .is-done filled green), then
+          text; <b> is the bright name. .is-sub is the dim second line, .is-group a group
+          heading, .is-sel the selected row; --in indents by characters. .r-side-end is a
+          right-hand slot. .r-side-head is the panel's own title line. .r-side-item wraps one
+          entry's lines when the page script makes entries draggable. A .r-side-cap under
+          the panel names the option and the one thing it changes.
+   NEVER  wider than the real panel — the width IS the constraint being argued about.
+          Never invented rows: real agent names from the real session.
+   Built 2026-10-05 for an agents list options page.                             */
+.r-sides{display:flex;flex-wrap:wrap;gap:44px 36px;align-items:flex-start}
+.r-side-wrap{display:grid;gap:10px;min-width:0;max-width:100%;align-content:start}
+.r-side{--cols:40;box-sizing:content-box;width:calc(var(--cols)*1ch);max-width:calc(100% - 26px);
+  background:var(--plate);border:1px solid var(--line);border-radius:var(--r-plate);
+  padding:12px;font:400 13px/21px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--mute)}
+.r-side-head{display:flex;justify-content:space-between;gap:1ch;color:var(--mute);
+  padding-bottom:10px}
+.r-side-row{display:flex;gap:0;padding-left:calc(var(--in,0)*1ch);white-space:pre;
+  border-radius:3px}
+.r-side-row > span:not(.r-side-dot):not(.r-side-end):not(.r-side-pill){flex:1 1 auto;min-width:0;
+  overflow:hidden;text-overflow:ellipsis}
+.r-side-row b{color:var(--ink);font-weight:700}
+.r-side-row.is-sub{color:var(--faint)}
+.r-side-row.is-sub::before{content:"";flex:0 0 2ch}
+.r-side-row.is-group{color:var(--ink);font-weight:700;margin-top:10px}
+.r-side-row.is-group:first-of-type{margin-top:0}
+.r-side-row.is-sel{background:var(--plate2)}
+/* .r-side-item wraps one entry's lines so the page script can drag it as a unit */
+.r-side-item[draggable=true]{cursor:grab}
+.r-side-item.is-drag{opacity:.45}
+.r-side-item.is-drop{box-shadow:0 -2px 0 var(--acc)}
+.r-side-dot{flex:0 0 2ch;display:flex;align-items:center}
+.r-side-dot::before{content:"";box-sizing:border-box;width:9px;height:9px;border-radius:50%;
+  border:1.5px solid var(--faint)}
+.r-side-dot.is-working::before{background:var(--amber);border-color:var(--amber)}
+.r-side-dot.is-idle::before{border-color:var(--green)}
+.r-side-dot.is-blocked::before{background:var(--red);border-color:var(--red)}
+.r-side-dot.is-done::before{background:var(--green);border-color:var(--green)}
+.r-side-end{flex:0 0 auto;padding-left:1ch;color:var(--faint)}
+.r-side-cap{font:400 13.5px/1.5 'Inter',system-ui,sans-serif;color:var(--mute);
+  max-width:calc(var(--cols,40)*1ch + 26px)}
+.r-side-cap strong{display:block;color:var(--ink);font-size:15px}
+/* Sidebar specimen, Mac-app form: .r-side.r-side-app draws the same rows in the page font at a
+   fixed pixel width (--w), for a native app's sidebar instead of a terminal's.
+   .r-side-dot.is-ring is the app's own spinning-ring mark, drawn still. Added 2026-10-05. */
+.r-side.r-side-app{--w:330px;width:var(--w);font:400 13px/19px 'Inter',system-ui,sans-serif;
+  padding:14px 14px 16px}
+.r-side-app .r-side-row{white-space:nowrap;align-items:center}
+.r-side-app .r-side-row:not(.is-sub){margin-top:10px;color:var(--ink);font-weight:500}
+.r-side-app .r-side-row b{font-weight:500}
+.r-side-app .r-side-row.is-sub{font-size:12px;line-height:17px}
+.r-side-app .r-side-head{padding-bottom:0}
+.r-side-app .r-side-dot,.r-side-app .r-side-row.is-sub::before{flex-basis:18px}
+.r-side-app .r-side-row{padding-left:calc(var(--in,0)*18px)}
+.r-side-dot.is-ring::before{width:12px;height:12px;border:2px solid var(--acc);
+  border-right-color:transparent}
+.r-side-app + .r-side-cap{max-width:calc(var(--w,330px) + 30px)}
+/* Sidebar specimen, row states being argued about: .is-tint (amber fill, both lines of an entry),
+   .is-edge (amber bar at the left edge), .is-faded (stepped back), .r-side-pill (a state word at
+   the right; .is-quiet for a non-urgent one). For pages comparing how a row could signal state. */
+.r-side-row.is-tint{background:color-mix(in srgb,var(--amber) 24%,transparent);border-radius:0}
+.r-side-row > span.r-side-pill{flex:0 0 auto;overflow:visible}
+.r-side-row.is-edge{box-shadow:inset 3px 0 0 var(--amber)}
+.r-side-row.is-faded{opacity:.42}
+.r-side-pill{flex:0 0 auto;margin-left:auto;font:600 10.5px/16px 'Inter',system-ui,sans-serif;
+  padding:0 6px;border-radius:3px;background:var(--amber);color:var(--bg)}
+.r-side-pill.is-quiet{background:none;color:var(--faint);border:1px solid var(--line)}
+/* Sidebar specimen, dots by need: .is-blue (filled teal-blue, in flight), .is-amber-ring (hollow amber),
+   .is-check (a small gray check instead of a dot). A bare .r-side-dot is a hollow gray ring. */
+.r-side-dot.is-blue::before{background:var(--acc);border-color:var(--acc)}
+.r-side-dot.is-amber-ring::before{border-color:var(--amber)}
+.r-side-dot.is-check::before{content:"✓";border:0;width:auto;height:auto;border-radius:0;
+  color:var(--faint);font-size:11px;line-height:1}
+
+/* TAB SPECIMEN — claims "this is what the tab prints". A Claude tab drawn at reading size: dark
+   ground whatever the page theme (it is a terminal), monospace, a title bar wearing the tab's
+   name and state. FOR pages that argue about what an agent prints or how a report should end.
+   HOLDS the lines as they would print — glyphs, words, links, and a drawn surface where the
+   report shows one. NEVER a whole transcript pasted in; never a sideways scroll; never a
+   color beyond the four meanings. Built 2026-10-06 for the done-report redesign. */
+.r-tab{background:#0e0f12;color:#d9dbe0;border:1px solid var(--line);border-radius:var(--r-plate);
+  overflow:hidden;min-width:0;font:13.5px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace}
+.r-tab-bar{display:flex;align-items:center;gap:10px;padding:8px 14px;background:#191b20;
+  border-bottom:1px solid #26282e;color:#9a9ea8;font:500 12.5px 'Inter',system-ui,sans-serif}
+.r-tab-bar .r-spacer{flex:1}
+.r-tab-body{padding:14px 16px 16px;overflow-wrap:anywhere}
+.r-tab-line{margin:0 0 6px}
+.r-tab-line:last-child{margin-bottom:0}
+.r-tab-head{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:baseline;margin-bottom:12px;color:#fff;font-weight:600}
+.r-tab-head .r-spacer{flex:1}
+.r-tab-h{color:#fff;font-weight:600;margin:12px 0 4px}
+.r-tab-dim{color:#7c818c}
+.r-tab-link{color:var(--acc);text-decoration:underline;text-underline-offset:3px;text-decoration-color:color-mix(in srgb,var(--acc) 50%,transparent)}
+.r-tab-done{color:var(--green)} .r-tab-call{color:var(--amber)} .r-tab-flight{color:var(--acc)}
+.r-tab-draw{margin:10px 0 12px;font:13.5px/1.45 'Inter',system-ui,sans-serif}
+.r-tab-draw-cap{color:#7c818c;font:12.5px 'Inter',system-ui,sans-serif;margin-bottom:6px}
+.r-tab-draw-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:14px}
+
+/* == Markdown page ==========================================================
+   FOR   a .md file opened in a browser, rendered to HTML
+   HOLDS whatever marked draws from the file: headings, lists, tables, code
+   NEVER a report — reports are built from the blocks above */
+.r-md{max-width:780px;margin:0 auto;padding:48px 24px 96px;line-height:1.6;font-size:15px}
+.r-md h1{font-size:28px;line-height:1.2;margin:0 0 24px}
+.r-md h2{font-size:20px;margin:40px 0 12px;padding-top:16px;border-top:1px solid var(--line2)}
+.r-md h3{font-size:16px;margin:28px 0 8px}
+.r-md a{color:var(--acc)}
+.r-md li{margin:4px 0}
+.r-md pre{background:var(--plate);border:1px solid var(--line2);border-radius:8px;padding:12px 14px;overflow:auto}
+.r-md :not(pre)>code{background:var(--plate2);padding:1px 5px;border-radius:4px}
+.r-md table{border-collapse:collapse;margin:16px 0;width:100%}
+.r-md th,.r-md td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}
+.r-md th{background:var(--plate)}
+.r-md blockquote{margin:16px 0;padding:4px 16px;border-left:3px solid var(--line);color:var(--mute)}
+.r-md hr{border:0;border-top:1px solid var(--line2);margin:32px 0}
+
+/* --- Quote list ----------------------------------------------------------
+   FOR    verbatim lines from other products or people, each labeled by who said it —
+          the evidence when the argument is about wording.
+   HOLDS  a label (product · page, or person) and the exact quote; an optional muted
+          note after the quote. Label left of the quote on a desktop, above it on a phone.
+   NEVER  a paraphrase — paraphrase is .r-points. Never a screenshot wall (that is
+          .r-shots-wide). Claims "and": the quotes are peers. Added 2026-10-12.     */
+.r-quotes{display:grid;gap:0;margin:14px 0 0;max-width:var(--measure)}
+.r-quote{display:grid;grid-template-columns:minmax(150px,220px) minmax(0,1fr);gap:4px 22px;
+  padding:11px 0;border-bottom:1px solid var(--line2)}
+.r-quote:first-child{border-top:1px solid var(--line2)}
+.r-quote-who{font:500 13.5px 'Inter',system-ui,sans-serif;color:var(--mute);padding-top:2px}
+.r-quote-said{margin:0;font-size:16px;line-height:1.5}
+.r-quote-note{display:block;font-size:13.5px;color:var(--mute);margin-top:3px}
+@media (max-width:720px){.r-quote{grid-template-columns:minmax(0,1fr)}}
+
+/* --- Copy specimens ------------------------------------------------------
+   FOR    product copy under review, many pieces at once: each drawn at the width and
+          type size it ships at, numbered so a ruling can cite it.
+   HOLDS  per row: the number · where the copy appears · the specimen (the surface's own
+          label line, then the copy) · its proof (source, a count, a status mark).
+          `--r-spec-w` on .r-specs is the shipping width of the specimen.
+   NEVER  a paraphrase of the copy, and never wider than it ships — a line that wraps in
+          the product must wrap here. Never unnumbered: the ruling cites the numbers.
+          Claims "and": the rows are peers. Added 2026-10-13.                        */
+.r-specs{--r-spec-w:352px;display:grid;gap:0;margin-top:18px}
+.r-spec-row{display:grid;
+  grid-template-columns:30px minmax(150px,1fr) var(--r-spec-w) minmax(190px,1.25fr);
+  gap:8px 28px;padding:18px 0;border-bottom:1px solid var(--line2);align-items:start}
+.r-spec-row:first-child{border-top:1px solid var(--line2)}
+.r-spec-n{font:600 15px/1.5 'Inter',system-ui,sans-serif;color:var(--mute);
+  font-variant-numeric:tabular-nums}
+.r-spec-where{min-width:0}
+.r-spec-where b{display:block;font-size:15.5px;font-weight:600;line-height:1.4}
+.r-spec-where span{display:block;font-size:13px;line-height:1.45;color:var(--mute);margin-top:2px}
+.r-spec-where .r-spec-addr{color:var(--faint);overflow-wrap:anywhere}
+.r-spec{min-width:0;background:var(--plate2);border:1px solid var(--line);border-radius:10px;
+  padding:16px;display:flex;flex-direction:column;gap:8px}
+.r-spec-label{font:600 12px/1.33 'Inter',system-ui,sans-serif;color:var(--mute)}
+.r-spec-copy{margin:0;font:400 14px/1.43 'Inter',system-ui,sans-serif;color:var(--ink)}
+.r-spec-proof{min-width:0;font-size:13px;line-height:1.5;color:var(--mute)}
+.r-spec-proof > span{display:block}
+.r-spec-proof > span + span{margin-top:4px}
+.r-spec-proof > .r-status{display:flex;font-size:13px}
+.r-spec-proof .r-spec-flag{color:var(--amber)}
+@media (max-width:1180px){
+  .r-spec-row{grid-template-columns:30px minmax(0,1fr)}
+  .r-spec-row > :nth-child(n+3){grid-column:2}
+  .r-spec{width:min(100%,var(--r-spec-w))}
+}
+@media (max-width:720px){
+  .r-spec-row{grid-template-columns:minmax(0,1fr);gap:8px}
+  .r-spec-row > :nth-child(n){grid-column:1}
+  .r-spec-n::before{content:"Card "}
+}
+
+/* Captures in a matrix cell. FOR a proof matrix whose every square is screenshots,
+   one per width. HOLDS 2–4 small captures under the cell's mark and phrase, each a
+   link to the full image, cut at one height so a tall widget never stretches the
+   row; a failing width wears a red edge. NEVER more than four, never the only sign
+   of a fail (the mark and phrase carry it). Built 2026-10-21 for the widget-looks
+   proof matrix. */
+.r-cell-shots{display:flex;gap:4px;margin-top:8px;min-width:150px}
+.r-cell-shots a{display:block;flex:1 1 0;min-width:0;height:92px;overflow:hidden;
+  border:1px solid var(--line);border-radius:var(--r-chip);background:#fff}
+.r-cell-shots img{display:block;width:100%;height:auto}
+.r-cell-shots a.is-fail{border-color:var(--red);border-width:2px}
+
+/* ── Face match ───────────────────────────────────────────────────────────
+   CLAIMS "this photo is that person". FOR approving names on face groups
+   (people in a photo library, contact photos): the reference photo left, its name as an
+   .r-edit, then one .r-match-row per candidate group — a strip of sample
+   faces, a plain-words strength line, an .r-skip. Pairs with the answer bar.
+   NEVER a distance number on the card — words only (Same photo / Strong /
+   Good / Maybe). NEVER hides a skipped row. */
+.r-matches{display:grid;grid-template-columns:repeat(auto-fill,minmax(520px,1fr));gap:16px}
+.r-match{display:grid;grid-template-columns:120px 1fr;gap:14px;background:var(--plate);
+  border:1px solid var(--line2);border-radius:var(--r-plate);padding:14px}
+.r-match > img{width:120px;height:120px;object-fit:cover;border-radius:6px}
+.r-match-name{font-size:18px;font-weight:600;color:var(--ink);margin-bottom:6px}
+.r-match-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:8px 0;border-top:1px solid var(--line2)}
+.r-match-row:first-of-type{border-top:0}
+.r-match-faces{display:flex;gap:4px}
+.r-match-faces img{width:52px;height:52px;object-fit:cover;border-radius:4px}
+.r-match-why{font-size:13px;color:var(--mute);flex:1;min-width:150px}
+.r-match-why b{color:var(--ink);font-weight:600}
+.r-match-row.is-skipped .r-skip{border-color:var(--amber)}
+.r-nomatch{display:flex;flex-wrap:wrap;gap:10px}
+.r-nomatch figure{margin:0;width:84px;font-size:11.5px;color:var(--mute);text-align:center}
+.r-nomatch img{width:84px;height:84px;object-fit:cover;border-radius:4px;display:block;margin-bottom:4px}
+@media (max-width:720px){.r-matches{grid-template-columns:1fr}.r-match{grid-template-columns:72px 1fr}
+  .r-match > img{width:72px;height:72px}}
+
+/* Redline — one proposed change to a document's wording: what's struck, what's new.
+   HOLDS  whole sentences, as a reader would see them on the page.
+   NEVER  code or markup; a code change is not a redline. */
+.r-redline{margin:12px 0 16px;max-width:var(--measure);font-size:14.5px;line-height:1.55}
+.r-redline p{margin:0;padding:6px 10px;border-left:3px solid transparent}
+.r-redline .r-del{color:var(--mute);text-decoration:line-through;border-left-color:var(--red,#d9534f)}
+.r-redline .r-add{border-left-color:var(--green,#3fa66b)}
+.r-redline .r-same{color:var(--mute)}
+.r-redline hr{border:0;border-top:1px solid var(--line2);margin:8px 0}
+
+/* Logo test wall: one mark on the surfaces it must survive. Tiles keep their own ground in both modes. */
+.r-lockups{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:10px;margin-top:14px}
+.r-lockup{grid-column:span 3;margin:0;min-width:0}
+.r-lockup-wide{grid-column:span 6}
+.r-lockup-art{position:relative;aspect-ratio:1;overflow:hidden;border-radius:6px;display:flex;align-items:center;justify-content:center;background:#111}
+.r-lockup-wide .r-lockup-art{aspect-ratio:3/2}
+.r-lockup-art>img.r-lockup-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.r-lockup-cap{font-size:12px;color:var(--mute,#888);margin-top:5px}
+.r-lockup-sizes{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
+@media(max-width:1000px){.r-lockup{grid-column:span 6}.r-lockup-wide{grid-column:span 12}.r-lockup-true .r-lockup-art{aspect-ratio:auto;min-height:300px}}
+@media(max-width:720px){.r-lockup-true{grid-column:span 12}}

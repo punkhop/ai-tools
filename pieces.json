@@ -1,0 +1,243 @@
+{
+  "_comment": "The manifest tools/aitools.py installs from. files: 'from' is a repo path (a folder copies everything in it); 'to' is a path under ~/.claude, or starts with ~/ for anywhere else in the home folder. 'os' limits a file to mac or linux. 'exec' marks it runnable. 'claude_md_if_also' swaps a piece's CLAUDE.md lines when another piece is also installed (null = none: chat-voice already holds all of plain-voice). Pieces are listed in the order their CLAUDE.md lines appear.",
+  "version": "1.0.0",
+  "pieces": {
+    "dev-bible": {
+      "name": "Development Bible",
+      "group": "Building",
+      "version": "1.0.0",
+      "always": true,
+      "needs": [],
+      "t3_only": false,
+      "files": [
+        {"from": "bibles/01-DEVELOPMENT-BIBLE.md", "to": "ai-tools/bibles/01-DEVELOPMENT-BIBLE.md"}
+      ],
+      "settings": null,
+      "claude_md": "claude-md/dev-bible.md",
+      "try": "Ask Claude to build you something small. It plans, tests and explains in plain words without being told."
+    },
+    "chat-voice": {
+      "name": "Chat pages",
+      "group": "How Claude talks to you",
+      "version": "1.0.0",
+      "needs": [],
+      "t3_only": true,
+      "files": [
+        {"from": "rules/chat-voice.md", "to": "ai-tools/rules/chat-voice.md"},
+        {"from": "rules/no-eyebrows.md", "to": "ai-tools/rules/no-eyebrows.md"},
+        {"from": "chat/README.md", "to": "ai-tools/chat/README.md"}
+      ],
+      "settings": null,
+      "claude_md": "claude-md/chat-voice.md",
+      "try": "Ask for any small change. The reply comes back as a tidy page with links at the end."
+    },
+    "html": {
+      "name": "Report pages",
+      "group": "How Claude talks to you",
+      "version": "1.0.0",
+      "needs": [],
+      "t3_only": false,
+      "files": [
+        {"from": "skills/html", "to": "skills/html"}
+      ],
+      "settings": null,
+      "claude_md": "claude-md/html.md",
+      "try": "Type /html where my project stands"
+    },
+    "plain-voice": {
+      "name": "Plain words",
+      "group": "How Claude talks to you",
+      "version": "1.0.0",
+      "needs": [],
+      "t3_only": false,
+      "files": [
+        {"from": "rules/plain-voice.md", "to": "ai-tools/rules/plain-voice.md"},
+        {"from": "rules/no-eyebrows.md", "to": "ai-tools/rules/no-eyebrows.md"}
+      ],
+      "settings": null,
+      "claude_md": "claude-md/plain-voice.md",
+      "claude_md_if_also": {"chat-voice": null},
+      "try": "Ask Claude to explain anything it just did. Short sentences, no jargon."
+    },
+    "memory": {
+      "name": "Memory folder and notes",
+      "group": "Memory",
+      "version": "1.0.0",
+      "needs": [],
+      "t3_only": false,
+      "files": [
+        {"from": "skills/note", "to": "skills/note"}
+      ],
+      "settings": null,
+      "claude_md": "claude-md/memory.md",
+      "try": "Type /note at the end of a chat."
+    },
+    "session-save": {
+      "name": "Every chat saved",
+      "group": "Memory",
+      "version": "1.0.0",
+      "needs": ["memory"],
+      "t3_only": false,
+      "files": [
+        {"from": "hooks/session-save.sh", "to": "hooks/session-save.sh", "exec": true}
+      ],
+      "settings": "session-save",
+      "claude_md": "claude-md/session-save.md",
+      "try": "Nothing to do. Every chat lands in the transcripts folder when it ends."
+    },
+    "qmd": {
+      "name": "Memory search",
+      "group": "Memory",
+      "version": "1.0.0",
+      "needs": ["memory"],
+      "t3_only": false,
+      "files": [
+        {"from": "upkeep/qmd-upkeep.sh", "to": "bin/qmd-upkeep", "exec": true},
+        {"from": "upkeep/qmd-index.service", "to": "~/.config/systemd/user/qmd-index.service", "os": "linux"},
+        {"from": "upkeep/qmd-index.timer", "to": "~/.config/systemd/user/qmd-index.timer", "os": "linux"},
+        {"from": "upkeep/qmd-upgrade.service", "to": "~/.config/systemd/user/qmd-upgrade.service", "os": "linux"},
+        {"from": "upkeep/qmd-upgrade.timer", "to": "~/.config/systemd/user/qmd-upgrade.timer", "os": "linux"},
+        {"from": "upkeep/com.user.qmd-index.plist", "to": "~/Library/LaunchAgents/com.user.qmd-index.plist", "os": "mac"},
+        {"from": "upkeep/com.user.qmd-upgrade.plist", "to": "~/Library/LaunchAgents/com.user.qmd-upgrade.plist", "os": "mac"}
+      ],
+      "settings": "qmd",
+      "claude_md": "claude-md/qmd.md",
+      "try": "Ask: what did we decide about ... last week?"
+    },
+    "pass-handoff": {
+      "name": "Fresh threads",
+      "group": "Memory",
+      "version": "1.0.0",
+      "needs": ["memory"],
+      "t3_only": true,
+      "files": [
+        {"from": "skills/pass", "to": "skills/pass"},
+        {"from": "skills/handoff", "to": "skills/handoff"}
+      ],
+      "settings": null,
+      "claude_md": "claude-md/pass-handoff.md",
+      "try": "When a thread gets long, type /pass. For a side idea, type /handoff and the idea."
+    },
+    "tailscale": {
+      "name": "Tailscale",
+      "group": "Your devices",
+      "version": "1.0.0",
+      "needs": [],
+      "t3_only": false,
+      "files": [],
+      "settings": "tailscale",
+      "claude_md": null,
+      "try": "Turn Tailscale on in your phone's app. Your computers are now one tap away."
+    },
+    "files-server": {
+      "name": "Links that open anywhere",
+      "group": "Your devices",
+      "version": "1.0.0",
+      "needs": ["tailscale"],
+      "t3_only": false,
+      "files": [
+        {"from": "files-server/files-server.sh", "to": "bin/files-server", "exec": true},
+        {"from": "files-server/files-server-serve.py", "to": "bin/files-server-serve.py"},
+        {"from": "files-server/files-server.service", "to": "~/.config/systemd/user/files-server.service", "os": "linux"},
+        {"from": "files-server/com.user.files-server.plist", "to": "~/Library/LaunchAgents/com.user.files-server.plist", "os": "mac"}
+      ],
+      "settings": "files-server",
+      "claude_md": "claude-md/files-server.md",
+      "try": "Open any link Claude gives you on your phone."
+    },
+    "syncthing": {
+      "name": "Syncthing",
+      "group": "Your devices",
+      "version": "1.0.0",
+      "needs": ["memory"],
+      "t3_only": false,
+      "files": [],
+      "settings": null,
+      "claude_md": null,
+      "try": "Write a /note on one computer, then look for it on the other."
+    },
+    "safety-hooks": {
+      "name": "Safety nets",
+      "group": "Building",
+      "version": "1.0.0",
+      "needs": [],
+      "t3_only": false,
+      "files": [
+        {"from": "hooks/block-secrets.py", "to": "hooks/block-secrets.py", "exec": true},
+        {"from": "hooks/block-rm-untracked.sh", "to": "hooks/block-rm-untracked.sh", "exec": true},
+        {"from": "hooks/context-budget-feedback.sh", "to": "hooks/context-budget-feedback.sh", "exec": true}
+      ],
+      "settings": "safety-hooks",
+      "claude_md": "claude-md/safety-hooks.md",
+      "try": "Nothing to do. They work on their own."
+    },
+    "doctor": {
+      "name": "Checkup",
+      "group": "Building",
+      "version": "1.0.0",
+      "needs": [],
+      "t3_only": false,
+      "files": [
+        {"from": "skills/doctor", "to": "skills/doctor"}
+      ],
+      "settings": null,
+      "claude_md": "claude-md/doctor.md",
+      "try": "Type /doctor when something feels off."
+    },
+    "spec-logic-design": {
+      "name": "Plan before building",
+      "group": "Building",
+      "version": "1.0.0",
+      "needs": [],
+      "t3_only": false,
+      "files": [
+        {"from": "skills/spec", "to": "skills/spec"},
+        {"from": "skills/logic", "to": "skills/logic"},
+        {"from": "skills/design", "to": "skills/design"}
+      ],
+      "settings": null,
+      "claude_md": "claude-md/spec-logic-design.md",
+      "try": "Type /spec and the app you want to make."
+    },
+    "prototype": {
+      "name": "Prototypes",
+      "group": "Building",
+      "version": "1.0.0",
+      "needs": [],
+      "t3_only": false,
+      "files": [
+        {"from": "skills/prototype", "to": "skills/prototype"}
+      ],
+      "settings": null,
+      "claude_md": "claude-md/prototype.md",
+      "try": "Type /prototype a page that ..."
+    },
+    "image": {
+      "name": "Images",
+      "group": "Building",
+      "version": "1.0.0",
+      "needs": [],
+      "t3_only": false,
+      "files": [
+        {"from": "skills/image", "to": "skills/image"}
+      ],
+      "settings": null,
+      "claude_md": "claude-md/image.md",
+      "try": "Type /image a logo for my recipe app"
+    },
+    "review-multi": {
+      "name": "Second opinion",
+      "group": "Extras",
+      "version": "1.0.0",
+      "needs": [],
+      "t3_only": false,
+      "files": [
+        {"from": "skills/review", "to": "skills/review"},
+        {"from": "skills/multi", "to": "skills/multi"}
+      ],
+      "settings": "review-multi",
+      "claude_md": "claude-md/review-multi.md",
+      "try": "After Claude builds something, type /review."
+    }
+  }
+}

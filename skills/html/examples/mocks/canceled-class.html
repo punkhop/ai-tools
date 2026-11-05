@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What a customer sees when a class is canceled</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..750&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kit.css">
+<style>
+  /* page-specific only: the refund block, which no other screen has */
+  .refund{border:1px solid var(--k-line);border-radius:var(--k-r);overflow:hidden}
+  .refund .row{display:flex;justify-content:space-between;gap:16px;padding:11px 15px;
+    border-bottom:1px solid var(--k-line);font-size:13.5px}
+  .refund .row:last-child{border-bottom:none;background:var(--k-panel)}
+  .refund .row b{font-variant-numeric:tabular-nums}
+  .refund .row .good{color:var(--k-ok);font-size:16px}
+  .nights .n{padding:12px 14px;border-bottom:1px solid var(--k-line);font-size:13.5px}
+  .nights .n:last-child{border-bottom:none}
+  .nights .n b{display:block}
+</style>
+</head>
+<body>
+
+<div class="buy-root">
+  <div class="buy-header">
+    <span class="buy-logo">N</span>
+    <span class="buy-name">Northgate Pottery</span>
+    <span class="buy-links">Classes · Studio time · About · Your bookings</span>
+  </div>
+
+  <div class="buy-notice is-off">
+    <span class="g">✕</span>
+    <span><b>This class was canceled</b>
+    The studio called it off on Friday, Aug 21. You do not need to do anything — your money is on
+    its way back.</span>
+  </div>
+
+  <div style="display:flex;gap:24px;padding:20px;flex-wrap:wrap">
+    <div style="flex:1.6 1 340px;min-width:min(100%,300px)">
+      <h2 class="buy-h1">Wheel Throwing: Beginners</h2>
+      <div class="sub" style="margin-top:4px">Sat, Aug 22 · 10:00 AM · Studio B · 12 seats</div>
+      <p style="font-size:13.5px;color:var(--k-mute);margin-top:10px">
+        Three hours at the wheel, clay and firing included. Taught by Ruth Okonjo.</p>
+
+      <h3 style="font-size:15px;font-weight:700;margin:22px 0 10px">Your refund</h3>
+      <div class="refund">
+        <div class="row"><span>2 seats · Beginners</span><b>$130.00</b></div>
+        <div class="row"><span>Materials fee</span><b>$18.00</b></div>
+        <div class="row"><span><b>Back to your card</b>
+          <div class="sub">Visa ending 4242 · 5–10 business days</div></span>
+          <b class="good">$148.00</b></div>
+      </div>
+      <div class="sub" style="margin-top:8px">Started automatically when the class was canceled.
+        Nothing for you to claim.</div>
+    </div>
+
+    <div style="flex:1 1 250px;min-width:min(100%,240px)">
+      <h3 style="font-size:15px;font-weight:700;margin-bottom:10px">Other dates here</h3>
+      <div class="nights" style="border:1px solid var(--k-line);border-radius:var(--k-r)">
+        <div class="n"><b>Wheel Throwing: Beginners</b><span class="sub">Sat, Aug 29 · 10:00 AM · from $65</span></div>
+        <div class="n"><b>Evening Glaze Lab</b><span class="sub">Tue, Sep 1 · 6:30 PM · $40</span></div>
+        <div class="n"><b>Hand Building for Two</b><span class="sub">Sat, Sep 12 · 1:00 PM · from $80</span></div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
+        <a class="buy-btn">See all classes</a>
+        <a class="buy-btn outline">Email the studio</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
