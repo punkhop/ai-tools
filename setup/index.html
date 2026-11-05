@@ -149,7 +149,6 @@ pre.out{white-space:pre-wrap;font:13px/1.5 ui-monospace,Menlo,monospace;backgrou
 <p class="sub">Every computer you use Claude on. Setup starts on your main one.</p>
 <div class="comps" id="comps"></div>
 <div class="row" style="margin-top:12px"><button class="btn" id="addComp" type="button">+ Add a computer</button></div>
-<div style="margin-top:18px"><label class="check"><input type="checkbox" id="phone"> I want to open what Claude makes on my phone too</label></div>
 
 <div id="envBox" hidden>
   <div class="card envs">
@@ -252,9 +251,9 @@ const ALL = GROUPS.flatMap(g=>g.pieces);
 const KEY = 'ai-tools-setup-v1';
 
 const defaults = () => ({
-  comps:[{nick:'',os:'Mac',role:'main'}], phone:true, where:'T3 Code',
+  comps:[{nick:'',os:'Mac',role:'main'}], where:'T3 Code',
   picks:Object.fromEntries(ALL.map(p=>[p.id,!p.off && p.id!=='syncthing'])),
-  memDir:'~/memory', image:'OpenAI'
+  image:'OpenAI'
 });
 let S;
 try{ S = Object.assign(defaults(), JSON.parse(localStorage.getItem(KEY)||'{}')); }catch(e){ S = defaults(); }
@@ -285,7 +284,6 @@ $('#comps').addEventListener('click', e=>{
   save(); renderComps(); renderMore(); update();
 });
 $('#addComp').onclick = ()=>{ S.comps.push({nick:'',os:S.comps[0]?.os||'Mac',role:'other'}); if(S.comps.length===2 && !S.picksTouchedSync){ S.picks.syncthing=true; } save(); renderComps(); renderGroups(); update(); const ins=document.querySelectorAll('#comps input'); ins[ins.length-1].focus(); };
-$('#phone').checked = S.phone; $('#phone').onchange = e=>{ S.phone=e.target.checked; save(); update(); };
 document.querySelectorAll('#where input').forEach(r=>{ r.checked = r.value===S.where; r.onchange=()=>{ S.where=r.value; save(); renderGroups(); update(); }; });
 
 function renderGroups(){
@@ -320,21 +318,6 @@ function renderGroups(){
 }
 
 function renderMore(){
-  const syncSlot = document.querySelector('.piece[data-id="syncthing"] .more-slot');
-  if(syncSlot){
-    if(S.picks.syncthing){
-      const names = S.comps.map(nick);
-      const mac = S.comps.some(c=>c.os==='Mac');
-      syncSlot.innerHTML = `<div class="more">
-        <label class="field"><span>Memory folder</span><input type="text" id="memDir" value="${esc(S.memDir)}" autocomplete="off" spellcheck="false"></label>
-        ${mac?'<p class="warn">On a Mac, keep it out of Documents, Desktop and Downloads. macOS stops background helpers from reading those folders.</p>':''}
-        <div class="field"><span>Computers that share it</span>
-        ${S.comps.length<2?'<p class="note">Add your other computers above.</p>':names.map((n,i)=>`<label class="check"><input type="checkbox" data-share="${i}" ${S.comps[i].share!==false?'checked':''}> ${esc(n)}</label>`).join('')}</div>
-      </div>`;
-      syncSlot.querySelector('#memDir').oninput = e=>{ S.memDir=e.target.value; save(); update(); };
-      syncSlot.querySelectorAll('[data-share]').forEach(cb=>cb.onchange=()=>{ S.comps[+cb.dataset.share].share = cb.checked; save(); update(); });
-    } else syncSlot.innerHTML='';
-  }
   const imgSlot = document.querySelector('.piece[data-id="image"] .more-slot');
   if(imgSlot){
     imgSlot.innerHTML = S.picks.image ? `<div class="more"><div class="field"><span>Which service will make your images?</span>
@@ -352,12 +335,10 @@ function answers(){
   L.push('Where I talk to Claude: '+S.where);
   L.push('Computers:');
   S.comps.forEach((c,i)=>L.push(`- ${nick(c,i)} · ${c.os} · ${c.role==='main'?'main':'other'}`));
-  L.push('Phone: '+(S.phone?'yes, I want to open things on my phone':'no'));
   L.push('','Pieces:');
   on.forEach(p=>L.push(`- ${p.id}  (${p.name}${p.cmd?' '+p.cmd:''})`));
   const offs = ALL.filter(p=>!on.includes(p));
   if(offs.length) L.push('Not wanted: '+offs.map(p=>p.id).join(', '));
-  if(S.picks.syncthing){ L.push('','Memory folder: '+(S.memDir.trim()||'~/memory')); L.push('Syncthing shares it between: '+(S.comps.map((c,i)=>c.share!==false?nick(c,i):null).filter(Boolean).join(', ')||'(none chosen)')); }
   if(S.picks.image) L.push('','Image service: '+S.image);
   L.push('','(answers v1 from the ai-tools setup page)');
   return L.join('\n');

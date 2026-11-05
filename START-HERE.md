@@ -69,25 +69,23 @@ Where I talk to Claude: T3 Code            (T3 Code · Terminal · Both)
 Computers:
 - studio · Mac · main                       (nickname · Mac/Linux/Windows · main/other)
 - laptop · Linux · other
-Phone: yes, I want to open things on my phone
 Pieces:
 - memory  (Memory folder and notes /note)   (one piece id per line)
 Not wanted: review-multi
-Memory folder: ~/memory                     (only when syncthing is picked)
-Syncthing shares it between: studio, laptop
 Image service: OpenAI                       (OpenAI · Gemini · Both)
 ```
 
 - No answers pasted: send them to **https://punkhop.github.io/ai-tools/setup/** ("tick what you
   want, copy, paste it back here"), or, if they'd rather, ask the same things one at a time with
-  AskUserQuestion: where they talk to Claude; their computers (nickname, kind, which is main); phone
-  yes/no; which pieces (by group, with the setup page's one-line descriptions); then memory folder,
-  sharing and image service only if those pieces are picked.
+  AskUserQuestion: where they talk to Claude; their computers (nickname, kind, which is main);
+  which pieces (by group, with the setup page's one-line descriptions); image service only if
+  /image is picked. Where the memory folder goes and which computers Syncthing shares are never on
+  the page: ask them in chat at Stage 2 and Stage 5.
 - **Which computer is this?** The answers' `main` one, unless the message says "this is <nickname>"
   — then this is that other computer: install the same pieces, and skip "Your other computers".
 - `dev-bible` is always installed. `chat-voice` and `pass-handoff` only when they use T3 Code. A
   piece's `needs` (in `pieces.json`) come along even if not ticked; say so in one line.
-- Memory folder: from the answers, else `~/memory`.
+- They want to open things on their phone; assume it. The files server and Tailscale make it work.
 
 ## Stage 1 — Welcome, then prerequisites
 
@@ -150,9 +148,18 @@ pieces need answers `--version`.
 
 ## Stage 2 — Memory folder (memory)
 
-`REAL` = the memory folder from the answers, as an absolute path. On a Mac, if it's inside
-Documents, Desktop or Downloads, suggest `~/memory` instead: macOS stops background helpers from
-reading those folders.
+Ask in chat, one question (AskUserQuestion), in plain words, never `~/`:
+
+- **"A folder called memory, inside your home folder (the one with your name on it)" (recommended)**
+  → `REAL="$HOME/memory"`.
+- **"Let me pick a folder"** → open the computer's own folder picker and use what they choose:
+  Mac `osascript -e 'POSIX path of (choose folder with prompt "Pick or make a folder for Claude\'s memory")'`;
+  Linux `zenity --file-selection --directory --title="Folder for Claude's memory"` (or `kdialog
+  --getexistingdirectory ~`); Windows/WSL ask them to type it. Cancelled → ask again.
+
+Then say back where it is in their words ("memory, in your home folder"). On a Mac, if they picked
+inside Documents, Desktop or Downloads, say in one line that macOS blocks background helpers from
+those folders and offer the home-folder one instead.
 
 ```bash
 REAL="<absolute path>"
@@ -219,8 +226,10 @@ guards; System Settings → Privacy & Security → Full Disk Access → **+** �
 
 ## Stage 5 — Syncthing (syncthing)
 
-Keeps the memory folder the same on the computers named in "Syncthing shares it between". Install
-it on this computer now; the others pair in "Your other computers".
+Keeps the memory folder the same on their computers. First ask in chat (AskUserQuestion,
+multiSelect, the nicknames from the answers): "Which of your computers should share your memory
+folder?" One computer only → skip this stage and say Syncthing waits until they add another.
+Install it on this computer now; the others pair in "Your other computers".
 
 | Mac | Linux |
 |---|---|
