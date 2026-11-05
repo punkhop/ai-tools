@@ -82,12 +82,20 @@ Not wanted: review-multi
 Image service: OpenAI                       (OpenAI · Gemini · Both)
 ```
 
-- No answers pasted: send them to **https://punkhop.github.io/ai-tools/setup/** ("tick what you
-  want, copy, paste it back here"), or, if they'd rather, ask the same things one at a time with
-  AskUserQuestion: where they talk to Claude; their computers (nickname, kind, which is main);
-  which pieces (by group, with the setup page's one-line descriptions); image service only if
-  /image is picked. Where the memory folder goes and which computers Syncthing shares are never on
-  the page: ask them in chat at Stage 2 and Stage 5.
+- No answers pasted: open the setup page from the copy you just downloaded, in their browser, and
+  tell them: "tick what you want, click Copy my answers, and paste it back here."
+
+  ```bash
+  P=~/.claude/ai-tools/src/setup/index.html
+  open "$P" 2>/dev/null || xdg-open "$P" 2>/dev/null || explorer.exe "$(wslpath -w "$P")" 2>/dev/null
+  ```
+
+  Nothing opened: give them the address `file://` + that path to paste into their browser. If they'd
+  rather skip the page, ask the same things one at a time with AskUserQuestion: where they talk to
+  Claude; their computers (nickname, kind, which is main); which pieces (by group, with the setup
+  page's one-line descriptions); image service only if /image is picked. Where the memory folder
+  goes and which computers Syncthing shares are never on the page: ask them in chat at Stage 2 and
+  Stage 5.
 - **Which computer is this?** The answers' `main` one, unless the message says "this is <nickname>"
   — then this is that other computer: install the same pieces, and skip "Your other computers".
 - `dev-bible` is always installed. `chat-voice` and `pass-handoff` only when T3 Code is one of
