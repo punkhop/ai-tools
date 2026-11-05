@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>ai-tools setup</title>
+<title>Peet's AI Tools</title>
 <style>
 :root{
   color-scheme:light;
@@ -28,8 +28,12 @@
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
-.wrap{max-width:820px;margin:0 auto;padding:40px 20px 140px}
-h1{font-size:34px;line-height:1.15;letter-spacing:-.02em;margin:0 0 12px;font-weight:700}
+.wrap{max-width:1180px;margin:0 auto;padding:48px 32px 140px}
+.brand{display:flex;gap:22px;align-items:center;margin:0 0 14px}
+.brand img{width:96px;height:96px;border-radius:.75rem;object-fit:cover;flex:none;display:block}
+.brand h1{margin:0}
+.top-row{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:48px;align-items:start}
+h1{font-size:44px;line-height:1.15;letter-spacing:-.02em;margin:0 0 12px;font-weight:700}
 h2{font-size:22px;letter-spacing:-.01em;margin:56px 0 6px;font-weight:650}
 h3{font-size:17px;margin:32px 0 10px;font-weight:650;color:var(--ink)}
 p{margin:0 0 10px}
@@ -64,8 +68,9 @@ input[type=text]:focus,select:focus{outline:2px solid var(--accent);outline-offs
 .radio input{accent-color:var(--accent);margin:0}
 
 /* pieces */
-.pieces{display:grid;gap:12px}
-.piece{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:18px;padding:16px;align-items:start;transition:opacity .15s}
+.pieces{display:grid;gap:16px;grid-template-columns:repeat(2,minmax(0,1fr))}
+.piece{display:grid;grid-template-columns:1fr;gap:14px;padding:16px;align-content:start;transition:opacity .15s}
+.piece>.art{order:-1}
 .piece.off{opacity:.62}
 .piece.off .art{filter:grayscale(1)}
 .piece .top{display:flex;gap:12px;align-items:flex-start}
@@ -108,7 +113,7 @@ input[type=text]:focus,select:focus{outline:2px solid var(--accent);outline-offs
 .steps li{counter-increment:s;display:flex;gap:12px;align-items:flex-start}
 .steps li::before{content:counter(s);flex:none;display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-weight:700;font-size:14px}
 .bar{position:fixed;left:0;right:0;bottom:0;padding:12px 20px calc(12px + env(safe-area-inset-bottom,0px));background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(10px);border-top:1px solid var(--line);z-index:5}
-.bar .in{max-width:820px;margin:0 auto;display:flex;gap:14px;align-items:center;justify-content:space-between}
+.bar .in{max-width:1180px;margin:0 auto;display:flex;gap:14px;align-items:center;justify-content:space-between}
 .bar .count{color:var(--ink2);font-size:15px}
 .bar .btn.primary{padding:11px 18px;font-size:16px}
 details{margin-top:14px}
@@ -125,11 +130,14 @@ pre.out{white-space:pre-wrap;font:13px/1.5 ui-monospace,Menlo,monospace;backgrou
 .envs .art{aspect-ratio:auto;cursor:zoom-in}
 .envs .art svg{height:auto}
 
+@media (max-width:900px){
+  .top-row{grid-template-columns:1fr;gap:0}
+  .pieces{grid-template-columns:1fr}
+}
 @media (max-width:640px){
   .wrap{padding:28px 16px 140px}
-  h1{font-size:28px}
-  .piece{grid-template-columns:1fr;gap:12px}
-  .piece .art{margin-left:34px}
+  h1{font-size:30px}
+  .brand img{width:64px;height:64px}
   .comp{grid-template-columns:1fr 1fr auto;grid-template-areas:"nick nick rm" "os role role";gap:10px}
   .comp .field.nick{grid-area:nick}
   .comp .field.os{grid-area:os}
@@ -142,9 +150,10 @@ pre.out{white-space:pre-wrap;font:13px/1.5 ui-monospace,Menlo,monospace;backgrou
 <body>
 <div class="wrap">
 
-<h1>Make Claude better at building your things</h1>
+<div class="brand"><img src="peet.jpg" alt="Peet"><h1>Peet's AI Tools</h1></div>
 <p class="lead">You build apps and tools with Claude. Tick the pieces you want, then paste your answers into Claude. It installs them and checks each one works.</p>
 
+<div class="top-row"><div>
 <h2>Your computers</h2>
 <p class="sub">Every computer you use Claude on. Setup starts on your main one.</p>
 <div class="comps" id="comps"></div>
@@ -160,12 +169,14 @@ pre.out{white-space:pre-wrap;font:13px/1.5 ui-monospace,Menlo,monospace;backgrou
   </div>
 </div>
 
+</div><div>
 <h2>Where you talk to Claude</h2>
 <div class="radios" id="where">
   <label class="radio"><input type="radio" name="where" value="T3 Code" checked> T3 Code</label>
   <label class="radio"><input type="radio" name="where" value="Terminal"> Claude Code in a terminal</label>
   <label class="radio"><input type="radio" name="where" value="Both"> Both</label>
 </div>
+</div></div>
 
 <h2>Pick your pieces</h2>
 <p class="sub">Click a picture to see it bigger.</p>
