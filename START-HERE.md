@@ -26,6 +26,10 @@ at a time. Never ask "do you write code".
   [Windows](#windows).
 - **Never ask for a key or password in the chat.** Chats are saved. Keys go through a private box
   (T3 Code) or a hidden prompt they run themselves.
+- **Nothing runs by itself without their ok.** Before you turn on anything that runs in the
+  background (memory search's two jobs, the links server, Syncthing, the start-of-session update
+  check), tell them in one plain line what it does and how often, and go on only after they say
+  ok. A no skips that piece; say what they lose in one line.
 - **Their files come first.** `$AIT` backs up anything it replaces to
   `~/.claude/ai-tools-backup/<date>/` and never deletes their memory folder.
 - After each stage passes, add a line to the progress file so a restart or a new thread can pick up:
@@ -470,9 +474,14 @@ phone needs Tailscale on.
 
 ## Updates
 
-Nothing updates the pieces by itself. Once a week a small start-of-session check (installed with
-the Development Bible) looks for a newer release and, when there is one, asks Claude to mention it
-once. When they say "check ai-tools for updates":
+Nothing updates the pieces by itself, and no clock or scheduled job does this. The update check
+is a start-of-session hook (installed with the Development Bible): each time Claude starts on this
+computer, at most once every 7 days, it asks GitHub for the newest version tag. One `git ls-remote`
+call in the background; it reads nothing else and changes nothing. When there is a newer version,
+Claude mentions it once. Before turning it on, tell them that in one line (see "Nothing runs by
+itself without their ok"). A no: after `$AIT settings`, delete the `ai-tools-check.sh` entry from `~/.claude/settings.json`;
+they can still say "check ai-tools for updates" any time.
+When they say "check ai-tools for updates":
 
 ```bash
 git -C ~/.claude/ai-tools/src fetch --depth 1 --tags -q
