@@ -1,0 +1,11 @@
+{
+  "_sources": {
+    "openai": "https://developers.openai.com/api/docs/pricing (read 2026-11-04)",
+    "gemini": "https://ai.google.dev/gemini-api/docs/pricing (not filled in yet: add the image model you use, see SKILL.md)",
+    "units": "dollars per 1 million tokens"
+  },
+  "gpt-image-2.6-flare":    {"in_text": 5, "in_image": 8, "out_text": 0, "out_image": 30},
+  "gpt-image-2.6-sunburst": {"in_text": 5, "in_image": 8, "out_text": 0, "out_image": 30},
+  "gpt-image-2.5-flare":    {"in_text": 5, "in_image": 8, "out_text": 0, "out_image": 30},
+  "gpt-image-2.5-sunburst": {"in_text": 5, "in_image": 8, "out_text": 0, "out_image": 30}
+}

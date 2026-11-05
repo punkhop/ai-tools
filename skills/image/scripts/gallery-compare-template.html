@@ -1,0 +1,212 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Compare</title>
+<!-- Compare gallery for BIG same-composition candidates (hero images, remasters, light/dark twins).
+     Left rail, two levels: SUBJECT (a product, a character) → STAGE (the kind of round: masters,
+     content, rolls, style lab…). Candidates list under it as ONE scroll with section headers.
+     One pick per subject. Flip is the default: one big image; hold Space or press the image to
+     see the section's reference in the same spot; shift-click any candidate to compare against
+     it instead. Side by side is the alternate. Reads the manifest written by generate.py.
+     Configure TITLE, SUBJECTS and STAGES below per project. Keep the rail this plain: tabs, pills,
+     buttons and dropdowns together made it unusable. -->
+<style>
+  :root{--bg:#0f0f10;--panel:#161618;--line:#26262a;--muted:#8b8b93;--text:#ececef;--gold:#e0b341}
+  *{box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font:14px/1.4 -apple-system,system-ui,sans-serif;margin:0}
+  #shell{display:grid;grid-template-columns:260px minmax(0,1fr);min-height:100vh}
+  #rail{position:sticky;top:0;height:100vh;overflow:auto;border-right:1px solid var(--line);background:var(--bg);
+    padding:12px 12px 90px;display:flex;flex-direction:column;gap:12px}
+  .top{display:flex;align-items:center;gap:8px}
+  h1{font-weight:600;font-size:15px;margin:0;flex:1}
+  .modes{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+  .modes button{background:var(--panel);border:0;padding:4px 7px;cursor:pointer;color:#8b8b93;display:flex}
+  .modes button+button{border-left:1px solid var(--line)}
+  .modes button.on{background:var(--gold);color:#111}
+  .modes svg{width:16px;height:12px;display:block}
+  #subjects{display:flex;flex-direction:column;gap:1px}
+  #subjects button{font:inherit;font-size:14px;background:transparent;color:#a9a9b1;border:0;border-left:2px solid transparent;
+    padding:6px 10px;cursor:pointer;display:flex;align-items:center;gap:8px;text-align:left;border-radius:0 6px 6px 0}
+  #subjects button:hover{color:#fff;background:#1a1a1d}
+  #subjects button.on{color:#fff;border-left-color:var(--gold);background:#1a1a1d}
+  #subjects button .star{color:var(--gold);font-size:12px;width:12px}
+  #subjects button .n{color:var(--muted);font-size:12px;margin-left:auto}
+  #chips{display:flex;flex-direction:column;gap:3px;border-top:1px solid var(--line);padding-top:10px}
+  .sec{font-size:11.5px;color:var(--muted);margin:10px 2px 3px}
+  .sec:first-child{margin-top:0}
+  .chip.vs{border-style:dashed;color:#9a9aa3}
+  .chip{font:inherit;font-size:12.5px;background:var(--panel);color:#c9c9cf;border:1px solid var(--line);
+    border-radius:8px;padding:6px 10px;cursor:pointer;display:flex;align-items:center;gap:6px;text-align:left}
+  .chip:hover{border-color:#555;color:#fff}
+  .chip.active{border-color:#fff;color:#fff}
+  .chip.picked::before{content:"★";color:var(--gold);font-size:11px}
+  .spacer{flex:1}
+  kbd{font:10.5px ui-monospace,Menlo,monospace;background:#202024;border:1px solid #333;border-radius:4px;padding:0 4px;color:#bbb}
+  .hint{color:var(--muted);font-size:11.5px;line-height:1.7}
+  main{padding:14px 20px 90px;min-width:0}
+  #panes{display:grid;grid-template-columns:1fr;gap:14px}
+  body.side #panes{grid-template-columns:1fr 1fr}
+  #paneL{display:none} body.side #paneL{display:block}
+  .pane{background:transparent}
+  .cap{display:none}
+  .view{aspect-ratio:16/9;overflow:hidden;border-radius:6px}
+  .view img{width:100%;height:100%;object-fit:contain}
+  .cap b{font-weight:600;font-size:13.5px}
+  .cap .sub{color:var(--muted);font-size:12px}
+  .pick{font:inherit;font-size:12.5px;background:#202024;color:#ddd;border:1px solid var(--line);border-radius:6px;padding:4px 12px;cursor:pointer}
+  .pick.on{background:var(--gold);color:#111;border-color:var(--gold);font-weight:600}
+  .view{position:relative;background:#000;cursor:pointer}
+  .view img{display:block;width:100%;height:auto}
+  .view img.alt{position:absolute;inset:0;opacity:0}
+  body.showalt .view img.alt{opacity:1}
+  .badge{position:absolute;top:10px;left:10px;background:#000c;color:#fff;font-size:12px;padding:4px 9px;border-radius:6px;pointer-events:none;opacity:0}
+  body.showalt .badge{opacity:1}
+  body.side .badge,body.side .view img.alt{display:none}
+  #bar{position:fixed;left:0;right:0;bottom:0;background:#141416;border-top:1px solid var(--line);
+    padding:10px 20px;display:flex;align-items:center;gap:10px;z-index:9;flex-wrap:wrap}
+  #bar b{color:var(--gold)}
+  #bar .pick{font-size:13px;padding:7px 14px}
+  #bar button{font:inherit;font-size:13px;background:#232326;color:#eee;border:1px solid var(--line);border-radius:8px;padding:7px 13px;cursor:pointer}
+  #bar button.primary{background:var(--gold);color:#111;border-color:var(--gold);font-weight:600}
+  #picks{display:none;width:100%;margin-top:8px;background:#0c0c0d;border:1px solid var(--line);border-radius:8px;
+    padding:10px;font:12px/1.5 ui-monospace,Menlo,monospace;color:#bbb;white-space:pre-wrap}
+  @media(max-width:1100px){body.side #panes{grid-template-columns:1fr} #shell{grid-template-columns:1fr} #rail{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line)}}
+</style></head><body>
+<div id="shell">
+<nav id="rail">
+  <div class="top">
+    <h1 id="title"></h1>
+    <div class="modes" id="modes">
+      <button data-mode="flip" class="on" title="Flip (hold Space)"><svg viewBox="0 0 16 12"><rect x="1" y="1" width="14" height="10" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button>
+      <button data-mode="side" title="Side by side"><svg viewBox="0 0 16 12"><rect x="1" y="1" width="6" height="10" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.6"/><rect x="9" y="1" width="6" height="10" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button>
+    </div>
+  </div>
+  <div id="subjects"></div>
+  <div id="chips"></div>
+  <span class="spacer"></span>
+  <div class="hint"><kbd>←</kbd><kbd>→</kbd> candidate · <kbd>Space</kbd> hold to flip<br><kbd>P</kbd> pick · <kbd>Tab</kbd> next subject<br><kbd>⇧</kbd>+click a candidate = compare against it</div>
+</nav>
+<main>
+  <div id="panes">
+    <div class="pane" id="paneL">
+      <div class="cap"><b id="labL"></b><span class="sub" id="subL"></span><span class="spacer"></span><button class="pick" id="pickL">Pick</button></div>
+      <div class="view"><img id="imgL" alt=""></div>
+    </div>
+    <div class="pane" id="paneR">
+      <div class="cap"><b id="labR"></b><span class="sub" id="subR"></span></div>
+      <div class="view" id="viewR"><img id="imgR" alt=""><img id="imgAlt" class="alt" alt=""><span class="badge" id="badge"></span></div>
+    </div>
+  </div>
+</main>
+</div>
+<div id="bar">
+  <button class="pick" id="pickR">Pick</button><span id="nameR" style="font-size:13px"></span><span class="spacer"></span><span><b id="count">0</b> picked</span>
+  <button id="showList">Show list</button>
+  <button id="clear">Clear</button>
+  <button id="copy" class="primary">Copy picks</button>
+  <pre id="picks"></pre>
+</div>
+
+<script>
+// Per project. TITLE names the page. A SUBJECT is a tab in the rail; its `match` claims candidates by name. STAGES split a
+// subject's list into sections (first match wins; unmatched → "Other"); a stage may carry its own
+// reference, else the subject's. The list is ONE scroll: section header, its candidates, next section.
+const TITLE = "Compare";
+document.title=TITLE;document.getElementById("title").textContent=TITLE;
+const SUBJECTS=[
+  // {key:"hero", label:"Hero", match:/^hero-/, reference:{src:"../refs/subject/hero-original.png", label:"Original"}},
+  // {key:"lab", label:"Experiments", match:/./},
+];
+const STAGES=[
+  // {key:"masters", label:"Masters", match:/-(master|remaster)-/},
+];
+const KEY="picks-v3:"+location.pathname;
+let picks={};try{picks=JSON.parse(localStorage.getItem(KEY)||"{}")}catch(_){}
+let subjects=[], si=0, iR=0, iL=0, mode="flip";
+const $=id=>document.getElementById(id);
+const REVIEW=true, srcFor=it=>(!it||!it.src)?"":(REVIEW?it.src.replace(/\.png$/i,".review.jpg"):it.src);
+const cur=()=>subjects[si], items=()=>cur().items;
+
+// Served over http: fetch the manifest fresh. Opened from disk (file://), browsers refuse that
+// fetch, so load manifest.js (the same data as a script, written by generate.py) instead.
+function loadManifest(done){
+  if(location.protocol.startsWith("http"))
+    return fetch("manifest.json?t="+Date.now(),{cache:"no-store"}).then(r=>r.json()).then(done);
+  const s=document.createElement("script");s.src="manifest.js";
+  s.onload=()=>done(window.MANIFEST||[]);document.head.appendChild(s);
+}
+loadManifest(all=>{
+  const num=r=>parseInt(String(r).replace(/\D/g,""),10)||0;
+  all.sort((a,b)=>num(b.round)-num(a.round)||String(a.name||a.file).localeCompare(String(b.name||b.file)));
+  const sdefs=SUBJECTS.length?SUBJECTS:[{key:"all",label:"All",match:/./}];
+  subjects=sdefs.map(s=>({...s,cands:[]}));
+  all.forEach(x=>{const it={...x,name:x.name||x.file,label:x.label||x.file,sub:x.sub||x.round||""};
+    (subjects.find(s=>s.match.test(it.name))||subjects[subjects.length-1]).cands.push(it);});
+  subjects=subjects.filter(s=>s.cands.length);
+  if(!subjects.length){document.querySelector("main").innerHTML="<h2>No images yet</h2>";return;}
+  subjects.forEach(s=>{
+    const groups=STAGES.map(g=>({...g,cands:[]})); const other={key:"other",label:"Other",cands:[]};
+    s.cands.forEach(c=>{(groups.find(g=>g.match.test(c.name))||other).cands.push(c);});
+    // flatten: [ref-of-section, candidates…] per section, newest round first
+    s.items=[]; s.sections=[];
+    const newest=g=>Math.max(...g.cands.map(c=>num(c.round)));
+    s.newest=Math.max(...s.cands.map(c=>num(c.round)));
+    groups.concat([other]).filter(g=>g.cands.length).sort((a,b)=>newest(b)-newest(a)).forEach(g=>{
+      const ref=g.reference||s.reference; const start=s.items.length;
+      if(ref) s.items.push({...ref,ref:true,section:g.label});
+      g.cands.forEach(c=>s.items.push({...c,section:g.label}));
+      s.sections.push({label:g.label,start,refIndex:ref?start:null,n:g.cands.length});
+    });
+  });
+  $("subjects").innerHTML=subjects.map((s,i)=>`<button data-i="${i}"><span class="star"></span>${s.label}<span class="n">${s.cands.length}</span></button>`).join("");
+  document.querySelectorAll("#subjects button").forEach(b=>b.addEventListener("click",()=>setSubject(+b.dataset.i)));
+  setSubject(subjects.reduce((best,s,i)=>s.newest>subjects[best].newest?i:best,0));
+});
+
+function sectionOf(i){const s=cur();let sec=s.sections[0];for(const x of s.sections){if(i>=x.start)sec=x;}return sec;}
+function setSubject(i){si=i;document.querySelectorAll("#subjects button").forEach(b=>b.classList.toggle("on",+b.dataset.i===i));
+  const s=cur();
+  $("chips").innerHTML=s.sections.map(sec=>`<div class="sec">${sec.label}<span style="margin-left:6px">${sec.n}</span></div>`+
+    s.items.slice(sec.start,sec.start+sec.n+(sec.refIndex!==null?1:0)).map((c,j)=>{const k=sec.start+j;return `<button class="chip${c.ref?" vs":""}" data-i="${k}">${c.ref?"◆ "+c.label:(c.n?`<b>${c.n}</b> `:"")+c.label}</button>`;}).join("")).join("");
+  document.querySelectorAll(".chip").forEach(c=>c.addEventListener("click",e=>{const k=+c.dataset.i;if(e.shiftKey)setL(k);else setR(k);}));
+  const first=s.items.findIndex(x=>!x.ref); setR(first<0?0:first);}
+function setL(i){iL=i;const it=items()[i];$("imgL").src=srcFor(it);$("imgAlt").src=srcFor(it);$("labL").textContent=it.label;$("subL").textContent=it.sub||"";$("badge").textContent=it.label;refresh();}
+function setR(i){iR=i;const it=items()[i];if(!it)return;$("imgR").src=srcFor(it);$("labR").textContent=it.label;$("subR").textContent=it.sub||"";$("nameR").textContent=(it.n?it.n+" · ":"")+it.label;
+  const sec=sectionOf(i); if(sec.refIndex!==null&&sectionOf(iL)!==sec&&!it.ref) setL(sec.refIndex); else refresh();}
+function step(d){const n=items().length;setR((iR+d+n)%n);}
+function togglePick(side){const s=cur(),it=items()[side==="L"?iL:iR];if(!it||it.ref)return;
+  if(picks[s.key]===it.src)delete picks[s.key];else picks[s.key]=it.src;save();refresh();}
+function save(){localStorage.setItem(KEY,JSON.stringify(picks));}
+function refresh(){
+  const s=cur();if(!s)return;const its=items(),it=its[iR]||{},itL=its[iL]||{};
+  const on=picks[s.key]===it.src,onL=picks[s.key]===itL.src;
+  $("pickR").classList.toggle("on",on);$("pickR").textContent=on?"★ Picked":"Pick";$("pickR").style.display=it.ref?"none":"";
+  $("pickL").classList.toggle("on",onL);$("pickL").textContent=onL?"★ Picked":"Pick";$("pickL").style.display=itL.ref?"none":"";
+  document.querySelectorAll(".chip").forEach(c=>{const k=+c.dataset.i;c.classList.toggle("active",k===iR);c.classList.toggle("picked",picks[s.key]===its[k].src);c.classList.toggle("vs",k===iL);});
+  document.querySelectorAll("#subjects button").forEach(b=>b.querySelector(".star").textContent=picks[subjects[+b.dataset.i].key]?"★":"");
+  $("count").textContent=Object.keys(picks).length;
+  if($("picks").style.display!=="none")$("picks").textContent=picksText()||"(nothing picked yet)";
+}
+// Number + label: notes go by number.
+function picksText(){return subjects.filter(s=>picks[s.key]).map(s=>{const it=s.cands.find(c=>c.src===picks[s.key])||{};
+  return `${s.label}: ${it.n??it.file??picks[s.key]} — ${it.label||""}`;}).join("\n");}
+function setMode(m){mode=m;document.body.classList.toggle("side",m==="side");document.querySelectorAll("#modes button").forEach(b=>b.classList.toggle("on",b.dataset.mode===m));}
+document.querySelectorAll("#modes button").forEach(b=>b.addEventListener("click",()=>setMode(b.dataset.mode)));
+$("pickR").addEventListener("click",()=>togglePick("R"));$("pickL").addEventListener("click",()=>togglePick("L"));
+const showAlt=on=>document.body.classList.toggle("showalt",on);
+document.addEventListener("keydown",e=>{
+  if(e.key==="ArrowRight"){e.preventDefault();step(1);}
+  else if(e.key==="ArrowLeft"){e.preventDefault();step(-1);}
+  else if(e.key==="Tab"){e.preventDefault();setSubject((si+(e.shiftKey?-1:1)+subjects.length)%subjects.length);}
+  else if(e.key===" "){e.preventDefault();showAlt(true);}
+  else if(e.key.toLowerCase()==="p"){togglePick("R");}
+  else if(e.key==="1")setMode("flip");else if(e.key==="2")setMode("side");
+});
+document.addEventListener("keyup",e=>{if(e.key===" ")showAlt(false);});
+$("viewR").addEventListener("pointerdown",()=>{if(mode==="flip")showAlt(true);});
+document.addEventListener("pointerup",()=>showAlt(false));
+$("clear").addEventListener("click",()=>{const n=Object.keys(picks).length;if(n&&!confirm("Clear all "+n+" picks?"))return;picks={};save();refresh();});
+$("showList").addEventListener("click",()=>{$("picks").style.display=$("picks").style.display==="none"?"block":"none";refresh();});
+$("copy").addEventListener("click",async e=>{const txt=picksText();
+  try{await navigator.clipboard.writeText(txt);e.target.textContent="Copied ✓";setTimeout(()=>e.target.textContent="Copy picks",1200);}
+  catch(_){$("picks").style.display="block";$("picks").textContent=txt;}});
+</script>
+</body></html>

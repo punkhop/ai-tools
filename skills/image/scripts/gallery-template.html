@@ -1,0 +1,287 @@
+<!doctype html>
+<!-- /image gallery: pick winners from a round, judging each image big and at the size it ships at.
+     Sits beside generate.py and its manifest. Edit the CONFIG block only. -->
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gallery</title>
+<style>
+  :root{--bg:#0e0e0f;--panel:#151517;--card:#1a1a1d;--line:#2a2a2e;--mute:#8b8b92;--text:#ececef;--accent:#e0b341}
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;background:var(--bg);color:var(--text);font:14px/1.4 -apple-system,system-ui,sans-serif;display:flex}
+  button{font:inherit;color:inherit;cursor:pointer}
+
+  /* ---- left nav ---- */
+  aside{width:248px;flex:none;height:100vh;position:sticky;top:0;background:var(--panel);border-right:1px solid var(--line);
+    display:flex;flex-direction:column}
+  aside .top{padding:18px 16px 10px}
+  aside h1{font-size:15px;font-weight:600;margin:0}
+  .seg{display:flex;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:2px;margin:14px 0 4px}
+  .seg button{flex:1;background:none;border:0;border-radius:6px;padding:6px 0;font-size:12.5px;color:var(--mute);white-space:nowrap}
+  .seg button.on{background:var(--card);color:var(--text);box-shadow:0 0 0 1px var(--line)}
+  .seg[hidden]{display:none}
+  aside .list{flex:1;overflow:auto;padding:6px 8px 12px}
+  .round{font-size:11.5px;color:var(--mute);padding:14px 8px 4px;display:flex;justify-content:space-between}
+  .list a{display:flex;justify-content:space-between;gap:8px;padding:5px 8px;border-radius:6px;color:var(--text);
+    text-decoration:none;font-size:13px}
+  .list a:hover{background:var(--card)}
+  .list a .ct{color:var(--mute);font-variant-numeric:tabular-nums}
+  .list a .ct b{color:var(--accent);font-weight:600}
+  aside .foot{border-top:1px solid var(--line);padding:12px 16px;display:grid;gap:8px}
+  .foot label{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--mute);cursor:pointer}
+  .foot .row{display:flex;gap:8px}
+  .foot .row button{flex:1;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 0;font-size:13px}
+  .foot .row button.primary{background:var(--accent);border-color:var(--accent);color:#111;font-weight:600}
+
+  /* ---- grid ---- */
+  main{flex:1;min-width:0;padding:8px 28px 60px}
+  section{scroll-margin-top:12px}
+  h2{font-size:15px;font-weight:600;margin:26px 0 12px;display:flex;gap:8px;align-items:baseline}
+  h2 .r{color:var(--mute);font-weight:400;font-size:12.5px}
+  .grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(var(--min,200px),1fr));align-items:start}
+  .card{position:relative;cursor:zoom-in}
+  .card .frame{border-radius:10px;overflow:hidden;background:var(--card);outline:1px solid var(--line)}
+  .card img{display:block;width:100%;height:auto}
+  .card.sel .frame{outline:2px solid var(--accent)}
+  .card .cap{font-size:12px;color:var(--mute);margin-top:7px;line-height:1.3}
+  .card .cap b{display:block;color:var(--text);font-weight:500;font-size:12.5px}
+  .num{font-size:22px;font-weight:700;color:var(--text);font-variant-numeric:tabular-nums;margin-right:8px}
+  .card .cap .num{float:left;line-height:1.1}
+  #viewer .bar .t .num{font-size:28px;vertical-align:-3px}
+  .pick{position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:50%;border:1.5px solid #fff9;
+    background:#0007;color:transparent;font-size:15px;font-weight:700;display:grid;place-items:center;backdrop-filter:blur(4px)}
+  .pick:hover{border-color:#fff}
+  .sel .pick{background:var(--accent);border-color:var(--accent);color:#111}
+  .card[hidden],section[hidden]{display:none}
+
+  /* ---- surface preview (optional, CONFIG.surface) ---- */
+  .surface{position:relative;overflow:hidden;background:#000;width:100%;container-type:inline-size}
+  .frame:has(.surface){outline:none;background:none;border-radius:0}
+  .card.sel .surface{outline:2px solid var(--accent);outline-offset:2px}
+  .surface img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .surface .island{position:absolute;top:3.2%;left:50%;transform:translateX(-50%);width:31%;height:4.3%;background:#000;border-radius:99px}
+  .surface .date{position:absolute;top:11%;width:100%;text-align:center;color:#fffe;font-weight:600;
+    font-size:5cqw;text-shadow:0 1px 6px #0006}
+  .surface .time{position:absolute;top:13.2%;width:100%;text-align:center;color:#fff;font-weight:700;letter-spacing:-.02em;
+    font-size:26cqw;line-height:1;text-shadow:0 2px 14px #0005}
+
+  /* ---- full-size viewer ---- */
+  #viewer{position:fixed;inset:0;background:#000f;z-index:20;display:flex;flex-direction:column}
+  #viewer[hidden]{display:none}
+  #viewer .bar{display:flex;align-items:center;gap:12px;padding:10px 16px;border-bottom:1px solid #222}
+  #viewer .bar .t{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #viewer .bar .t span{color:var(--mute);margin-left:8px;font-size:12.5px}
+  #viewer .bar button.x,#viewer .bar button.vp{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px 12px;font-size:13px}
+  #viewer .bar button.vp.on{background:var(--accent);border-color:var(--accent);color:#111;font-weight:600}
+  #viewer .seg{margin:0;width:auto}
+  #viewer .seg button{padding:5px 12px}
+  #stage{flex:1;overflow:auto;display:grid;place-items:center;padding:16px}
+  #stage.fit{overflow:hidden}
+  #stage.fit img.full{max-width:100%;max-height:calc(100vh - 110px);object-fit:contain}
+  #stage .hint{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);color:#777;font-size:12px}
+
+  @media(max-width:760px){
+    body{flex-direction:column}
+    aside{width:auto;height:auto;position:static;border-right:0;border-bottom:1px solid var(--line)}
+    aside .list{max-height:30vh}
+    main{padding:4px 16px 40px}
+    .grid{--min:140px}
+  }
+</style></head><body>
+
+<aside>
+  <div class="top">
+    <h1 id="title"></h1>
+    <div class="seg" id="viewSeg"></div>
+  </div>
+  <nav class="list" id="nav"></nav>
+  <div class="foot">
+    <label><input type="checkbox" id="onlyPicked"> Picked only</label>
+    <div class="row"><button id="clear">Clear</button><button id="copy" class="primary">Copy <span id="count">0</span> picks</button></div>
+  </div>
+</aside>
+
+<main id="root"></main>
+
+<div id="viewer" hidden>
+  <div class="bar">
+    <div class="t" id="vTitle"></div>
+    <div class="seg" id="vSeg"></div>
+    <button class="vp" id="vPick">Pick</button>
+    <button class="x" id="vClose">Close</button>
+  </div>
+  <div id="stage" class="fit"></div>
+</div>
+
+<script>
+// ===== CONFIG — the only block a project edits =====
+const CONFIG = {
+  title: "Gallery",
+  // Optional: preview every candidate inside the surface it ships into. null = no surface view.
+  // width/height in CSS points at real device size; radius rounds the corners.
+  // e.g. iPhone 15 lock screen: {name:"Lock screen", width:393, height:852, radius:55, clock:true}
+  surface: null,
+};
+// ===================================================
+
+document.title = CONFIG.title;
+document.getElementById("title").textContent = CONFIG.title;
+const KEY = "picks-v2:" + location.pathname;               // per-gallery, never shared across projects
+const picks = new Set(JSON.parse(localStorage.getItem(KEY) || "[]"));
+const params = new URLSearchParams(location.search);
+let view = params.get("view") || "grid";                    // grid | surface  (deep-linkable for headless screenshots)
+let all = [], order = [], cur = -1, vMode = "fit";
+
+const views = [["grid", "Grid"]].concat(CONFIG.surface ? [["surface", CONFIG.surface.name]] : []);
+const vModes = [["fit", "Fit"], ["actual", "Actual pixels"]].concat(CONFIG.surface ? [["surface", CONFIG.surface.name]] : []);
+if (!views.some(v => v[0] === view)) view = "grid";
+const seg = (el, opts, curVal, onPick) => {
+  el.innerHTML = opts.map(([k, l]) => `<button data-k="${k}" class="${k === curVal ? "on" : ""}">${l}</button>`).join("");
+  el.hidden = opts.length < 2;
+  el.onclick = e => { const k = e.target.dataset.k; if (k) onPick(k); };
+};
+const groupOf = it => (it.label || it.file).split(" · ")[0];
+const full = it => it.src;                                   // PNG master
+const thumb = it => it.src.replace(/\.png$/, ".review.jpg"); // light copy written by generate.py
+const save = () => localStorage.setItem(KEY, JSON.stringify([...picks]));
+const slug = s => s.replace(/[^a-z0-9]+/gi, "-").toLowerCase();
+
+function surfaceHTML(src) {   // fills its parent's width; corners and clock scale with it
+  const s = CONFIG.surface, rx = s.radius / s.width * 100, ry = s.radius / s.height * 100;
+  const now = new Date();
+  const clock = s.clock ? `<div class="island"></div>
+    <div class="date">${now.toLocaleDateString([], {weekday: "long", month: "long", day: "numeric"})}</div>
+    <div class="time">${now.toLocaleTimeString([], {hour: "numeric", minute: "2-digit"}).replace(/\s?[AP]M/i, "")}</div>` : "";
+  return `<div class="surface" style="aspect-ratio:${s.width}/${s.height};border-radius:${rx}% / ${ry}%"><img src="${src}">${clock}</div>`;
+}
+
+function render() {
+  seg(document.getElementById("viewSeg"), views, view, k => { view = k; params.set("view", k);
+    history.replaceState(null, "", "?" + params); render(); });
+  const num = r => parseInt(r, 10) || 0;
+  const rounds = [...new Set(all.map(x => x.round))].sort((a, b) => num(b) - num(a)); // newest round first
+  let nav = "", html = "";
+  order = [];
+  for (const r of rounds) {
+    const inRound = all.filter(x => x.round === r);
+    const groups = [...new Set(inRound.map(groupOf))];
+    nav += `<div class="round"><span>${r}</span><span>${inRound.length}</span></div>`;
+    for (const g of groups) {
+      const items = inRound.filter(x => groupOf(x) === g), id = slug(r + "-" + g);
+      const np = items.filter(x => picks.has(x.src)).length;
+      nav += `<a href="#${id}"><span>${g}</span><span class="ct">${np ? `<b>${np}</b> / ` : ""}${items.length}</span></a>`;
+      html += `<section id="${id}"><h2>${g}<span class="r">${r}</span></h2><div class="grid" style="${
+        view === "surface" ? `--min:240px` : ""}">` +
+        items.map(it => {
+          const i = order.push(it) - 1, sub = (it.label || "").split(" · ").slice(1).join(" · ") || it.file;
+          const img = view === "surface" ? surfaceHTML(thumb(it)) : `<img loading="lazy" src="${thumb(it)}">`;
+          return `<div class="card" data-i="${i}"><div class="frame">${img}</div>
+            <button class="pick" title="Pick">✓</button><div class="cap">${it.n ? `<span class="num">${it.n}</span>` : ""}<b>${sub}</b></div></div>`;
+        }).join("") + `</div></section>`;
+    }
+  }
+  document.getElementById("nav").innerHTML = nav;
+  document.getElementById("root").innerHTML = html;
+  refresh();
+}
+
+function refresh() {
+  const only = document.getElementById("onlyPicked").checked;
+  document.querySelectorAll(".card").forEach(c => {
+    const sel = picks.has(order[c.dataset.i].src);
+    c.classList.toggle("sel", sel);
+    c.hidden = only && !sel;
+  });
+  document.querySelectorAll("section").forEach(s => s.hidden = ![...s.querySelectorAll(".card")].some(c => !c.hidden));
+  document.getElementById("count").textContent = picks.size;
+  document.querySelectorAll(".list a").forEach(a => {                     // keep nav pick counts live
+    const sec = document.getElementById(a.hash.slice(1)), n = sec.querySelectorAll(".card.sel").length;
+    const total = sec.querySelectorAll(".card").length;
+    a.querySelector(".ct").innerHTML = (n ? `<b>${n}</b> / ` : "") + total;
+  });
+  if (cur >= 0) document.getElementById("vPick").classList.toggle("on", picks.has(order[cur].src));
+}
+
+function toggle(it) { picks.has(it.src) ? picks.delete(it.src) : picks.add(it.src); save(); refresh(); }
+
+// ---- viewer ----
+function open(i) {
+  cur = (i + order.length) % order.length;
+  const it = order[cur];
+  document.getElementById("viewer").hidden = false;
+  document.getElementById("vTitle").innerHTML = `${it.n ? `<span class="num">${it.n}</span>` : ""}${groupOf(it)}<span>${(it.label || "").split(" · ").slice(1).join(" · ")}${it.round === "finals" ? "" : " · " + it.round}</span>`;
+  seg(document.getElementById("vSeg"), vModes, vMode, k => { vMode = k; open(cur); });
+  const st = document.getElementById("stage");
+  st.className = vMode === "fit" ? "fit" : "";
+  if (vMode === "surface") {
+    const s = CONFIG.surface, w = Math.min(s.width * 1.4, (innerHeight - 110) * s.width / s.height);
+    st.innerHTML = `<div style="width:${w}px">${surfaceHTML(full(it))}</div>`;
+  } else {
+    st.innerHTML = `<img class="full" src="${full(it)}">`;
+    const img = st.querySelector("img");
+    if (vMode === "actual") img.onload = () => img.style.width = img.naturalWidth / devicePixelRatio + "px"; // 1 image px = 1 screen px
+  }
+  st.insertAdjacentHTML("beforeend", `<div class="hint">← → browse · type a number to jump · Space pick · F fit · A actual · Esc close</div>`);
+  refresh();
+}
+// ← → walk the images in number order (1, 2, 3…), finals after, so the number read off the
+// viewer always follows the last one; unnumbered images keep their grid order.
+function step(d) {
+  const flip = order.map((it, i) => i).sort((x, y) => {
+    const a = order[x], b = order[y], fa = a.round === "finals", fb = b.round === "finals";
+    return fa - fb || (a.n ?? 1e9) - (b.n ?? 1e9) || x - y;
+  });
+  open(flip[(flip.indexOf(cur) + d + flip.length) % flip.length]);
+}
+function close() { document.getElementById("viewer").hidden = true; cur = -1; }
+
+document.getElementById("root").addEventListener("click", e => {
+  const card = e.target.closest(".card"); if (!card) return;
+  const it = order[card.dataset.i];
+  if (e.target.closest(".pick")) toggle(it); else open(+card.dataset.i);
+});
+document.getElementById("vPick").onclick = () => toggle(order[cur]);
+document.getElementById("vClose").onclick = close;
+// Type a number (anywhere) to open that image: the same number notes use.
+let typed = "", typedT;
+document.addEventListener("keydown", e => {
+  if (!/^[0-9]$/.test(e.key) || e.metaKey || e.ctrlKey) return;
+  typed += e.key; clearTimeout(typedT);
+  typedT = setTimeout(() => { const i = order.findIndex(x => x.n === +typed && x.round !== "finals"); typed = ""; if (i >= 0) open(i); }, 500);
+});
+document.addEventListener("keydown", e => {
+  if (cur < 0) return;
+  if (e.key === "Escape") close();
+  else if (e.key === "ArrowRight") step(1);
+  else if (e.key === "ArrowLeft") step(-1);
+  else if (e.key === " ") { e.preventDefault(); toggle(order[cur]); }
+  else if (e.key === "f") { vMode = "fit"; open(cur); }
+  else if (e.key === "a") { vMode = "actual"; open(cur); }
+});
+
+document.getElementById("onlyPicked").onchange = refresh;
+document.getElementById("clear").onclick = () => {
+  if (picks.size && confirm(`Clear all ${picks.size} picks?`)) { picks.clear(); save(); refresh(); }
+};
+document.getElementById("copy").onclick = async e => {
+  // Number + label: notes go by number.
+  const txt = all.filter(x => picks.has(x.src)).map(x => `${x.n ?? x.file} — ${x.label || ""}`).join("\n");
+  const b = e.currentTarget, was = b.innerHTML;
+  try { await navigator.clipboard.writeText(txt); b.textContent = "Copied ✓"; }
+  catch (_) { prompt("Copy these picks:", txt); }
+  setTimeout(() => { b.innerHTML = was; refresh(); }, 1200);
+};
+
+// Served over http: fetch the manifest fresh. Opened from disk (file://), browsers refuse that
+// fetch, so load manifest.js (the same data as a script, written by generate.py) instead.
+function loadManifest(done) {
+  if (location.protocol.startsWith("http"))
+    return fetch("manifest.json?t=" + Date.now(), {cache: "no-store"}).then(r => r.json()).then(done);
+  const s = document.createElement("script");
+  s.src = "manifest.js";
+  s.onload = () => done(window.MANIFEST || []);
+  s.onerror = () => { document.getElementById("root").innerHTML = "<h2>No images yet</h2>"; };
+  document.head.appendChild(s);
+}
+loadManifest(m => { all = m; render(); });
+</script>
+</body></html>

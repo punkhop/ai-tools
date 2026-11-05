@@ -1,0 +1,6 @@
+[Unit]
+Description=qmd-upkeep index
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash %h/.claude/bin/qmd-upkeep index

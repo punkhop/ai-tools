@@ -1,0 +1,114 @@
+{
+  "_comment": "Grouped per piece. The installer merges 'base' always, then only the groups for the pieces the user chose, into ~/.claude/settings.json (arrays are appended without duplicates; existing settings are kept).",
+  "base": {
+    "permissions": {
+      "allow": [
+        "Read",
+        "Glob",
+        "Grep",
+        "Skill",
+        "WebFetch",
+        "WebSearch",
+        "Bash(ls:*)",
+        "Bash(pwd)",
+        "Bash(cat:*)",
+        "Bash(grep:*)",
+        "Bash(find:*)",
+        "Bash(git status:*)",
+        "Bash(git log:*)",
+        "Bash(git diff:*)",
+        "Bash(git branch:*)",
+        "Bash(launchctl list:*)",
+        "Bash(systemctl --user list-timers:*)",
+        "Bash(systemctl --user status:*)",
+        "Bash(systemctl --user is-active:*)",
+        "Bash(claude mcp list)",
+        "Bash(tail:*)",
+        "Bash(stat:*)",
+        "Bash(date)"
+      ],
+      "deny": [
+        "Bash(sudo:*)",
+        "Bash(rm -rf /)",
+        "Bash(rm -rf ~)",
+        "Bash(rm -rf $HOME)",
+        "Bash(git push --force:*)",
+        "Bash(git reset --hard:*)"
+      ]
+    }
+  },
+  "safety-hooks": {
+    "hooks": {
+      "PreToolUse": [
+        {
+          "matcher": "Edit|Write|Read",
+          "hooks": [
+            { "type": "command", "command": "python3 ~/.claude/hooks/block-secrets.py" }
+          ]
+        },
+        {
+          "matcher": "Bash",
+          "hooks": [
+            { "type": "command", "command": "~/.claude/hooks/block-rm-untracked.sh" }
+          ]
+        }
+      ]
+    }
+  },
+  "session-save": {
+    "hooks": {
+      "SessionEnd": [
+        {
+          "matcher": ".*",
+          "hooks": [
+            { "type": "command", "command": "~/.claude/hooks/session-save.sh" }
+          ]
+        }
+      ]
+    }
+  },
+  "pass-handoff": {
+    "hooks": {
+      "UserPromptSubmit": [
+        {
+          "hooks": [
+            { "type": "command", "command": "~/.claude/hooks/context-budget-feedback.sh" }
+          ]
+        }
+      ]
+    }
+  },
+  "qmd": {
+    "permissions": {
+      "allow": [
+        "Bash(qmd:*)",
+        "mcp__qmd__query",
+        "mcp__qmd__get",
+        "mcp__qmd__multi_get",
+        "mcp__qmd__status"
+      ]
+    }
+  },
+  "files-server": {
+    "permissions": {
+      "allow": [
+        "Bash(~/.claude/bin/files-server url:*)"
+      ]
+    }
+  },
+  "tailscale": {
+    "permissions": {
+      "allow": [
+        "Bash(tailscale status:*)"
+      ]
+    }
+  },
+  "review-multi": {
+    "permissions": {
+      "allow": [
+        "Bash(codex --version)",
+        "Bash(codex login status)"
+      ]
+    }
+  }
+}

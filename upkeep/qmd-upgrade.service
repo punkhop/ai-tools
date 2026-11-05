@@ -1,0 +1,6 @@
+[Unit]
+Description=qmd-upkeep upgrade
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash %h/.claude/bin/qmd-upkeep upgrade

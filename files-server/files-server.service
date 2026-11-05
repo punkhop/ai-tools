@@ -1,0 +1,14 @@
+[Unit]
+Description=files-server — clickable http links to memory, dev and /tmp, tailnet only
+After=network-online.target tailscaled.service
+
+[Service]
+ExecStart=/bin/bash %h/.claude/bin/files-server start
+Environment=MEMORY_ROOT=%h/memory
+Restart=always
+RestartSec=5
+StandardOutput=append:/tmp/files-server.log
+StandardError=append:/tmp/files-server.err
+
+[Install]
+WantedBy=default.target
