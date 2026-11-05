@@ -29,8 +29,8 @@
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
 .wrap{max-width:1180px;margin:0 auto;padding:48px 32px 140px}
-.brand{display:flex;gap:22px;align-items:center;margin:0 0 14px}
-.brand img{width:96px;height:96px;border-radius:.75rem;object-fit:cover;flex:none;display:block}
+.brand{display:flex;gap:28px;align-items:center;margin:0 0 14px}
+.brand img{width:192px;height:192px;border-radius:.75rem;object-fit:cover;flex:none;display:block}
 .brand h1{margin:0}
 .top-row{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:48px;align-items:start}
 h1{font-size:44px;line-height:1.15;letter-spacing:-.02em;margin:0 0 12px;font-weight:700}
@@ -137,7 +137,7 @@ pre.out{white-space:pre-wrap;font:13px/1.5 ui-monospace,Menlo,monospace;backgrou
 @media (max-width:640px){
   .wrap{padding:28px 16px 140px}
   h1{font-size:30px}
-  .brand img{width:64px;height:64px}
+  .brand img{width:96px;height:96px}
   .comp{grid-template-columns:1fr 1fr auto;grid-template-areas:"nick nick rm" "os role role";gap:10px}
   .comp .field.nick{grid-area:nick}
   .comp .field.os{grid-area:os}
@@ -150,8 +150,7 @@ pre.out{white-space:pre-wrap;font:13px/1.5 ui-monospace,Menlo,monospace;backgrou
 <body>
 <div class="wrap">
 
-<div class="brand"><img src="peet.jpg" alt="Peet"><h1>Peet's AI Tools</h1></div>
-<p class="lead">You build apps and tools with Claude. Tick the pieces you want, then paste your answers into Claude. It installs them and checks each one works.</p>
+<div class="brand"><img src="peet.jpg" alt="Peet"><div><h1>Peet's AI Tools</h1><p class="lead" style="margin:8px 0 0">He definitely knows what he's doing.</p></div></div>
 
 <div class="top-row"><div>
 <h2>Your computers</h2>
