@@ -61,6 +61,13 @@ python3 -m venv ~/.claude/ai-tools/venv
 ~/.claude/ai-tools/venv/bin/python -m pip install pillow openai google-genai
 ```
 
+**Keep them current, at the start of every project** (they're never updated otherwise, and an
+old SDK can't call a new model): `PY -m pip install --quiet --upgrade pillow openai google-genai`
+(only the services in use; add `--user` when `PY` is plain `python3`). If the private
+environment's Python no longer runs (a system or Homebrew Python upgrade removes the one it was
+built from), rebuild it in place with `python3 -m venv --clear ~/.claude/ai-tools/venv`, then
+install the packages again.
+
 ## 2. Models and money
 
 **Two services, one prompt list.** The model ids live in one constant, `MODELS`, at the top of
@@ -95,7 +102,10 @@ effect). Until it clears, `gpt-image-2` is a working fallback: set it in `MODELS
 
 **Before a new project, check for newer models:** `PY tools/generate.py --models` lists the image
 models the user's keys can reach. If a newer one than `MODELS` exists, say so and use it; never
-silently stay stale.
+silently stay stale. If an id in `MODELS` is missing from that list, it was retired: swap in its
+newest successor before the first round (a run that hits a retired id prints MODEL GONE). Each
+project keeps its own copy of `generate.py`, so an old project picked up months later needs the
+same check.
 
 **Every paid call's cost is known to the cent, never estimated from memory.** Three parts, all
 built into `generate.py`:

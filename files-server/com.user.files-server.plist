@@ -2,7 +2,7 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-  <!-- Always-on files-server (Mac). Install: see GUIDE.md, stage 4. -->
+  <!-- Always-on files-server (Mac). Install: see START-HERE.md, stage 4. -->
   <key>Label</key>
   <string>com.user.files-server</string>
   <key>ProgramArguments</key>

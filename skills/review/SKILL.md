@@ -23,6 +23,11 @@ If `codex --version` fails, tell the user:
 
 If a codex call fails with a sign-in or auth error, ask the user to run `codex login`, then retry.
 
+If it fails with an unknown or unsupported model, an "upgrade" or "update" message, or an
+unknown option, the codex CLI is out of date (it never updates itself here). Update it
+(`npm install -g @openai/codex@latest`, or `brew upgrade codex` if `brew list codex` knows it),
+then retry once.
+
 ## How to Run
 
 ```bash

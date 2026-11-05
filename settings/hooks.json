@@ -37,6 +37,21 @@
       ]
     }
   },
+  "dev-bible": {
+    "hooks": {
+      "SessionStart": [
+        {
+          "matcher": "startup",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "~/.claude/hooks/ai-tools-check.sh"
+            }
+          ]
+        }
+      ]
+    }
+  },
   "safety-hooks": {
     "hooks": {
       "PreToolUse": [

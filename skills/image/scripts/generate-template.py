@@ -295,6 +295,11 @@ def run(item: dict, model: str, aspect: str, out_path: Path) -> bool:
                 print(f"  KEY REJECTED {item['name']}: the {key_for(model)} was refused; make a new one. "
                       f"{KEY_HELP[key_for(model)]}")
                 return False
+            if "model_not_found" in msg or "404" in msg or "does not exist" in msg or "is not found" in msg:
+                print(f"  MODEL GONE {item['name']}: {model} is retired or not open to this key. Run "
+                      "generate.py --models, put the newest image model in MODELS at the top of "
+                      "generate.py, add its price to prices.json, then run again.")
+                return False
             if "429" in msg or "quota" in msg.lower() or "rate limit" in msg.lower() or "rate_limit" in msg:
                 wait = 30 * (attempt + 1)
                 print(f"  rate-limited {item['name']}, waiting {wait}s")
