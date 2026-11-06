@@ -170,6 +170,19 @@
       "claude_md": "claude-md/safety-hooks.md",
       "try": "Nothing to do. They work on their own."
     },
+    "passwords": {
+      "name": "Passwords",
+      "group": "Building",
+      "version": "1.0.0",
+      "needs": [],
+      "t3_only": false,
+      "files": [
+        {"from": "skills/2password", "to": "skills/2password"}
+      ],
+      "settings": null,
+      "claude_md": "claude-md/passwords.md",
+      "try": "Ask Claude to use one of your keys. It finds it in 1Password; you tap Touch ID."
+    },
     "doctor": {
       "name": "Checkup",
       "group": "Building",

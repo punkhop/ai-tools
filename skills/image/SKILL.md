@@ -46,6 +46,11 @@ Then collect it without it ever landing in the chat:
 - **Anywhere else:** ask the user to open a separate terminal window and run
   `python3 ~/.claude/skills/image/scripts/save_key.py OPENAI_API_KEY` (or `GEMINI_API_KEY`), then
   paste the key there when asked; the paste stays hidden.
+- **When the 2password skill is installed**, the key goes in their 1Password instead and only its
+  `op://` reference is saved: `2password find openai` for one already there, or `2password create
+  api-credential --title "OpenAI API Key" --vault Personal --clipboard` (or `--stdin < <file>` from
+  the private box) for a new one, then `PY SKILL_DIR/scripts/save_key.py OPENAI_API_KEY --ref "<ref>"`.
+  The scripts read it from 1Password when they run; each run asks for one Touch ID.
 - Never ask them to paste a key into this chat: chats are saved. Never echo a key, put it in a
   command line, or write it anywhere except through `save_key.py`.
 

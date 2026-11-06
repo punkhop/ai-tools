@@ -12,6 +12,7 @@ Two services behind one prompt list. A prompt's "model" picks which:
   "openai"           → MODELS["openai"] normally, MODELS["openai_edit"] when the prompt has refs
   any full model id  → used as is (gemini-* goes to Google, gpt-image-* / chatgpt-image-* to OpenAI)
 Keys come from the environment (OPENAI_API_KEY, GEMINI_API_KEY) or ~/.claude/ai-tools/keys.env.
+A value starting op:// is a 1Password reference, read with `op read` when a client is first built.
 This script never prints a key.
 
 Usage:
@@ -32,6 +33,7 @@ import argparse
 import base64
 import json
 import os
+import subprocess
 import sys
 import threading
 import time
@@ -132,6 +134,18 @@ def has_key(name: str) -> bool:
     return bool(os.environ.get(name))
 
 
+def secret(name: str) -> str:
+    """The key itself. An op:// reference is read from 1Password here, once (one Touch ID)."""
+    v = os.environ[name]
+    if v.startswith("op://"):
+        r = subprocess.run(["op", "read", v], capture_output=True, text=True)
+        if r.returncode or not r.stdout.strip():
+            sys.exit(f"1Password didn't hand over {name}: Touch ID was cancelled, or the 1Password app is "
+                     "closed or locked. Open it and try again.")
+        v = os.environ[name] = r.stdout.strip()
+    return v
+
+
 def key_for(model: str) -> str:
     return "GEMINI_API_KEY" if model.startswith("gemini") else "OPENAI_API_KEY"
 
@@ -194,7 +208,7 @@ def _gemini():
     with _clients_lock:
         if "gemini" not in _clients:
             from google import genai
-            _clients["gemini"] = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
+            _clients["gemini"] = genai.Client(api_key=secret("GEMINI_API_KEY"))
     return _clients["gemini"]
 
 
@@ -202,7 +216,7 @@ def _openai():
     with _clients_lock:
         if "openai" not in _clients:
             from openai import OpenAI
-            _clients["openai"] = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
+            _clients["openai"] = OpenAI(api_key=secret("OPENAI_API_KEY"))
     return _clients["openai"]
 
 
@@ -426,7 +440,8 @@ def number(entries: list) -> None:
 # --- Checks --------------------------------------------------------------------------------------
 def check() -> None:
     for name in KEY_HELP:
-        print(f"{name}: {'found' if has_key(name) else 'missing'}")
+        where = " (in 1Password)" if os.environ.get(name, "").startswith("op://") else ""
+        print(f"{name}: {'found' + where if has_key(name) else 'missing'}")
     for module, pip in PACKAGES.items():
         try:
             __import__(module)

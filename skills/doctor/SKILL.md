@@ -271,6 +271,18 @@ elif [ "$OS" = Darwin ]; then echo "FAIL Syncthing not running — open the Sync
 else echo "FAIL Syncthing not running — systemctl --user enable --now syncthing"; fi
 ```
 
+## passwords
+
+Never asks for Touch ID: it checks the tools are there, not the vault.
+
+```bash
+export PATH="$HOME/.bun/bin:$PATH"
+[ -f ~/.claude/skills/2password/SKILL.md ] && echo "OK 2password skill" || echo "FAIL 2password skill missing — rerun the installer and pick passwords"
+command -v op >/dev/null && echo "OK 1Password CLI" || echo "FAIL 1Password CLI missing — Mac: brew install 1password-cli · Linux: developer.1password.com/docs/cli/get-started"
+command -v 2password >/dev/null && echo "OK 2password" || echo "FAIL 2password missing — ~/.bun/bin/bun add -g 2password (no Bun yet: curl -fsSL https://bun.sh/install | bash)"
+{ [ -d /Applications/1Password.app ] || command -v 1password >/dev/null; } && echo "OK 1Password app" || echo "WARN 1Password app not found — install it from 1password.com/downloads, sign in, and turn on Settings › Developer › Integrate with 1Password CLI"
+```
+
 ## doctor
 
 You're running it. Nothing to check.

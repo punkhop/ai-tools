@@ -16,7 +16,7 @@ at a time. Never ask "do you write code".
   during this session aren't on your PATH yet. Start every Bash call with:
 
   ```bash
-  SRC=~/.claude/ai-tools/src; AIT="python3 $SRC/tools/aitools.py"; [ -x /opt/homebrew/bin/brew ] && eval "$(/opt/homebrew/bin/brew shellenv)"; export PATH="$HOME/.local/bin:$HOME/.claude/bin:$PATH"
+  SRC=~/.claude/ai-tools/src; AIT="python3 $SRC/tools/aitools.py"; [ -x /opt/homebrew/bin/brew ] && eval "$(/opt/homebrew/bin/brew shellenv)"; export PATH="$HOME/.local/bin:$HOME/.claude/bin:$HOME/.bun/bin:$PATH"
   ```
 
 - **You can't run `sudo` and you can't click.** When a step needs a password, a click or a sign-in,
@@ -43,7 +43,7 @@ Look first, silently:
 
 ```bash
 uname -s; sw_vers -productVersion 2>/dev/null; grep -m1 PRETTY /etc/os-release 2>/dev/null
-for c in git python3 node npm jq curl qmd tailscale syncthing codex claude brew; do printf '%-10s %s\n' $c "$(command -v $c || echo -)"; done
+for c in git python3 node npm jq curl qmd tailscale syncthing codex claude brew op bun 2password; do printf '%-10s %s\n' $c "$(command -v $c || echo -)"; done
 node --version 2>/dev/null
 ls -la ~/memory 2>/dev/null | head -3
 ls ~/.claude/CLAUDE.md ~/.claude/settings.json 2>/dev/null; ls ~/.claude/skills 2>/dev/null
@@ -129,7 +129,7 @@ before replacing anything of theirs, that you'll say when you need them, and tha
 checkup.
 
 **Prerequisites** — only what the picked pieces need: `python3` and `git` always; `jq` for
-safety-hooks; Node 22+ for qmd and review-multi; `curl` for files-server.
+safety-hooks; 1Password, its CLI and Bun for passwords (Stage 8b); Node 22+ for qmd and review-multi; `curl` for files-server.
 
 - **Mac:** `xcode-select -p` prints a path, or they run `xcode-select --install` and click
   **Install** (gives python3 and git). Homebrew: `command -v brew`; missing → they paste the
@@ -332,6 +332,43 @@ the plan: `dev-bible`, `reply-format`, `chat-voice`, `html`, `pass-handoff`, `do
 ones, which stay theirs); `ls ~/.claude/ai-tools/bibles ~/.claude/ai-tools/rules 2>/dev/null` shows
 the bible and the rules picked.
 
+## Stage 8b — Passwords (passwords)
+
+All their passwords and API keys live in 1Password; when Claude needs a key it reads it from the
+vault and they tap Touch ID. Say once, plainly: **1Password needs a paid account** (a free trial
+works to start). They do the clicks; you wait for "done" after each.
+
+1. **The app.** Mac: install **1Password** from 1password.com/downloads (or the Mac App Store), open
+   it and sign in. Linux: 1password.com/downloads/linux has the one copy-paste block for their
+   distro (Arch: `yay -S 1password`); they run it, open 1Password and sign in.
+2. **Unlock with Touch ID.** 1Password → **Settings** → **Security** → turn on **Touch ID** (Linux:
+   **Unlock using system authentication**).
+3. **Let Claude ask.** **Settings** → **Developer** → turn on **Integrate with 1Password CLI**.
+
+Then the command-line tool and 2password (Kit Langton's free 1Password helper made for agents: Claude
+finds keys and uses them without ever seeing them):
+
+| Mac | Linux |
+|---|---|
+| `brew install 1password-cli` (if it asks for their Mac password, they run it) | they run the CLI block from developer.1password.com/docs/cli/get-started for their distro (Arch: `yay -S 1password-cli`) |
+
+```bash
+command -v bun >/dev/null || curl -fsSL https://bun.sh/install | bash     # lands in ~/.bun, no sudo; Linux needs unzip
+~/.bun/bin/bun add -g 2password
+$AIT install passwords
+```
+
+**Verify:** tell them a Touch ID box (Linux: a password box) is about to appear and to approve it.
+
+```bash
+op --version && 2password --version
+op vault list --format json | python3 -c 'import sys,json; v=json.load(sys.stdin); print(len(v), "vaults:", ", ".join(x["name"] for x in v))'
+```
+
+It prints their vault names and no secrets. Note which one is **Personal** (older accounts:
+**Private**): new keys go there. "not currently signed in" or no box: the Developer switch in step 3
+is off, or the app is locked.
+
 ## Stage 9 — Images (image)
 
 ```bash
@@ -348,6 +385,12 @@ above is the fix, and the image skill uses it from then on.
 Create new secret key (needs billing set up); Gemini — aistudio.google.com → Get API key → Create
 API key.
 
+- **With Passwords installed:** the key goes in 1Password, and only where it is gets saved. Already
+  there: `2password find openai` (or `gemini`) gives its `ref`. New: in T3 Code take it through the
+  private box (below) and run `2password create api-credential --title "OpenAI API Key" --vault
+  Personal --stdin < <the file>`; elsewhere they copy the key and you run the same with `--clipboard`.
+  Then `python3 ~/.claude/skills/image/scripts/save_key.py OPENAI_API_KEY --ref "<the ref>"`. Each
+  image round asks for one Touch ID.
 - **In T3 Code:** load `mcp__t3-code__request_secret` with ToolSearch and call it with
   `delivery: "file"`, label "OpenAI API key" (or "Gemini API key"). They paste into the private box.
   Then run `python3 ~/.claude/skills/image/scripts/save_key.py OPENAI_API_KEY --from-file <the file>`.
@@ -524,7 +567,7 @@ systemctl --user daemon-reload 2>/dev/null
 `uninstall` removes the files it installed, the hooks and permissions it added, and its block in
 `CLAUDE.md`. It puts nothing else back; the old copies are in `~/.claude/ai-tools-backup/`. If the
 install replaced one of their own skills (`ls ~/.claude/ai-tools-backup/*/.claude/skills`), offer to
-copy it back. Then ask before each of these: `npm uninstall -g @tobilu/qmd @openai/codex`;
+copy it back. Then ask before each of these: `npm uninstall -g @tobilu/qmd @openai/codex`; `~/.bun/bin/bun remove -g 2password`;
 `rm -rf ~/.cache/qmd ~/.config/qmd ~/.local/share/files-server`; `rm -rf ~/.claude/ai-tools` (this also deletes their saved image
 keys). Tailscale, Syncthing and T3 Code are apps they remove themselves. If `~/memory` is a
 shortcut, `rm ~/memory` removes only the shortcut.
@@ -544,5 +587,7 @@ commands mostly work there.
 - **Background jobs** (files-server, memory-search upkeep) have no launchd or systemd: make them with
   Task Scheduler, e.g. `schtasks /Create /SC MINUTE /MO 30 /TN qmd-index /TR "bash -lc '~/.claude/bin/qmd-upkeep index'"`
   and `schtasks /Create /SC ONLOGON /TN files-server /TR "bash -lc '~/.claude/bin/files-server start'"`.
+- **Passwords:** `winget install AgileBits.1Password AgileBits.1Password.CLI`, the same three
+  clicks (Windows Hello instead of Touch ID), Bun from bun.sh, then `bun add -g 2password`.
 - Hooks: `jq` from `winget install jqlang.jq`. If a hook misbehaves, leave safety-hooks off and tell
   them plainly.
