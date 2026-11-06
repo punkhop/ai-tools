@@ -1,4 +1,4 @@
-# ai-tools
+# Peet's ai tools
 
 Skills, rules and setup for building apps and tools with Claude Code, picked to suit you and installed by Claude itself.
 
