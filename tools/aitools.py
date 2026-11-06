@@ -6,7 +6,7 @@ Claude runs it while following START-HERE.md; nobody needs to run it by hand.
   plan <ids...>                 every file: new / same / different from what is already there
   install <id> [--take|--keep]  copy one piece in, back up anything replaced, record it
   claude-md <ids...>            write the marked ai-tools block in ~/.claude/CLAUDE.md
-  settings <ids...>             merge the pieces' hooks and permissions into ~/.claude/settings.json
+  settings <ids...>             merge the pieces' hooks, permissions and status line into ~/.claude/settings.json
   status                        installed pieces and versions against this copy of the repo
   uninstall [ids...]            remove what ai-tools installed (all of it when no ids)
 
@@ -152,6 +152,8 @@ def cmd_plan(ids):
             notes.append("needs " + ", ".join(missing))
         if piece["t3_only"]:
             notes.append("T3 Code only")
+        if piece.get("terminal_only"):
+            notes.append("terminal only")
         print(f"{pid}  ({piece['name']}){'  — ' + '; '.join(notes) if notes else ''}")
         rows = [(compare(s, d), s, d) for unit in units(pid) for s, d, _ in unit]
         if not rows:
@@ -260,8 +262,17 @@ def write_settings(data):
 
 
 def merge_group(cur, group):
-    """Add a group's permissions and hooks to cur. Returns only what was actually added."""
+    """Add a group's permissions, hooks and single settings (statusLine) to cur.
+    Returns only what was actually added; a single setting they already have is kept."""
     added = {}
+    for key, value in group.items():
+        if key in ("permissions", "hooks"):
+            continue
+        if key not in cur:
+            cur[key] = value
+            added[key] = value
+        elif cur[key] != value:
+            print(f"~/.claude/settings.json: kept your own {key}")
     for kind, items in group.get("permissions", {}).items():
         have = cur.setdefault("permissions", {}).setdefault(kind, [])
         new = [x for x in items if x not in have]
@@ -293,6 +304,7 @@ def cmd_settings(ids):
                 prev.setdefault("permissions", {}).setdefault(kind, []).extend(items)
             for event, entries in added.get("hooks", {}).items():
                 prev.setdefault("hooks", {}).setdefault(event, []).extend(entries)
+            prev.update({k: v for k, v in added.items() if k not in ("permissions", "hooks")})
     if json.dumps(cur, sort_keys=True) != before:
         write_settings(cur)
         save_state(state)
@@ -332,6 +344,9 @@ def remove_settings(state, groups_to_remove, keep_groups):
     still = json.dumps([GROUPS[g] for g in keep_groups])
     for name in groups_to_remove:
         added = state.get("settings", {}).pop(name, {})
+        for key, value in added.items():
+            if key not in ("permissions", "hooks") and cur.get(key) == value:
+                del cur[key]
         for kind, items in added.get("permissions", {}).items():
             have = cur.get("permissions", {}).get(kind, [])
             for x in items:
