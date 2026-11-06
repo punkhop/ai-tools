@@ -1,6 +1,6 @@
 ---
 name: doctor
-description: Health check of this Claude Code setup — checks only the pieces you installed (listed in ~/.claude/ai-tools/installed.json) — memory folder, skills, hooks, memory search, the file server, Tailscale, Syncthing, the Development Bible, the codex CLI. Mac and Linux. Prints OK / WARN / FAIL with a one-line fix for each. Use after install, when something feels off, or when memory search or links stop working.
+description: Health check of this Claude Code setup — checks only the pieces you installed (listed in ~/.claude/ai-tools/installed.json) — memory folder, skills, hooks, memory search, the file server, Tailscale, Syncthing, the Development Bible, the codex CLI, the browser helper, the status bar. Mac and Linux. Prints OK / WARN / FAIL with a one-line fix for each. Use after install, when something feels off, or when memory search or links stop working.
 disable-model-invocation: false
 ---
 
@@ -269,6 +269,48 @@ restart it with the command in the FAIL line.
 if pgrep -ix syncthing >/dev/null; then echo "OK Syncthing running"
 elif [ "$OS" = Darwin ]; then echo "FAIL Syncthing not running — open the Syncthing app (or: brew services start syncthing)"
 else echo "FAIL Syncthing not running — systemctl --user enable --now syncthing"; fi
+```
+
+## permissions
+
+```bash
+registered block-broad-kill.py
+[ -f ~/.claude/hooks/block-broad-kill.py ] && echo "OK block-broad-kill.py present" || echo "FAIL block-broad-kill.py missing — rerun the installer and pick permissions"
+grep -q '"Bash(git add:' "$S" 2>/dev/null && echo "OK everyday commands allowed in settings.json" || echo "FAIL the everyday allow list isn't in settings.json — rerun the installer and pick permissions"
+echo '{"tool_input":{"command":"kill -1"}}' | python3 ~/.claude/hooks/block-broad-kill.py 2>/dev/null
+[ $? -eq 2 ] && echo "OK kill guard blocks killing every program" || echo "FAIL kill guard let kill -1 through — rerun the installer and pick permissions"
+```
+
+## resume
+
+```bash
+registered recent-sessions.py
+echo '{}' | python3 ~/.claude/hooks/recent-sessions.py >/dev/null 2>&1 && echo "OK start-of-chat list runs" || echo "FAIL recent-sessions.py won't run — rerun the installer and pick resume"
+ls ~/memory/sessions/*.md ~/memory/sessions/*/SESSION-NOTE.md >/dev/null 2>&1 && echo "OK there are notes to pick up from" || echo "WARN no session notes yet — normal until the first /note"
+```
+
+## browser
+
+```bash
+[ -f ~/.claude/skills/browser/SKILL.md ] && echo "OK /browser" || echo "FAIL /browser missing — rerun the installer and pick browser"
+claude mcp list 2>/dev/null | grep -q '^chrome-devtools' && echo "OK chrome-devtools MCP added" || echo "FAIL chrome-devtools MCP missing — claude mcp add --scope user chrome-devtools -- npx -y chrome-devtools-mcp@latest --isolated, then restart Claude"
+{ [ -d "/Applications/Google Chrome.app" ] || command -v google-chrome google-chrome-stable chromium >/dev/null; } && echo "OK Chrome found" || echo "FAIL Chrome not found — install Google Chrome from google.com/chrome"
+command -v npx >/dev/null && echo "OK npx (starts the browser helper)" || echo "FAIL npx missing — install Node (Mac: brew install node · Linux: your package manager)"
+```
+
+## status-bar
+
+```bash
+[ -x ~/.claude/statusline.sh ] && echo "OK statusline.sh executable" || echo "FAIL statusline.sh missing or not executable — rerun the installer and pick status-bar"
+grep -q 'statusline.sh' "$S" 2>/dev/null && echo "OK status bar set in settings.json" || echo "WARN settings.json has a different status line — theirs was kept"
+command -v jq >/dev/null && echo "OK jq" || echo "FAIL jq missing — the status bar shows only a warning (Mac: brew install jq · Linux: install jq)"
+```
+
+## how-claude-works
+
+```bash
+[ -f ~/.claude/ai-tools/rules/how-claude-works.md ] && echo "OK How Claude works rules" || echo "FAIL rules file missing — rerun the installer and pick how-claude-works"
+grep -q 'how-claude-works.md' ~/.claude/CLAUDE.md 2>/dev/null && echo "OK loaded from CLAUDE.md" || echo "FAIL CLAUDE.md doesn't load it — rerun the installer's CLAUDE.md step"
 ```
 
 ## passwords

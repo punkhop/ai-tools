@@ -28,7 +28,7 @@ at a time. Never ask "do you write code".
   (T3 Code) or a hidden prompt they run themselves.
 - **Nothing runs by itself without their ok.** Before you turn on anything that runs in the
   background (memory search's two jobs, the links server, Syncthing, the start-of-session update
-  check), tell them in one plain line what it does and how often, and go on only after they say
+  check, the start-of-chat list of recent notes), tell them in one plain line what it does and how often, and go on only after they say
   ok. A no skips that piece; say what they lose in one line.
 - **Their files come first.** `$AIT` backs up anything it replaces to
   `~/.claude/ai-tools-backup/<date>/` and never deletes their memory folder.
@@ -43,13 +43,14 @@ Look first, silently:
 
 ```bash
 uname -s; sw_vers -productVersion 2>/dev/null; grep -m1 PRETTY /etc/os-release 2>/dev/null
-for c in git python3 node npm jq curl qmd tailscale syncthing codex claude brew op bun 2password; do printf '%-10s %s\n' $c "$(command -v $c || echo -)"; done
+for c in git python3 node npm npx jq curl qmd tailscale syncthing codex claude brew op bun 2password google-chrome chromium; do printf '%-10s %s\n' $c "$(command -v $c || echo -)"; done
 node --version 2>/dev/null
 ls -la ~/memory 2>/dev/null | head -3
 ls ~/.claude/CLAUDE.md ~/.claude/settings.json 2>/dev/null; ls ~/.claude/skills 2>/dev/null
 cat ~/.claude/ai-tools/installed.json 2>/dev/null | head -5
 cat ~/.claude/ai-tools/install-progress.md 2>/dev/null
-claude mcp list 2>/dev/null | grep -i qmd
+claude mcp list 2>/dev/null | grep -iE 'qmd|chrome-devtools'
+ls -d "/Applications/Google Chrome.app" 2>/dev/null
 ```
 
 Inside T3 Code = tools named `mcp__t3-code__…` exist (check your tool list or ToolSearch `t3-code`).
@@ -100,7 +101,8 @@ Image service: OpenAI                       (OpenAI · Gemini · Both)
   — then this is that other computer: install the same pieces, and skip "Your other computers".
 - `dev-bible` is always installed. `chat-voice` and `pass-handoff` only when T3 Code is one of
   the places they talk to Claude; terminal and desktop-app users get `reply-format` (markdown
-  replies) and nothing T3-only. A
+  replies) and nothing T3-only. `status-bar` only when "Terminal" is one of the places (the status
+  bar shows only in a terminal). A
   piece's `needs` (in `pieces.json`) come along even if not ticked; say so in one line.
 - They want to open things on their phone; assume it. The files server and Tailscale make it work.
 
@@ -129,7 +131,8 @@ before replacing anything of theirs, that you'll say when you need them, and tha
 checkup.
 
 **Prerequisites** — only what the picked pieces need: `python3` and `git` always; `jq` for
-safety-hooks; 1Password, its CLI and Bun for passwords (Stage 8b); Node 22+ for qmd and review-multi; `curl` for files-server.
+safety-hooks and status-bar; 1Password, its CLI and Bun for passwords (Stage 8b); Node 22+ for qmd,
+review-multi and browser; Google Chrome for browser (Stage 8c); `curl` for files-server.
 
 - **Mac:** `xcode-select -p` prints a path, or they run `xcode-select --install` and click
   **Install** (gives python3 and git). Homebrew: `command -v brew`; missing → they paste the
@@ -304,11 +307,19 @@ systemctl --user list-timers --no-pager | grep qmd   # Linux: both listed
 
 The first real search downloads two more models (about 1.9 GB); expect a pause then.
 
-## Stage 7 — Safety nets and saved chats (safety-hooks, session-save)
+## Stage 7 — Safety nets, saved chats, fewer prompts, picking up (safety-hooks, session-save, permissions, resume)
+
+Before `permissions`, tell them in one line: "From now on Claude reads, edits and runs everyday
+commands (git, npm, python) without asking you each time; it still asks before anything risky,
+like deleting or pushing to main." A no skips it; they keep clicking allow. Before `resume`, one
+line: "When Claude starts, it reads the names of your latest notes, so it knows what you were
+doing. Nothing runs in between." A no skips it.
 
 ```bash
 $AIT install safety-hooks
 $AIT install session-save
+$AIT install permissions
+$AIT install resume
 ```
 
 **Verify:**
@@ -318,14 +329,18 @@ echo '{"tool_input":{"file_path":"/x/.env"}}' | python3 ~/.claude/hooks/block-se
 T=$(mktemp -d); (cd "$T" && git init -q && touch scratch.txt)
 printf '{"tool_input":{"command":"rm -rf %s/scratch.txt"}}' "$T" | ~/.claude/hooks/block-rm-untracked.sh; echo "exit $?"; rm -r "$T"   # exit 2
 bash -n ~/.claude/hooks/session-save.sh && bash -n ~/.claude/hooks/context-budget-feedback.sh && echo ok
+echo '{"tool_input":{"command":"kill -1"}}' | python3 ~/.claude/hooks/block-broad-kill.py; echo "exit $?"   # exit 2 = blocks
+echo '{"tool_input":{"command":"kill 99999"}}' | python3 ~/.claude/hooks/block-broad-kill.py; echo "exit $?"   # exit 0 = a single process is fine
+echo '{}' | python3 ~/.claude/hooks/recent-sessions.py; echo "exit $?"   # exit 0; lists notes once there are some
 ```
 
-The hooks start working after the restart (Stage 11) once Stage 10 registers them.
+The hooks and the allow list start working after the restart (Stage 11) once Stage 10 registers
+them.
 
 ## Stage 8 — Skills and rules
 
 One `$AIT install <id>` per chosen piece, in this order, each with its keep/take/skip answer from
-the plan: `dev-bible`, `reply-format`, `chat-voice`, `html`, `pass-handoff`, `doctor`, `status`,
+the plan: `dev-bible`, `how-claude-works`, `reply-format`, `chat-voice`, `html`, `pass-handoff`, `doctor`, `status`,
 `spec-logic-design`, `prototype`.
 
 **Verify:** `ls ~/.claude/skills/*/SKILL.md` lists every skill picked (except kept or skipped
@@ -368,6 +383,42 @@ op vault list --format json | python3 -c 'import sys,json; v=json.load(sys.stdin
 It prints their vault names and no secrets. Note which one is **Personal** (older accounts:
 **Private**): new keys go there. "not currently signed in" or no box: the Developer switch in step 3
 is off, or the app is locked.
+
+## Stage 8c — Browser (browser)
+
+Claude opens their app in its own private Chrome window (a fresh, empty profile each time, thrown
+away after; never their own Chrome or its logins), clicks through it and takes screenshots. It
+uses Google's Chrome DevTools helper, `chrome-devtools-mcp`, which `npx` fetches when Claude first
+uses it. Say once: **it needs Google Chrome**.
+
+- No Chrome (`/Applications/Google Chrome.app` on a Mac; `google-chrome` or `google-chrome-stable`
+  on Linux): they install it from google.com/chrome. Linux with only Chromium works too: add
+  `--executablePath "$(command -v chromium)"` to the line below.
+- Already listed by `claude mcp list` as `chrome-devtools`: keep theirs and only install the skill.
+
+```bash
+$AIT install browser
+claude mcp add --scope user chrome-devtools -- npx -y chrome-devtools-mcp@latest --isolated --usageStatistics=false --performanceCrux=false
+```
+
+**Verify:** `claude mcp list 2>&1 | grep chrome-devtools` says "Connected" (the first check
+downloads the helper; give it a minute). After the restart (Stage 11), the checkup's last step
+opens a page with `/browser`.
+
+## Stage 8d — Status bar (status-bar)
+
+Only when they use Claude Code in a terminal. Two lines under the prompt: the folder and git
+branch, and a bar of how full the chat is (green, yellow at 70%, red at 90%). Needs `jq`.
+
+```bash
+$AIT install status-bar
+echo '{"workspace":{"current_dir":"'"$HOME"'"},"context_window":{"used_percentage":42}}' | ~/.claude/statusline.sh
+```
+
+**Verify:** the second command prints their home folder's name and a bar ending in `42% of this
+chat`. If they already have a status line, `$AIT settings` keeps theirs and says so; tell them in
+one line and ask whether to switch (switch: replace the `statusLine` entry in
+`~/.claude/settings.json` with `{"type": "command", "command": "~/.claude/statusline.sh"}`).
 
 ## Stage 9 — Images (image)
 
@@ -436,12 +487,12 @@ their file isn't valid JSON, show them the error line in plain words and fix it 
 **Verify:**
 
 ```bash
-python3 -c 'import json,os; s=json.load(open(os.path.expanduser("~/.claude/settings.json"))); print(sorted(h["hooks"][0]["command"] for v in s.get("hooks",{}).values() for h in v))'
+python3 -c 'import json,os; s=json.load(open(os.path.expanduser("~/.claude/settings.json"))); print(sorted(h["hooks"][0]["command"] for v in s.get("hooks",{}).values() for h in v)); print(s.get("statusLine"))'
 grep -c 'ai-tools:start' ~/.claude/CLAUDE.md      # 1
 sed -n '/ai-tools:start/,/ai-tools:end/p' ~/.claude/CLAUDE.md | grep '^@' | sed 's/^@//' | while read f; do f="${f/#\~/$HOME}"; [ -f "$f" ] && echo "ok $f" || echo "MISSING $f"; done
 ```
 
-Every hook picked is listed; one block; every `@` import points at a file that exists.
+Every hook picked is listed (and the status line, with status-bar); one block; every `@` import points at a file that exists.
 
 ## Stage 11 — Restart
 
@@ -466,6 +517,8 @@ session. In a terminal: quit `claude` and start it again, then the same sentence
 1. Run `/doctor`. Fix every FAIL (each line says how) and re-run until there are none. "No
    transcripts yet" and "no upkeep runs logged yet" are normal on day one.
 2. With qmd: one real search through the qmd tool for "ai-tools" — show it answers.
+   With browser: `/browser` open the setup page (`file://` + `~/.claude/ai-tools/src/setup/index.html`)
+   and show them the screenshot.
 3. With memory: run `/note` about this install (what was set up, where the memory folder is, this
    computer's name). With files-server and a phone: ask them to open the note's link on the phone.
    That link opening is the proof it all works end to end.
@@ -560,6 +613,7 @@ Their memory folder and saved notes are never touched.
 
 ```bash
 claude mcp remove qmd --scope user 2>/dev/null
+claude mcp remove chrome-devtools --scope user 2>/dev/null   # only if the install added it (Stage 8c)
 python3 ~/.claude/ai-tools/src/tools/aitools.py uninstall          # or: uninstall <id> <id> for some pieces
 systemctl --user daemon-reload 2>/dev/null
 ```
@@ -579,8 +633,9 @@ shortcut, `rm ~/memory` removes only the shortcut.
 Less tested; say so. Claude Code on Windows runs its commands in **Git Bash**, so the Linux-style
 commands mostly work there.
 
-- Pieces that are plain files work as they are: dev-bible, reply-format, chat-voice, html, memory,
-  pass-handoff, doctor, status, spec-logic-design, prototype, image, review-multi. `$AIT` runs with
+- Pieces that are plain files work as they are: dev-bible, how-claude-works, reply-format,
+  chat-voice, html, memory, pass-handoff, doctor, status, browser, spec-logic-design, prototype,
+  image, review-multi. `$AIT` runs with
   `python` from Git Bash.
 - **Tailscale** and **Syncthing** have Windows installers (tailscale.com/download,
   syncthing.net/downloads — SyncTrayzor or the official build).

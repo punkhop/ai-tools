@@ -1,5 +1,5 @@
 {
-  "_comment": "The manifest tools/aitools.py installs from. files: 'from' is a repo path (a folder copies everything in it); 'to' is a path under ~/.claude, or starts with ~/ for anywhere else in the home folder. 'os' limits a file to mac or linux. 'exec' marks it runnable. Pieces are listed in the order their CLAUDE.md lines appear.",
+  "_comment": "The manifest tools/aitools.py installs from. files: 'from' is a repo path (a folder copies everything in it); 'to' is a path under ~/.claude, or starts with ~/ for anywhere else in the home folder. 'os' limits a file to mac or linux. 't3_only' / 'terminal_only' pieces are offered only to people who talk to Claude there. 'exec' marks it runnable. Pieces are listed in the order their CLAUDE.md lines appear.",
   "version": "1.0.0",
   "pieces": {
     "dev-bible": {
@@ -16,6 +16,19 @@
       "settings": "dev-bible",
       "claude_md": "claude-md/dev-bible.md",
       "try": "Ask Claude to build you something small. It plans, tests and explains in plain words without being told."
+    },
+    "how-claude-works": {
+      "name": "How Claude works",
+      "group": "Building",
+      "version": "1.0.0",
+      "needs": [],
+      "t3_only": false,
+      "files": [
+        {"from": "rules/how-claude-works.md", "to": "ai-tools/rules/how-claude-works.md"}
+      ],
+      "settings": null,
+      "claude_md": "claude-md/how-claude-works.md",
+      "try": "Ask for something that means reading a lot. Claude sends a helper to read it and comes back with the answer."
     },
     "reply-format": {
       "name": "Reply format",
@@ -83,6 +96,19 @@
       "settings": "session-save",
       "claude_md": "claude-md/session-save.md",
       "try": "Nothing to do. Every chat lands in the transcripts folder when it ends."
+    },
+    "resume": {
+      "name": "Picks up where you left off",
+      "group": "Memory",
+      "version": "1.0.0",
+      "needs": ["memory"],
+      "t3_only": false,
+      "files": [
+        {"from": "hooks/recent-sessions.py", "to": "hooks/recent-sessions.py", "exec": true}
+      ],
+      "settings": "resume",
+      "claude_md": "claude-md/resume.md",
+      "try": "Open a new chat in a project and ask: where were we?"
     },
     "qmd": {
       "name": "Memory search",
@@ -170,6 +196,19 @@
       "claude_md": "claude-md/safety-hooks.md",
       "try": "Nothing to do. They work on their own."
     },
+    "permissions": {
+      "name": "Fewer \"allow this?\" prompts",
+      "group": "Building",
+      "version": "1.0.0",
+      "needs": ["safety-hooks"],
+      "t3_only": false,
+      "files": [
+        {"from": "hooks/block-broad-kill.py", "to": "hooks/block-broad-kill.py", "exec": true}
+      ],
+      "settings": "permissions",
+      "claude_md": "claude-md/permissions.md",
+      "try": "Nothing to do. Claude asks less; it still asks before anything risky."
+    },
     "passwords": {
       "name": "Passwords",
       "group": "Building",
@@ -208,6 +247,19 @@
       "settings": null,
       "claude_md": "claude-md/status.md",
       "try": "Type /status in any project folder, or /status <project name>."
+    },
+    "browser": {
+      "name": "Browser",
+      "group": "Building",
+      "version": "1.0.0",
+      "needs": [],
+      "t3_only": false,
+      "files": [
+        {"from": "skills/browser", "to": "skills/browser"}
+      ],
+      "settings": "browser",
+      "claude_md": "claude-md/browser.md",
+      "try": "Type /browser open my app and click through sign-up"
     },
     "spec-logic-design": {
       "name": "Plan before building",
@@ -263,6 +315,20 @@
       "settings": "review-multi",
       "claude_md": "claude-md/review-multi.md",
       "try": "After Claude builds something, type /review."
+    },
+    "status-bar": {
+      "name": "Status bar",
+      "group": "Extras",
+      "version": "1.0.0",
+      "needs": [],
+      "t3_only": false,
+      "terminal_only": true,
+      "files": [
+        {"from": "statusline/statusline.sh", "to": "statusline.sh", "exec": true}
+      ],
+      "settings": "status-bar",
+      "claude_md": null,
+      "try": "Look under the prompt in your terminal: the folder, the branch, and how full the chat is."
     }
   }
 }
