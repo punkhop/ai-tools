@@ -183,6 +183,19 @@
       "claude_md": "claude-md/doctor.md",
       "try": "Type /doctor when something feels off."
     },
+    "status": {
+      "name": "Project status",
+      "group": "Building",
+      "version": "1.0.0",
+      "needs": [],
+      "t3_only": false,
+      "files": [
+        {"from": "skills/status", "to": "skills/status"}
+      ],
+      "settings": null,
+      "claude_md": "claude-md/status.md",
+      "try": "Type /status in any project folder, or /status <project name>."
+    },
     "spec-logic-design": {
       "name": "Plan before building",
       "group": "Building",

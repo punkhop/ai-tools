@@ -325,7 +325,7 @@ The hooks start working after the restart (Stage 11) once Stage 10 registers the
 ## Stage 8 — Skills and rules
 
 One `$AIT install <id>` per chosen piece, in this order, each with its keep/take/skip answer from
-the plan: `dev-bible`, `reply-format`, `chat-voice`, `html`, `pass-handoff`, `doctor`,
+the plan: `dev-bible`, `reply-format`, `chat-voice`, `html`, `pass-handoff`, `doctor`, `status`,
 `spec-logic-design`, `prototype`.
 
 **Verify:** `ls ~/.claude/skills/*/SKILL.md` lists every skill picked (except kept or skipped
@@ -537,7 +537,7 @@ Less tested; say so. Claude Code on Windows runs its commands in **Git Bash**, s
 commands mostly work there.
 
 - Pieces that are plain files work as they are: dev-bible, reply-format, chat-voice, html, memory,
-  pass-handoff, doctor, spec-logic-design, prototype, image, review-multi. `$AIT` runs with
+  pass-handoff, doctor, status, spec-logic-design, prototype, image, review-multi. `$AIT` runs with
   `python` from Git Bash.
 - **Tailscale** and **Syncthing** have Windows installers (tailscale.com/download,
   syncthing.net/downloads — SyncTrayzor or the official build).

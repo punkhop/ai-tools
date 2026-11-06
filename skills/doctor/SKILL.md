@@ -275,6 +275,12 @@ else echo "FAIL Syncthing not running — systemctl --user enable --now syncthin
 
 You're running it. Nothing to check.
 
+## status
+
+```bash
+[ -f ~/.claude/skills/status/SKILL.md ] && echo "OK /status" || echo "FAIL /status missing — rerun the installer and pick status"
+```
+
 ## spec-logic-design
 
 ```bash
