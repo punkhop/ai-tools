@@ -34,6 +34,6 @@ fi
 # 2. Memory search upkeep (only when it is installed).
 LAST=$(grep -E '^(ok|FAILED)' /tmp/qmd-upkeep.log 2>/dev/null | tail -1)
 case "$LAST" in
-  FAILED*) echo "Memory search's upkeep job failed its last run ($LAST; log: /tmp/qmd-upkeep.log). Run ~/.claude/bin/qmd-upkeep upgrade yourself; if it still fails, tell the user in one line and run /doctor." ;;
+  FAILED*) echo "Memory search's upkeep job failed its last run ($LAST; log: /tmp/qmd-upkeep.log). Run ~/.claude/bin/qmd-upkeep upgrade yourself; if it still fails, tell the user in one line and run /checkup." ;;
 esac
 exit 0

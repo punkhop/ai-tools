@@ -30,8 +30,12 @@ at a time. Never ask "do you write code".
   background (memory search's two jobs, the links server, Syncthing, the start-of-session update
   check, the start-of-chat list of recent notes), tell them in one plain line what it does and how often, and go on only after they say
   ok. A no skips that piece; say what they lose in one line.
-- **Their files come first.** `$AIT` backs up anything it replaces to
-  `~/.claude/ai-tools-backup/<date>/` and never deletes their memory folder.
+- **Their setup comes first, on a first install and on every update.** Before changing anything,
+  look at what is already there (Stage 0): `installed.json`, `config.json`, their memory folder,
+  skills, hooks and settings. Never move, rename or overwrite the memory folder or its notes, and
+  never decide where it goes: ask. `$AIT` backs up anything it replaces to
+  `~/.claude/ai-tools-backup/<date>/`, and remembers every "keep yours": later installs and updates
+  leave those files alone without asking again.
 - After each stage passes, add a line to the progress file so a restart or a new thread can pick up:
   `echo "done: <stage>" >> ~/.claude/ai-tools/install-progress.md`.
 
@@ -45,7 +49,8 @@ Look first, silently:
 uname -s; sw_vers -productVersion 2>/dev/null; grep -m1 PRETTY /etc/os-release 2>/dev/null
 for c in git python3 node npm npx jq curl qmd tailscale syncthing codex claude brew op bun 2password google-chrome chromium; do printf '%-10s %s\n' $c "$(command -v $c || echo -)"; done
 node --version 2>/dev/null
-ls -la ~/memory 2>/dev/null | head -3
+cat ~/.claude/ai-tools/config.json 2>/dev/null          # their saved memory folder, from an earlier install
+ls -la ~/memory 2>/dev/null | head -3; ls -d ~/*/memory ~/*/*/memory 2>/dev/null | head -5
 ls ~/.claude/CLAUDE.md ~/.claude/settings.json 2>/dev/null; ls ~/.claude/skills 2>/dev/null
 cat ~/.claude/ai-tools/installed.json 2>/dev/null | head -5
 cat ~/.claude/ai-tools/install-progress.md 2>/dev/null
@@ -63,8 +68,8 @@ stages it lists as done.
 Get the repo (or update it):
 
 ```bash
-if [ -d ~/.claude/ai-tools/src/.git ]; then git -C ~/.claude/ai-tools/src fetch --depth 1 origin tag v1.0.0 && git -C ~/.claude/ai-tools/src checkout -q v1.0.0
-else mkdir -p ~/.claude/ai-tools && git clone --depth 1 --branch v1.0.0 https://github.com/punkhop/ai-tools ~/.claude/ai-tools/src; fi
+if [ -d ~/.claude/ai-tools/src/.git ]; then git -C ~/.claude/ai-tools/src fetch --depth 1 origin tag v1.1.0 && git -C ~/.claude/ai-tools/src checkout -q v1.1.0
+else mkdir -p ~/.claude/ai-tools && git clone --depth 1 --branch v1.1.0 https://github.com/punkhop/ai-tools ~/.claude/ai-tools/src; fi
 ```
 
 No git yet: Mac — tell them to run `xcode-select --install` in Terminal and click **Install**;
@@ -99,6 +104,8 @@ Image service: OpenAI                       (OpenAI · Gemini · Both)
   Stage 5.
 - **Which computer is this?** The answers' `main` one, unless the message says "this is <nickname>"
   — then this is that other computer: install the same pieces, and skip "Your other computers".
+- An earlier `config.json` with `memory_root` is their answer to "where is the memory folder": use
+  it and don't ask again.
 - `dev-bible` is always installed. `chat-voice` and `pass-handoff` only when T3 Code is one of
   the places they talk to Claude; terminal and desktop-app users get `reply-format` (markdown
   replies) and nothing T3-only. `status-bar` only when "Terminal" is one of the places (the status
@@ -157,8 +164,34 @@ review-multi and browser; Google Chrome for browser (Stage 8c); `curl` for files
   [ -f ~/.zshrc ] && { grep -q '.local/bin' ~/.zshrc || echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc; }
   ```
 
+**The memory folder.** Before the plan, because almost every piece mentions it. Skip this when
+`config.json` already has `memory_root`. Otherwise ask in chat, one question (AskUserQuestion), in
+plain words, never `~/`:
+
+- **A folder they already have** — when Stage 0 found one (a `memory` folder with notes in it,
+  anywhere), offer it first, named in their words ("the memory folder inside stuff"). Recommended.
+- **"A new folder called memory, inside your home folder (the one with your name on it)"**
+  (recommended when they have none).
+- **"Let me pick a folder"** → open the computer's own folder picker and use what they choose:
+  Mac `osascript -e 'POSIX path of (choose folder with prompt "Pick or make a folder for Claude\'s memory")'`;
+  Linux `zenity --file-selection --directory --title="Folder for Claude's memory"` (or `kdialog
+  --getexistingdirectory ~`); Windows/WSL ask them to type it. Cancelled → ask again.
+
+Say back where it is in their words. On a Mac, if they picked inside Documents, Desktop or
+Downloads, say in one line that macOS blocks background helpers from those folders and offer
+another. Then save it; every piece is written with this folder from now on:
+
+```bash
+MEM="<absolute path>"; mkdir -p "$MEM"
+$AIT config memory_root "$MEM"
+```
+
+A path with a space or a symbol is refused: ask them to rename the folder or pick another. Never
+make a `~/memory` shortcut to it, and never move what is in it.
+
 **Then the plan.** Run `$AIT plan <every chosen id>`. It lists each file as `new`, `same` or
-`different`. Nothing to say about `new` and `same`. For each `different` item, at that piece's
+`different` (or `kept`: a file they chose to keep earlier — leave it, don't ask again). Nothing to
+say about `new`, `same` and `kept`. For each `different` item, at that piece's
 stage: read both copies (the plan prints the `diff` command), tell them in one or two plain lines
 what theirs does that ours doesn't and the other way round, and ask: **keep yours**, **take mine**
 (yours is backed up), or **skip this piece**.
@@ -168,33 +201,17 @@ pieces need answers `--version`.
 
 ## Stage 2 — Memory folder (memory)
 
-Ask in chat, one question (AskUserQuestion), in plain words, never `~/`:
-
-- **"A folder called memory, inside your home folder (the one with your name on it)" (recommended)**
-  → `REAL="$HOME/memory"`.
-- **"Let me pick a folder"** → open the computer's own folder picker and use what they choose:
-  Mac `osascript -e 'POSIX path of (choose folder with prompt "Pick or make a folder for Claude\'s memory")'`;
-  Linux `zenity --file-selection --directory --title="Folder for Claude's memory"` (or `kdialog
-  --getexistingdirectory ~`); Windows/WSL ask them to type it. Cancelled → ask again.
-
-Then say back where it is in their words ("memory, in your home folder"). On a Mac, if they picked
-inside Documents, Desktop or Downloads, say in one line that macOS blocks background helpers from
-those folders and offer the home-folder one instead.
+The folder was chosen and saved in Stage 1. Add the three subfolders it needs (anything already in
+it stays exactly as it is) and the /note skill:
 
 ```bash
-REAL="<absolute path>"
-mkdir -p "$REAL"/{sessions,handoffs,transcripts}
-if [ "$REAL" != "$HOME/memory" ]; then
-  if [ -e ~/memory ] && [ ! -L ~/memory ]; then echo "STOP: ~/memory is a real folder"; else ln -sfn "$REAL" ~/memory; fi
-fi
+MEM=$($AIT config memory_root); mkdir -p "$MEM"/{sessions,handoffs,transcripts}
 $AIT install memory        # add --take or --keep if the plan showed a difference
 ```
 
-On STOP: ask whether to move what's in `~/memory` into `REAL` first, or keep `~/memory` as the
-place. Every skill uses the path `~/memory`; the shortcut points it at their folder.
-
-**Verify:** `[ "$(cd ~/memory && pwd -P)" = "$(cd "$REAL" && pwd -P)" ] && ls ~/memory && ls ~/.claude/skills/note/SKILL.md`
-shows `handoffs sessions transcripts` and the skill.
+**Verify:** `ls "$MEM" && ls ~/.claude/skills/note/SKILL.md && grep -c "$(basename "$MEM")" ~/.claude/skills/note/SKILL.md`
+shows `handoffs sessions transcripts` (next to whatever was there), the skill, and a count above 0
+(the skill writes to their folder).
 
 ## Stage 3 — Tailscale, and the phone (tailscale)
 
@@ -207,7 +224,7 @@ They do this; you explain and wait.
 **Phone** (if the answers say yes): install the Tailscale app, sign in with the **same account**,
 turn it on. Every other computer: same account (see "Your other computers").
 
-Then `$AIT install tailscale` (records it so `/doctor` checks it).
+Then `$AIT install tailscale` (records it so `/checkup` checks it).
 
 **Verify:**
 
@@ -237,7 +254,7 @@ $AIT install files-server     # copies the server, and the Mac or Linux backgrou
 **Verify:**
 
 ```bash
-sleep 3; URL="$(~/.claude/bin/files-server url ~/memory/sessions)/"; echo "$URL"
+sleep 3; URL="$(~/.claude/bin/files-server url "$($AIT config memory_root)/sessions")/"; echo "$URL"
 curl -s -o /dev/null -w '%{http_code}\n' "$URL"      # 200
 ```
 
@@ -261,8 +278,8 @@ Install it on this computer now; the others pair in "Your other computers".
 
 Then they open **http://127.0.0.1:8384** and:
 
-1. **Add Folder** → Folder Path: the memory folder (`REAL`, the real path, not the `~/memory`
-   shortcut) → Folder Label: `memory` → **Save**.
+1. **Add Folder** → Folder Path: the memory folder (`$AIT config memory_root` prints it) → Folder
+   Label: `memory` → **Save**.
 2. **Actions → Show ID**: this computer's device ID. They'll paste it on each other computer.
 3. Later, when another computer shows up: **Add Remote Device** → paste that computer's ID → name it
    by its nickname → on the **Sharing** tab tick `memory` → **Save**. Accept the matching prompt on
@@ -279,11 +296,12 @@ with a password), and they see the `memory` folder in the Syncthing page.
 ## Stage 6 — Memory search (qmd)
 
 ```bash
-npm install -g @tobilu/qmd          # Linux: lands in ~/.local/bin, no sudo
+command -v qmd >/dev/null || npm install -g @tobilu/qmd     # Linux: lands in ~/.local/bin, no sudo
 qmd --version
-qmd collection add "$(cd ~/memory && pwd -P)" --name memory      # the real path, not the shortcut
-claude mcp add --scope user qmd -e PATH="$(dirname "$(command -v node)"):/usr/bin:/bin" -- "$(command -v qmd)" mcp
-qmd update && qmd embed             # the first run downloads a ~330 MB model; tell them it takes a while
+$AIT config qmd_bin "$(command -v qmd)"; $AIT config node_bin "$(command -v node)"   # background jobs start without nvm's PATH
+qmd collection list | grep -q '^memory ' || qmd collection add "$(cd "$($AIT config memory_root)" && pwd -P)" --name memory
+claude mcp list 2>/dev/null | grep -q '^qmd' || claude mcp add --scope user qmd -e PATH="$(dirname "$(command -v node)"):/usr/bin:/bin" -- "$(command -v qmd)" mcp
+qmd update && qmd embed             # search by meaning; the first run downloads a ~330 MB model, so tell them it takes a while
 $AIT install qmd                    # the upkeep script and its background jobs
 ```
 
@@ -297,13 +315,16 @@ $AIT install qmd                    # the upkeep script and its background jobs
 **Verify:**
 
 ```bash
-qmd status | grep -E 'Total|Updated'                 # "Total: 0 files" is right while memory is empty
+qmd status | grep -E 'Total|Vectors|Pending|Updated'  # Vectors above 0 once there are notes; no Pending line
 qmd collection list | grep '^memory '
 claude mcp list 2>&1 | grep -i qmd                   # "Connected"
 ~/.claude/bin/qmd-upkeep index; tail -1 /tmp/qmd-upkeep.log      # ok
 launchctl list | grep com.user.qmd                   # Mac: both listed
 systemctl --user list-timers --no-pager | grep qmd   # Linux: both listed
 ```
+
+Notes already in the folder but `Vectors: 0 embedded`, or a `Pending` line: run `qmd embed` again
+and read its error. Search only matches exact words until this passes.
 
 The first real search downloads two more models (about 1.9 GB); expect a pause then.
 
@@ -453,7 +474,7 @@ API key.
 From here on `PY` is the private environment's Python when it exists: put
 `PY=~/.claude/ai-tools/venv/bin/python; [ -x "$PY" ] || PY=python3` at the top of each command.
 
-The projects folder: `$PY ~/.claude/skills/image/scripts/new_project.py --set-folder ~/memory/images`
+The projects folder: `$PY ~/.claude/skills/image/scripts/new_project.py --set-folder "$($AIT config memory_root)/images"`
 (or wherever they'd like; ask once, suggest that one).
 
 **Verify:** `$PY ~/.claude/skills/image/scripts/generate-template.py --check` shows their key as
@@ -480,7 +501,7 @@ $AIT claude-md <every installed id>
 ```
 
 `settings` adds hooks and permissions to `~/.claude/settings.json` and never removes theirs.
-`claude-md` writes one block between `<!-- ai-tools:start v1.0.0 -->` and `<!-- ai-tools:end -->` in
+`claude-md` writes one block between `<!-- ai-tools:start v1.1.0 -->` and `<!-- ai-tools:end -->` in
 `~/.claude/CLAUDE.md`; their own lines stay as they are. Both back up first. If `settings` says
 their file isn't valid JSON, show them the error line in plain words and fix it with them first.
 
@@ -514,9 +535,11 @@ session. In a terminal: quit `claude` and start it again, then the same sentence
 
 ## Stage 12 — Checkup, first note, done
 
-1. Run `/doctor`. Fix every FAIL (each line says how) and re-run until there are none. "No
+1. Run `/checkup`. Fix every FAIL (each line says how) and re-run until there are none. "No
    transcripts yet" and "no upkeep runs logged yet" are normal on day one.
-2. With qmd: one real search through the qmd tool for "ai-tools" — show it answers.
+2. With qmd: one real search through the qmd tool, a question in plain words about a note in
+   their folder (or this install's note, after step 3) — show it finds it by meaning, not by an
+   exact word.
    With browser: `/browser` open the setup page (`file://` + `~/.claude/ai-tools/src/setup/index.html`)
    and show them the screenshot.
 3. With memory: run `/note` about this install (what was set up, where the memory folder is, this
@@ -594,11 +617,18 @@ git -C ~/.claude/ai-tools/src -c advice.detachedHead=false checkout -q "$NEW"
 python3 ~/.claude/ai-tools/src/tools/aitools.py status
 ```
 
+`Memory folder: not saved yet` in that output (an install from before v1.1.0): ask where their memory
+folder is, exactly as in Stage 1, offering what they use now first (`cd ~/memory && pwd -P` when
+`~/memory` exists). Save it with `$AIT config memory_root`. Never move the folder; an old `~/memory`
+shortcut can stay, nothing needs it any more. Run `status` again: files that only differed because
+their Claude pointed them at their folder now show as up to date.
+
 Show the `CHANGELOG.md` sections newer than their installed version, in plain words. For each
 piece marked `update` or `differ`: `$AIT plan <id>`, the same keep / take / skip rule as the
 install (a `different` file they changed themselves: say so), then `$AIT install <id> --take` or
-`--keep`. Finish with `$AIT settings <installed ids>`, `$AIT claude-md <installed ids>`, the restart
-(Stage 11) and `/doctor`. New pieces in the newer version: name them with their one-liner and offer
+`--keep`. A file they kept before shows as `kept`: `install` keeps it again by itself, so don't
+ask. Finish with `$AIT settings <installed ids>`, `$AIT claude-md <installed ids>`, the restart
+(Stage 11) and `/checkup`. New pieces in the newer version: name them with their one-liner and offer
 them.
 
 ---
@@ -623,8 +653,8 @@ systemctl --user daemon-reload 2>/dev/null
 install replaced one of their own skills (`ls ~/.claude/ai-tools-backup/*/.claude/skills`), offer to
 copy it back. Then ask before each of these: `npm uninstall -g @tobilu/qmd @openai/codex`; `~/.bun/bin/bun remove -g 2password`;
 `rm -rf ~/.cache/qmd ~/.config/qmd ~/.local/share/files-server`; `rm -rf ~/.claude/ai-tools` (this also deletes their saved image
-keys). Tailscale, Syncthing and T3 Code are apps they remove themselves. If `~/memory` is a
-shortcut, `rm ~/memory` removes only the shortcut.
+keys). Tailscale, Syncthing and T3 Code are apps they remove themselves. If an older install left a
+`~/memory` shortcut, `rm ~/memory` removes only the shortcut.
 
 ---
 

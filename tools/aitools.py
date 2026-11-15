@@ -3,8 +3,13 @@
 
 Claude runs it while following START-HERE.md; nobody needs to run it by hand.
 
-  plan <ids...>                 every file: new / same / different from what is already there
-  install <id> [--take|--keep]  copy one piece in, back up anything replaced, record it
+  config [key [value]]          show or save a setting in ~/.claude/ai-tools/config.json:
+                                  memory_root  where their memory folder is (asked at install, never assumed)
+                                  qmd_bin, node_bin  full paths, so background jobs find them (nvm)
+  plan <ids...>                 every file: new / same / different / kept from what is already there
+  install <id> [--take|--keep] [--unkeep]
+                                copy one piece in, back up anything replaced, record it. A file they
+                                chose to keep stays theirs on every later install; --unkeep forgets that
   claude-md <ids...>            write the marked ai-tools block in ~/.claude/CLAUDE.md
   settings <ids...>             merge the pieces' hooks, permissions and status line into ~/.claude/settings.json
   status                        installed pieces and versions against this copy of the repo
@@ -12,7 +17,8 @@ Claude runs it while following START-HERE.md; nobody needs to run it by hand.
 
 Keys are saved by the image skill's own script: ~/.claude/skills/image/scripts/save_key.py.
 Backups go to ~/.claude/ai-tools-backup/<YYYY-MM-DD>/, keeping each file's path from the home folder.
-The memory folder is never touched.
+The memory folder is never touched. Every piece that mentions it is written with the folder saved in
+config.json (memory_root) instead of the repo's ~/memory.
 """
 
 import datetime
@@ -29,11 +35,14 @@ REPO = Path(__file__).resolve().parent.parent
 HOME = Path.home()
 CLAUDE = HOME / ".claude"
 STATE = CLAUDE / "ai-tools" / "installed.json"
+CONFIG = CLAUDE / "ai-tools" / "config.json"
+CONFIG_KEYS = ("memory_root", "qmd_bin", "node_bin")
 CLAUDE_MD = CLAUDE / "CLAUDE.md"
 SETTINGS = CLAUDE / "settings.json"
 START, END = "<!-- ai-tools:start v{} -->", "<!-- ai-tools:end -->"
 BLOCK = re.compile(r"\n*<!-- ai-tools:start v[^>]*-->.*?<!-- ai-tools:end -->\n?", re.S)
 PLACEHOLDER = "/Users/REPLACE_WITH_YOUR_USERNAME"   # launchd files need a real home path
+MEMORY = re.compile(r"(/Users/REPLACE_WITH_YOUR_USERNAME/memory|\$HOME/memory|%h/memory|~/memory)(?![\w.-])")
 OS = {"Darwin": "mac", "Linux": "linux"}.get(platform.system(), "other")
 
 MANIFEST = json.loads((REPO / "pieces.json").read_text())
@@ -52,6 +61,39 @@ def load_state():
     if STATE.exists():
         return json.loads(STATE.read_text())
     return {"version": MANIFEST["version"], "installed_at": None, "pieces": {}, "settings": {}}
+
+
+def load_config():
+    if CONFIG.exists():
+        return json.loads(CONFIG.read_text())
+    return {}
+
+
+def memory_forms():
+    """The saved memory folder, as each repo spelling of ~/memory should become."""
+    root = load_config().get("memory_root")
+    if not root:
+        return None
+    path = Path(root)
+    try:
+        rel = str(path.relative_to(HOME))
+    except ValueError:
+        rel = None
+    tilde = f"~/{rel}" if rel else str(path)
+    return {"/Users/REPLACE_WITH_YOUR_USERNAME/memory": str(path),
+            "$HOME/memory": f"$HOME/{rel}" if rel else str(path),
+            "%h/memory": f"%h/{rel}" if rel else str(path),
+            "~/memory": tilde}
+
+
+def with_memory(text, where):
+    if not MEMORY.search(text):
+        return text
+    forms = memory_forms()
+    if forms is None:
+        die(f"{where} mentions the memory folder, and none is saved yet. Ask them where their memory "
+            f"folder is (or where to make one), then run: aitools.py config memory_root <path>", 4)
+    return MEMORY.sub(lambda m: forms[m.group(1)], text)
 
 
 def save_state(state):
@@ -96,6 +138,16 @@ def check_ids(ids):
         die(f"Unknown piece: {', '.join(bad)}. Known: {', '.join(PIECES)}")
 
 
+class Unit(list):
+    """One keep/take decision: a single file, or a whole folder. key is how it is recorded."""
+    def __init__(self, rows, key):
+        super().__init__(rows)
+        self.key = key
+
+    def kept(self, names):                  # v1.0.0 recorded a folder by its first file
+        return self.key in names or bool(self) and shown(self[0][1]) in names
+
+
 def units(piece_id):
     """Each manifest file entry as one unit: [(src, dest, exec), ...] for files on this OS.
     A folder entry is one unit, so keep/take decides a whole skill at once."""
@@ -109,23 +161,29 @@ def units(piece_id):
         if src.is_dir():
             files = sorted(p for p in src.rglob("*") if p.is_file()
                            and "__pycache__" not in p.parts and p.name != ".DS_Store")
-            out.append([(f, dest_path(entry["to"]) / f.relative_to(src), entry.get("exec", False)) for f in files])
+            out.append(Unit([(f, dest_path(entry["to"]) / f.relative_to(src), entry.get("exec", False))
+                             for f in files], shown(dest_path(entry["to"]))))
         else:
-            out.append([(src, dest_path(entry["to"]), entry.get("exec", False))])
+            out.append(Unit([(src, dest_path(entry["to"]), entry.get("exec", False))], shown(dest_path(entry["to"]))))
     return out
 
 
 def content(src):
     data = src.read_bytes()
+    try:
+        data = with_memory(data.decode(), src.relative_to(REPO)).encode()
+    except UnicodeDecodeError:
+        pass                                # images and other binary files
     if PLACEHOLDER.encode() in data:
         data = data.replace(PLACEHOLDER.encode(), str(HOME).encode())
     return data
 
 
 def compare(src, dest):
+    data = content(src)                     # first, so a missing memory folder stops the plan too
     if not dest.exists():
         return "new"
-    return "same" if dest.read_bytes() == content(src) else "different"
+    return "same" if dest.read_bytes() == data else "different"
 
 
 def owners(state):
@@ -155,10 +213,17 @@ def cmd_plan(ids):
         if piece.get("terminal_only"):
             notes.append("terminal only")
         print(f"{pid}  ({piece['name']}){'  — ' + '; '.join(notes) if notes else ''}")
-        rows = [(compare(s, d), s, d) for unit in units(pid) for s, d, _ in unit]
+        kept = set(state["pieces"].get(pid, {}).get("kept_theirs", []))
+        rows = []
+        for unit in units(pid):
+            keep = unit.kept(kept)
+            rows += [("kept" if keep and compare(s, d) == "different" else compare(s, d), s, d) for s, d, _ in unit]
         if not rows:
             print("  no files (set up by hand in its stage)")
         for status, src, dest in rows:
+            if status == "kept":
+                print(f"  kept      {shown(dest)}  (they chose to keep theirs; don't ask again)")
+                continue
             who = mine.get(str(dest))
             tag = f"  (installed earlier by ai-tools: {', '.join(who)})" if who and status == "different" else ""
             print(f"  {status:<9} {shown(dest)}{tag}")
@@ -166,17 +231,20 @@ def cmd_plan(ids):
                 print(f"            compare: diff {dest} {src}")
 
 
-def cmd_install(pid, take, keep):
+def cmd_install(pid, take, keep, unkeep):
     check_ids([pid])
     state = load_state()
+    before = state["pieces"].get(pid, {})
+    was_kept = set() if unkeep else set(before.get("kept_theirs", []))
     recorded, kept, backed = [], [], []
     for unit in units(pid):
         statuses = [compare(s, d) for s, d, _ in unit]
-        if "different" in statuses and not (take or keep):
-            die(f"{pid}: {shown(unit[0][1])} differs from what is already there. "
+        mine_kept = unit.kept(was_kept)                 # their earlier "keep mine" always stands
+        if "different" in statuses and not (take or keep or mine_kept):
+            die(f"{pid}: {unit.key} differs from what is already there. "
                 f"Run plan, explain the difference, then install again with --take (use mine) or --keep (keep theirs).", 3)
-        if "different" in statuses and keep:
-            kept.append(shown(unit[0][1]))
+        if "different" in statuses and (keep or mine_kept):
+            kept.append(unit.key)
             continue
         for (src, dest, exe), status in zip(unit, statuses):
             if status == "different":
@@ -188,6 +256,14 @@ def cmd_install(pid, take, keep):
             if exe:
                 dest.chmod(0o755)
             recorded.append(shown(dest))
+    shipped = {str(d) for unit in units(pid) for _, d, _ in unit}
+    for rec in before.get("files", []):        # files this piece no longer ships (a renamed skill)
+        path = from_record(rec)
+        if str(path) not in shipped and path.exists() and str(path) not in {
+                str(from_record(r)) for p, v in state["pieces"].items() if p != pid for r in v.get("files", [])}:
+            backed.append(shown(backup(path)))
+            path.unlink()
+            prune_empty(path)
     state["pieces"][pid] = {"version": PIECES[pid]["version"], "files": recorded}
     if kept:
         state["pieces"][pid]["kept_theirs"] = kept
@@ -206,7 +282,7 @@ def block_for(ids):
                 snippet = swap
         if pid not in ids or not snippet:
             continue
-        for line in (REPO / snippet).read_text().rstrip("\n").split("\n"):
+        for line in with_memory((REPO / snippet).read_text(), snippet).rstrip("\n").split("\n"):
             key = line.strip()
             if key.startswith(("@", "## ")):
                 if key in seen:
@@ -316,6 +392,11 @@ def cmd_settings(ids):
 def cmd_status():
     state = load_state()
     print(f"This copy of ai-tools: {MANIFEST['version']}")
+    root = load_config().get("memory_root")
+    print(f"Memory folder: {root}" if root else "Memory folder: not saved yet (ask them, then config memory_root <path>)")
+    if not root and state["pieces"]:
+        print("Save the memory folder first; then run status again to see what to update.")
+        return
     if not state["pieces"]:
         print("Nothing installed with ai-tools yet.")
     else:
@@ -324,7 +405,8 @@ def cmd_status():
         have = state["pieces"].get(pid)
         if not have:
             continue
-        rows = [compare(s, d) for unit in units(pid) for s, d, _ in unit]
+        kept = set(have.get("kept_theirs", []))
+        rows = [compare(s, d) for unit in units(pid) if not unit.kept(kept) for s, d, _ in unit]
         changed = sum(r != "same" for r in rows)
         if have["version"] != piece["version"]:
             word = f"update {have['version']} → {piece['version']}"
@@ -413,8 +495,36 @@ def cmd_uninstall(ids):
         save_state(state)
     elif STATE.exists():
         STATE.unlink()
-        print("Left in place: ~/memory, ~/.claude/ai-tools-backup, and ~/.claude/ai-tools "
+        print(f"Left in place: the memory folder ({load_config().get('memory_root', 'not saved')}), "
+              "~/.claude/ai-tools-backup, and ~/.claude/ai-tools "
               "(this copy of the repo and any saved keys).")
+
+
+def cmd_config(args):
+    cfg = load_config()
+    if not args:
+        print(json.dumps(cfg, indent=2) if cfg else "Nothing saved yet.")
+        return
+    key = args[0]
+    if key not in CONFIG_KEYS:
+        die(f"Unknown setting: {key}. Known: {', '.join(CONFIG_KEYS)}")
+    if len(args) == 1:
+        print(cfg.get(key, ""))
+        return
+    value = os.path.abspath(os.path.expanduser(args[1]))
+    if key == "memory_root":
+        if not re.fullmatch(r"[A-Za-z0-9._/-]+", value):
+            die("The memory folder's path has a space or a symbol in it, which breaks the scripts that use it. "
+                "Ask them for a folder whose path has only letters, numbers, dots, dashes and underscores "
+                "(rename it, or pick another).", 2)
+        if not os.path.isdir(value):
+            die(f"No folder at {value}. Make it first (mkdir -p), or ask them again.", 2)
+    elif not os.access(value, os.X_OK):
+        die(f"{value} isn't a program that runs.", 2)
+    cfg[key] = value
+    CONFIG.parent.mkdir(parents=True, exist_ok=True)
+    CONFIG.write_text(json.dumps(cfg, indent=2) + "\n")
+    print(f"saved {key} = {value}")
 
 
 def main(argv):
@@ -424,10 +534,13 @@ def main(argv):
     cmd, args = argv[0], argv[1:]
     flags = {a for a in args if a.startswith("--")}
     ids = [a for a in args if not a.startswith("--")]
-    if cmd == "plan" and ids:
+    if cmd == "config":
+        cmd_config(args)
+    elif cmd == "plan" and ids:
         cmd_plan(ids)
-    elif cmd == "install" and len(ids) == 1 and not flags - {"--take", "--keep"} and len(flags) < 2:
-        cmd_install(ids[0], "--take" in flags, "--keep" in flags)
+    elif cmd == "install" and len(ids) == 1 and not flags - {"--take", "--keep", "--unkeep"} \
+            and not {"--take", "--keep"} <= flags:
+        cmd_install(ids[0], "--take" in flags, "--keep" in flags, "--unkeep" in flags)
     elif cmd == "claude-md":
         cmd_claude_md(ids)
     elif cmd == "settings":

@@ -17,7 +17,7 @@ logged in, and it is thrown away when the window closes. It never touches the pe
 Chrome, its tabs or its logins.
 
 No `mcp__chrome-devtools__` tools? The piece isn't set up on this computer, or Claude hasn't been
-restarted since. Say so in one line and suggest "check my ai-tools setup" (or `/doctor`).
+restarted since. Say so in one line and suggest "check my ai-tools setup" (or `/checkup`).
 
 ## The usual walk
 

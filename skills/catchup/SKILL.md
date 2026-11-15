@@ -1,9 +1,9 @@
 ---
-name: status
-description: Catch the person up on any project they are working on — what it is, where it stands, what changed lately, what is unfinished and what is theirs to decide — in plain words, no code. Reads the project's own history and the memory folder's notes, never just this chat. Use when someone types /status, /status <project>, or asks "where are we", "catch me up", "what's the status of", "where did we leave off".
+name: catchup
+description: Catch the person up on any project they are working on — what it is, where it stands, what changed lately, what is unfinished and what is theirs to decide — in plain words, no code. Reads the project's own history and the memory folder's notes, never just this chat. Use when someone types /catchup, /catchup <project>, or asks "where are we", "catch me up", "what's the status of", "where did we leave off".
 ---
 
-# /status — catch me up on a project
+# /catchup — catch me up on a project
 
 The person builds things with Claude and does not read code. They come back to a project after a
 day, a week, a month, and need the hospital shift handoff: what this is, how far it got, what
@@ -14,11 +14,11 @@ project's files and notes are the truth.
 
 ## 1 · Which project
 
-- `/status <name>` → find it. Try, in order: a folder by that name under the current folder, under
+- `/catchup <name>` → find it. Try, in order: a folder by that name under the current folder, under
   `~` (one or two levels: `~/<name>`, `~/*/<name>`, `~/dev/<name>`, `~/projects/<name>`,
   `~/Documents/<name>`), then a match among session-note `project:` fields in
   `~/memory/sessions/`. Several matches → ask which, once, listing them.
-- `/status` alone → the current folder. If it is the home folder or holds no project (no git, no
+- `/catchup` alone → the current folder. If it is the home folder or holds no project (no git, no
   code, no notes naming it), ask which project, offering the 3 most recent `project:` names from
   `~/memory/sessions/` if that folder exists.
 
