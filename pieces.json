@@ -1,11 +1,11 @@
 {
   "_comment": "The manifest tools/aitools.py installs from. files: 'from' is a repo path (a folder copies everything in it); 'to' is a path under ~/.claude, or starts with ~/ for anywhere else in the home folder. 'os' limits a file to mac or linux. 't3_only' / 'terminal_only' pieces are offered only to people who talk to Claude there. 'exec' marks it runnable. Pieces are listed in the order their CLAUDE.md lines appear.",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "pieces": {
     "dev-bible": {
       "name": "Development Bible",
       "group": "Building",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "always": true,
       "needs": [],
       "t3_only": false,
@@ -100,7 +100,7 @@
     "resume": {
       "name": "Picks up where you left off",
       "group": "Memory",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "needs": ["memory"],
       "t3_only": false,
       "files": [
@@ -113,7 +113,7 @@
     "qmd": {
       "name": "Memory search",
       "group": "Memory",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "needs": ["memory"],
       "t3_only": false,
       "files": [
@@ -225,33 +225,33 @@
     "doctor": {
       "name": "Checkup",
       "group": "Building",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "needs": [],
       "t3_only": false,
       "files": [
-        {"from": "skills/doctor", "to": "skills/doctor"}
+        {"from": "skills/checkup", "to": "skills/checkup"}
       ],
       "settings": null,
       "claude_md": "claude-md/doctor.md",
-      "try": "Type /doctor when something feels off."
+      "try": "Type /checkup when something feels off."
     },
     "status": {
       "name": "Project status",
       "group": "Building",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "needs": [],
       "t3_only": false,
       "files": [
-        {"from": "skills/status", "to": "skills/status"}
+        {"from": "skills/catchup", "to": "skills/catchup"}
       ],
       "settings": null,
       "claude_md": "claude-md/status.md",
-      "try": "Type /status in any project folder, or /status <project name>."
+      "try": "Type /catchup in any project folder, or /catchup <project name>."
     },
     "browser": {
       "name": "Browser",
       "group": "Building",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "needs": [],
       "t3_only": false,
       "files": [

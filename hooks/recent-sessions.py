@@ -16,7 +16,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-SESSIONS = Path.home() / "memory" / "sessions"
+SESSIONS = Path(os.path.expanduser("~/memory/sessions"))
 NEWEST, FOR_PROJECT, LEFTOVERS = 5, 3, 5
 
 

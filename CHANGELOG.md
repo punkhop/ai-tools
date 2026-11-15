@@ -2,6 +2,24 @@
 
 Newest first. Claude reads this when you say "check ai-tools for updates".
 
+## v1.1.0
+
+From Abbie's install, thank you Abbie.
+
+- **Your memory folder stays where you keep it.** The install now always asks where your memory
+  folder is (or where to make one) and remembers the answer. Every piece is written to use that
+  folder, so there is no `~/memory` shortcut any more, and an update never points things back at
+  `~/memory`. Updating from v1.0.0: Claude asks once, offering the folder you already use.
+- **"Keep mine" sticks.** When you keep your own version of a file, later installs and updates leave
+  it alone and don't ask again.
+- **Memory search works when Node comes from nvm.** The install saves where qmd and Node live, and
+  the 30-minute job uses them; before, it failed quietly for anyone using nvm.
+- **Search by meaning is checked, not assumed.** The install proves notes are embedded, the
+  30-minute job reports a failure when notes are left waiting, and the checkup warns when nothing is
+  embedded or notes are piling up.
+- **Renamed two commands** that clashed with Claude Code's own: /doctor is now **/checkup** and
+  /status is now **/catchup**. The update removes the old ones.
+
 ## v1.0.0
 
 First release. Twenty-four pieces to pick from on the setup page: the reply format, chat pages (T3 Code),
