@@ -1,10 +1,10 @@
 ---
-name: doctor
+name: checkup
 description: Health check of this Claude Code setup — checks only the pieces you installed (listed in ~/.claude/ai-tools/installed.json) — memory folder, skills, hooks, memory search, the file server, Tailscale, Syncthing, the Development Bible, the codex CLI, the browser helper, the status bar. Mac and Linux. Prints OK / WARN / FAIL with a one-line fix for each. Use after install, when something feels off, or when memory search or links stop working.
 disable-model-invocation: false
 ---
 
-# /doctor — health check
+# /checkup — health check
 
 Checks only what is installed. The installer writes `~/.claude/ai-tools/installed.json`:
 
@@ -79,6 +79,9 @@ git --version >/dev/null 2>&1 && python3 -c 1 2>/dev/null && echo "OK git and py
 ## memory
 
 ```bash
+SET=$(python3 -c 'import json,os,sys; print(json.load(open(sys.argv[1])).get("memory_root",""))' ~/.claude/ai-tools/config.json 2>/dev/null)
+[ -n "$SET" ] && echo "OK memory folder set to $SET" \
+  || echo "FAIL no memory folder saved — ask the user where theirs is, then: python3 ~/.claude/ai-tools/src/tools/aitools.py config memory_root <path>"
 if [ -L ~/memory ]; then REAL=$(cd ~/memory 2>/dev/null && pwd -P)
   [ -n "$REAL" ] && [ -d "$REAL" ] && echo "OK ~/memory → $REAL" || echo "FAIL ~/memory points at a missing folder — start the sync app or mount the drive"
 elif [ -d ~/memory ]; then echo "OK ~/memory is the memory folder"
@@ -190,6 +193,14 @@ if command -v qmd >/dev/null; then echo "OK $(qmd --version)"
     *s\ ago|*m\ ago|1h\ ago|2h\ ago) echo "OK index updated $UPD" ;;
     *) echo "WARN index last updated $UPD — the 30-minute upkeep job isn't running (see below)" ;;
   esac
+  TOT=$(printf '%s\n' "$ST" | sed -n 's/^ *Total: *\([0-9]*\).*/\1/p' | head -1)
+  VEC=$(printf '%s\n' "$ST" | sed -n 's/^ *Vectors: *\([0-9]*\).*/\1/p' | head -1)
+  PEND=$(printf '%s\n' "$ST" | sed -n 's/.*Pending: *\([0-9]*\).*/\1/p' | head -1)
+  if [ "${TOT:-0}" -gt 0 ] && [ "${VEC:-0}" -eq 0 ]; then
+    echo "FAIL $TOT notes indexed but 0 embedded — search only matches exact words, not meaning: run qmd embed"
+  elif [ "${PEND:-0}" -gt 0 ]; then
+    echo "WARN $PEND notes wait to be embedded — run qmd embed; if this number grows between checkups, the upkeep job isn't embedding (see below)"
+  elif [ "${TOT:-0}" -gt 0 ]; then echo "OK search by meaning ($VEC pieces embedded)"; fi
   qmd collection list 2>/dev/null | grep -q '^memory ' && echo "OK collection 'memory'" \
     || echo "FAIL no 'memory' collection — qmd collection add \"\$(cd ~/memory && pwd -P)\" --name memory"
   CP=$(qmd collection show memory 2>/dev/null | sed -n 's/^ *Path: *//p'); MP=$(cd ~/memory 2>/dev/null && pwd -P)
@@ -332,7 +343,7 @@ You're running it. Nothing to check.
 ## status
 
 ```bash
-[ -f ~/.claude/skills/status/SKILL.md ] && echo "OK /status" || echo "FAIL /status missing — rerun the installer and pick status"
+[ -f ~/.claude/skills/catchup/SKILL.md ] && echo "OK /catchup" || echo "FAIL /catchup missing — rerun the installer and pick status"
 ```
 
 ## spec-logic-design
