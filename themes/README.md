@@ -9,6 +9,7 @@ MIT licensed (see `LICENSE`). This copy changes the sidebar:
 - New chat sits right under search.
 - No "Recents" heading.
 - Working sits under your recent chats instead of above them.
+- Chat rows drop the project badge and the Claude icon.
 
 Claude installs it for you when you tick it on the setup page. By hand: T3 Code → **Settings →
 Appearance** → **Add a theme**, then drop in `t3-clawd.json`.
