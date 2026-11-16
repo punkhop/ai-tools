@@ -68,8 +68,8 @@ stages it lists as done.
 Get the repo (or update it):
 
 ```bash
-if [ -d ~/.claude/ai-tools/src/.git ]; then git -C ~/.claude/ai-tools/src fetch --depth 1 origin tag v1.2.0 && git -C ~/.claude/ai-tools/src checkout -q v1.2.0
-else mkdir -p ~/.claude/ai-tools && git clone --depth 1 --branch v1.2.0 https://github.com/punkhop/ai-tools ~/.claude/ai-tools/src; fi
+if [ -d ~/.claude/ai-tools/src/.git ]; then git -C ~/.claude/ai-tools/src fetch --depth 1 origin tag v1.3.0 && git -C ~/.claude/ai-tools/src checkout -q v1.3.0
+else mkdir -p ~/.claude/ai-tools && git clone --depth 1 --branch v1.3.0 https://github.com/punkhop/ai-tools ~/.claude/ai-tools/src; fi
 ```
 
 No git yet: Mac — tell them to run `xcode-select --install` in Terminal and click **Install**;
@@ -441,17 +441,18 @@ chat`. If they already have a status line, `$AIT settings` keeps theirs and says
 one line and ask whether to switch (switch: replace the `statusLine` entry in
 `~/.claude/settings.json` with `{"type": "command", "command": "~/.claude/statusline.sh"}`).
 
-## Stage 8e — T3 Clawd theme (t3-theme)
+## Stage 8e — Orbit theme (t3-theme)
 
-Only in T3 Code. Restyles T3 Code itself: Claude's colours, a clay New chat button under search, a
-tidier sidebar.
+Only in T3 Code. Restyles T3 Code itself: a near-black theme built for reading all day, with a
+chartreuse green accent, "orbit" at the top of the sidebar, New chat as a green plus beside Search,
+and chat rows without the project badge, Claude icon or PR badge. Light mode uses a deep olive green.
 
 ```bash
 $AIT install t3-theme
 ```
 
-Load `mcp__t3-code__t3_theme_set` with ToolSearch. Read `~/.claude/ai-tools/themes/t3-clawd.json`
-and call it with `themeId: "t3-clawd"` and `theme` set to that whole file's object. It switches this
+Load `mcp__t3-code__t3_theme_set` with ToolSearch. Read `~/.claude/ai-tools/themes/orbit.json`
+and call it with `themeId: "orbit"` and `theme` set to that whole file's object. It switches this
 computer's T3 Code to the theme at once.
 
 **Verify:** the call returns `"published": true`; ask them to look at the sidebar. To go back:
@@ -518,7 +519,7 @@ $AIT claude-md <every installed id>
 ```
 
 `settings` adds hooks and permissions to `~/.claude/settings.json` and never removes theirs.
-`claude-md` writes one block between `<!-- ai-tools:start v1.2.0 -->` and `<!-- ai-tools:end -->` in
+`claude-md` writes one block between `<!-- ai-tools:start v1.3.0 -->` and `<!-- ai-tools:end -->` in
 `~/.claude/CLAUDE.md`; their own lines stay as they are. Both back up first. If `settings` says
 their file isn't valid JSON, show them the error line in plain words and fix it with them first.
 
@@ -670,7 +671,7 @@ systemctl --user daemon-reload 2>/dev/null
 install replaced one of their own skills (`ls ~/.claude/ai-tools-backup/*/.claude/skills`), offer to
 copy it back. Then ask before each of these: `npm uninstall -g @tobilu/qmd @openai/codex`; `~/.bun/bin/bun remove -g 2password`;
 `rm -rf ~/.cache/qmd ~/.config/qmd ~/.local/share/files-server`; `rm -rf ~/.claude/ai-tools` (this also deletes their saved image
-keys). Tailscale, Syncthing and T3 Code are apps they remove themselves. With the T3 Clawd theme installed, they switch back in T3 Code → **Settings → Appearance**. If an older install left a
+keys). Tailscale, Syncthing and T3 Code are apps they remove themselves. With the Orbit theme installed, they switch back in T3 Code → **Settings → Appearance** and pick one of the built-in themes. If an older install left a
 `~/memory` shortcut, `rm ~/memory` removes only the shortcut.
 
 ---

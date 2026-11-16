@@ -2,6 +2,14 @@
 
 Newest first. Claude reads this when you say "check ai-tools for updates".
 
+## v1.3.0
+
+- **Orbit replaces the T3 Clawd theme (T3 Code only).** Orbit is a near-black theme built for
+  reading all day, with a chartreuse green accent and a deep olive green in light mode. New chat is
+  a green plus beside Search, and chat rows drop the project badge, Claude icon and PR badge. It is
+  built from @rohit3a's T3 Clawd. Updating removes the T3 Clawd file; if you had it on, Claude
+  switches you to Orbit, or pick another theme in **Settings → Appearance**.
+
 ## v1.2.0
 
 - **T3 Clawd theme (T3 Code only).** A new optional piece under Extras: a Claude look for T3 Code,
