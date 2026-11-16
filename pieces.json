@@ -1,6 +1,6 @@
 {
   "_comment": "The manifest tools/aitools.py installs from. files: 'from' is a repo path (a folder copies everything in it); 'to' is a path under ~/.claude, or starts with ~/ for anywhere else in the home folder. 'os' limits a file to mac or linux. 't3_only' / 'terminal_only' pieces are offered only to people who talk to Claude there. 'exec' marks it runnable. Pieces are listed in the order their CLAUDE.md lines appear.",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "pieces": {
     "dev-bible": {
       "name": "Development Bible",
@@ -329,6 +329,19 @@
       "settings": "status-bar",
       "claude_md": null,
       "try": "Look under the prompt in your terminal: the folder, the branch, and how full the chat is."
+    },
+    "t3-theme": {
+      "name": "T3 Clawd theme",
+      "group": "Extras",
+      "version": "1.0.0",
+      "needs": [],
+      "t3_only": true,
+      "files": [
+        {"from": "themes/t3-clawd.json", "to": "ai-tools/themes/t3-clawd.json"}
+      ],
+      "settings": null,
+      "claude_md": null,
+      "try": "Look at T3 Code: Claude's colours, a clay New chat button under search, and a tidier sidebar."
     }
   }
 }
