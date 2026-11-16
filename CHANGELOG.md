@@ -2,6 +2,12 @@
 
 Newest first. Claude reads this when you say "check ai-tools for updates".
 
+## v1.2.0
+
+- **T3 Clawd theme (T3 Code only).** A new optional piece under Extras: a Claude look for T3 Code,
+  made by @rohit3a, with a simpler sidebar (New chat under search, no Projects buttons, Working
+  under your recent chats). Off unless you tick it.
+
 ## v1.1.0
 
 From Abbie's install, thank you Abbie.
