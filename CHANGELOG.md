@@ -2,6 +2,10 @@
 
 Newest first. Claude reads this when you say "check ai-tools for updates".
 
+## v1.3.1
+
+- **Orbit theme: chat rows show Working and Waiting again, not only the timer.**
+
 ## v1.3.0
 
 - **Orbit replaces the T3 Clawd theme (T3 Code only).** Orbit is a near-black theme built for

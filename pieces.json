@@ -1,6 +1,6 @@
 {
   "_comment": "The manifest tools/aitools.py installs from. files: 'from' is a repo path (a folder copies everything in it); 'to' is a path under ~/.claude, or starts with ~/ for anywhere else in the home folder. 'os' limits a file to mac or linux. 't3_only' / 'terminal_only' pieces are offered only to people who talk to Claude there. 'exec' marks it runnable. Pieces are listed in the order their CLAUDE.md lines appear.",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "pieces": {
     "dev-bible": {
       "name": "Development Bible",
@@ -333,7 +333,7 @@
     "t3-theme": {
       "name": "Orbit theme",
       "group": "Extras",
-      "version": "2.0.0",
+      "version": "2.0.1",
       "needs": [],
       "t3_only": true,
       "files": [
