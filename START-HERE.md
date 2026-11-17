@@ -68,8 +68,8 @@ stages it lists as done.
 Get the repo (or update it):
 
 ```bash
-if [ -d ~/.claude/ai-tools/src/.git ]; then git -C ~/.claude/ai-tools/src fetch --depth 1 origin tag v1.3.0 && git -C ~/.claude/ai-tools/src checkout -q v1.3.0
-else mkdir -p ~/.claude/ai-tools && git clone --depth 1 --branch v1.3.0 https://github.com/punkhop/ai-tools ~/.claude/ai-tools/src; fi
+if [ -d ~/.claude/ai-tools/src/.git ]; then git -C ~/.claude/ai-tools/src fetch --depth 1 origin tag v1.3.1 && git -C ~/.claude/ai-tools/src checkout -q v1.3.1
+else mkdir -p ~/.claude/ai-tools && git clone --depth 1 --branch v1.3.1 https://github.com/punkhop/ai-tools ~/.claude/ai-tools/src; fi
 ```
 
 No git yet: Mac — tell them to run `xcode-select --install` in Terminal and click **Install**;
@@ -519,7 +519,7 @@ $AIT claude-md <every installed id>
 ```
 
 `settings` adds hooks and permissions to `~/.claude/settings.json` and never removes theirs.
-`claude-md` writes one block between `<!-- ai-tools:start v1.3.0 -->` and `<!-- ai-tools:end -->` in
+`claude-md` writes one block between `<!-- ai-tools:start v1.3.1 -->` and `<!-- ai-tools:end -->` in
 `~/.claude/CLAUDE.md`; their own lines stay as they are. Both back up first. If `settings` says
 their file isn't valid JSON, show them the error line in plain words and fix it with them first.
 
